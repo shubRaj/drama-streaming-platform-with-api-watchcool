@@ -20,6 +20,8 @@ class Status(models.Model):
     name = models.CharField(max_length=20,unique=True)
     def __str__(self):
         return self.name
+    class Meta:
+        verbose_name_plural = "Status"
 class Cast(models.Model):
     movie = models.ManyToManyField(Movie)
     tv = models.ManyToManyField(TV)

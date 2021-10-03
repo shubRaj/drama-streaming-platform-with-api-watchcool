@@ -26,7 +26,8 @@ class DisplayAbsShow(admin.ModelAdmin):
         "themoviedb_id",
         "imdb_id",
         "title",
-        "vote_average", "added",
+        "vote_average", 
+        "added",
     ]
     search_fields = (
         "themoviedb_id",
@@ -47,7 +48,10 @@ class DisplayAbsShow(admin.ModelAdmin):
 
 
 class DisplayMovie(DisplayAbsShow):
-    pass
+    def __init__(self,*args,**kwargs):
+        self.list_display = super().list_display.copy()
+        self.list_display.insert(len(self.list_display)-1,"views")
+        super(DisplayMovie,self).__init__(*args,**kwargs)
 
 
 class DisplayTV(DisplayAbsShow):
@@ -191,6 +195,7 @@ class DisplayEpisode(admin.ModelAdmin):
         "episode_number",
         "tmdb_episode_id",
         "vote_average",
+        "views"
     ]
     list_per_page = 200
     list_max_show_all = 1000

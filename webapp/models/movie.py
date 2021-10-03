@@ -4,6 +4,7 @@ from .absmodels import AbsWatch,AbsSubtitle,AbsShow
 class Movie(AbsShow):
     trailer = models.URLField(null=True,blank=True)
     runtime = models.IntegerField(null=True,blank=True)
+    views = models.IntegerField(default=0,editable=False)
     class Meta:
         db_table = "movie"
 class WatchMovie(AbsWatch):

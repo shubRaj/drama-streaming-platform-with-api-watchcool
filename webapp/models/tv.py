@@ -34,6 +34,7 @@ class Episode(models.Model):
     trailer = models.URLField(null=True,blank=True)
     still_path = models.URLField(null=True,blank=True)
     vote_average = models.IntegerField(null=True,blank=True)
+    views = models.IntegerField(default=0,editable=False)
     air_date = models.DateTimeField(null=True,blank=True)
     class Meta:
         ordering = ('-air_date',)
