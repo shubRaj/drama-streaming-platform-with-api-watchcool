@@ -7,7 +7,8 @@ from django.utils import timesince
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from .models import (Movie, WatchMovie, MovieSubtitle, Genre,
                      Status, Cast, TV, Type, WatchEpisode,
-                     EpisodeSubtitle, Episode, Season, Report, Page)
+                     EpisodeSubtitle, Episode, Season, Report,
+                     Page, Configuration)
 from django.utils import timesince
 CustomUser = get_user_model()
 
@@ -337,6 +338,14 @@ class DisplayPage(admin.ModelAdmin):
     )
 
 
+class DisplayConfiguration(admin.ModelAdmin):
+    list_display = (
+        "title",
+        "description",
+        "themoviedb_api_key",
+    )
+
+
 admin.site.register(Movie, DisplayMovie)
 admin.site.register(TV, DisplayTV)
 admin.site.register(WatchMovie, DisplayWatchMovie)
@@ -351,4 +360,5 @@ admin.site.register(Status, DisplayStatus)
 admin.site.register(Type, DisplayType)
 admin.site.register(Report, DisplayReport)
 admin.site.register(Page, DisplayPage)
+admin.site.register(Configuration)
 admin.site.register(CustomUser, CustomUserAdmin)
