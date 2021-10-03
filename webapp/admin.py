@@ -8,8 +8,7 @@ from .forms import CustomUserCreationForm, CustomUserChangeForm
 from .models import (Movie, WatchMovie, MovieSubtitle, Genre,
                      Status, Cast, TV, Type, WatchEpisode,
                      EpisodeSubtitle, Episode, Season, Report,
-                     Page, Configuration)
-from django.utils import timesince
+                     Page, Configuration, Review)
 CustomUser = get_user_model()
 
 
@@ -346,6 +345,28 @@ class DisplayConfiguration(admin.ModelAdmin):
     )
 
 
+class DisplayReview(admin.ModelAdmin):
+    list_display = (
+        "title",
+        "user",
+        "description",
+        "rate",
+        "added",
+    )
+    list_filter = (
+        "rate",
+    )
+    def title(self,obj):
+        if obj.movie:
+            return obj.movie
+        elif obj.tv:
+            return obj.tv
+    def user(self,obj):
+        if obj.user:
+            return obj.user.get_full_name()
+        return "Anonymous"
+    def added(self,obj):
+        return f"{timesince.timesince(obj.added_on)} ago"
 admin.site.register(Movie, DisplayMovie)
 admin.site.register(TV, DisplayTV)
 admin.site.register(WatchMovie, DisplayWatchMovie)
@@ -360,5 +381,6 @@ admin.site.register(Status, DisplayStatus)
 admin.site.register(Type, DisplayType)
 admin.site.register(Report, DisplayReport)
 admin.site.register(Page, DisplayPage)
-admin.site.register(Configuration)
+admin.site.register(Configuration,DisplayConfiguration)
+admin.site.register(Review,DisplayReview)
 admin.site.register(CustomUser, CustomUserAdmin)

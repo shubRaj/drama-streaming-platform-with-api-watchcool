@@ -24,9 +24,11 @@ class Configuration(models.Model):
     custom_footer = models.TextField(null=True, blank=True)
     themoviedb_api_key = models.CharField(
         max_length=600, null=True, blank=True)
+    show_message = models.BooleanField(default=False)
     message_title = models.CharField(max_length=30, null=True, blank=True)
-    show_message = models.BooleanField(default=0)
     message = models.TextField(null=True, blank=True)
+    movie_comment = models.BooleanField(default=False)
+    tv_comment = models.BooleanField(default=False)
 
     def __str__(self):
         return "Configuration"
