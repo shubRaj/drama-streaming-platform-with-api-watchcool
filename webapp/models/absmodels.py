@@ -12,6 +12,7 @@ class AbsShow(models.Model):
     title = models.CharField(max_length=30)
     tagline = models.CharField(max_length=200,blank=True,null=True)
     vote_average = models.DecimalField(decimal_places=1,max_digits=3,null=True,blank=True)
+    published = models.BooleanField(default=True)
     added_on = models.DateTimeField(default=timezone.now,editable=False)
     class Meta:
         ordering = ("-added_on","-release_date",)
