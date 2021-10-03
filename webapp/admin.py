@@ -5,7 +5,10 @@ from django.contrib import admin
 from django.db import models
 from django.utils import timesince
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import Movie, WatchMovie, MovieSubtitle, Genre, Status, Cast, TV, Type, WatchEpisode, EpisodeSubtitle, Episode, Season
+from .models import (Movie, WatchMovie, MovieSubtitle, Genre,
+                     Status, Cast, TV, Type, WatchEpisode,
+                     EpisodeSubtitle, Episode, Season, Report, Page)
+from django.utils import timesince
 CustomUser = get_user_model()
 
 
@@ -223,6 +226,115 @@ class DisplaySeason(admin.ModelAdmin):
     @admin.display(description="TV Show")
     def show(self, obj):
         return obj.tv.title
+# common models
+
+
+class DisplayGenre(admin.ModelAdmin):
+    list_display = (
+        "num_movie",
+        "num_tv",
+    )
+    search_fields = (
+        "name",
+    )
+    list_filter = (
+        "name",
+    )
+
+    @admin.display(description="Movies")
+    def num_movie(self, obj):
+        return obj.movie.count()
+
+    @admin.display(description="TV Shows")
+    def num_tv(self, obj):
+        return obj.tv.count()
+
+
+class DisplayCast(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "gender",
+        "popularity",
+    )
+    list_filter = (
+        "gender",
+    )
+    search_fields = (
+        "name",
+        "movie__title",
+        "tv__title",
+    )
+
+    @admin.display(description="Movies")
+    def num_movie(self, obj):
+        return obj.movie.count()
+
+    @admin.display(description="TV Shows")
+    def num_tv(self, obj):
+        return obj.tv.count()
+
+
+class DisplayStatus(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "num_movie",
+        "num_tv",
+    )
+    list_filter = (
+        "name",
+    )
+
+    @admin.display(description="Movies")
+    def num_movie(self, obj):
+        return obj.movie.count()
+
+    @admin.display(description="TV Shows")
+    def num_tv(self, obj):
+        return obj.tv.count()
+
+
+class DisplayType(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "num_tv",
+    )
+    list_filter = (
+        "name",
+    )
+
+    @admin.display(description="TV Shows")
+    def num_tv(self, obj):
+        return obj.tv.count()
+
+
+class DisplayReport(admin.ModelAdmin):
+    list_display = (
+        "title",
+        "status",
+        "description",
+        "reported",
+    )
+    search_fields = (
+        "movie__title",
+        "episode__name",
+    )
+    list_filter = (
+        "status",
+    )
+    date_hierarchy = "added_on"
+
+    def reported(self, obj):
+        return f"{timesince.timesince(obj.added_on)} ago"
+
+    def title(self, obj):
+        return obj.__str__()
+
+
+class DisplayPage(admin.ModelAdmin):
+    list_display = (
+        "title",
+        "order",
+    )
 
 
 admin.site.register(Movie, DisplayMovie)
@@ -232,5 +344,11 @@ admin.site.register(WatchEpisode, DisplayWatchEpisode)
 admin.site.register(Episode, DisplayEpisode)
 admin.site.register(Season, DisplaySeason)
 admin.site.register(EpisodeSubtitle, DisplayEpisodeSubtitle)
-admin.site.register(MovieSubtitle,DisplayMovieSubtitle)
+admin.site.register(MovieSubtitle, DisplayMovieSubtitle)
+admin.site.register(Genre, DisplayGenre)
+admin.site.register(Cast, DisplayCast)
+admin.site.register(Status, DisplayStatus)
+admin.site.register(Type, DisplayType)
+admin.site.register(Report, DisplayReport)
+admin.site.register(Page, DisplayPage)
 admin.site.register(CustomUser, CustomUserAdmin)
