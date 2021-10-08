@@ -12,13 +12,20 @@ STATUS_CHOICES = (
 
 
 class CustomUser(AbstractUser):
-    pass
-
+    email = models.EmailField(unique=True)
+    country = models.CharField(max_length=30,null=True,blank=True,editable=False)
+    def __str__(self):
+        return self.username
+    class Meta:
+        ordering = ("-date_joined",)
 
 class Configuration(models.Model):
     title = models.CharField(max_length=300)
     favicon = models.ImageField(
-        blank=True, null=True, upload_to="images/favicon")
+        blank=True, null=True, upload_to="images")
+    logo = models.ImageField(
+        blank=True, null=True, upload_to="images")
+    tagline = models.CharField(null=True,blank=True,max_length=200)
     description = models.TextField(null=True, blank=True)
     custom_header = models.TextField(null=True, blank=True)
     custom_footer = models.TextField(null=True, blank=True)

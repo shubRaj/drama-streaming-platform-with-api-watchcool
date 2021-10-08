@@ -3,7 +3,6 @@ from django.utils import timezone
 class AbsShow(models.Model):
     themoviedb_id = models.IntegerField(unique=True)
     imdb_id = models.IntegerField(null=True,blank=True,unique=True)
-    original_language = models.CharField(max_length=10,null=True)
     original_title = models.CharField(max_length=300,null=True,blank=True)
     overview = models.TextField(null=True)
     backdrop_path = models.URLField(null=True)
@@ -11,11 +10,12 @@ class AbsShow(models.Model):
     release_date = models.DateField(null=True,blank=True)
     title = models.CharField(max_length=30)
     tagline = models.CharField(max_length=200,blank=True,null=True)
-    vote_average = models.DecimalField(decimal_places=1,max_digits=3,null=True,blank=True)
+    vote_average = models.DecimalField(decimal_places=1,max_digits=3,null=True,blank=True,default=0.0)
     published = models.BooleanField(default=True)
+    views = models.IntegerField(default=0,editable=False)
     added_on = models.DateTimeField(default=timezone.now,editable=False)
     class Meta:
-        ordering = ("-added_on","-release_date",)
+        ordering = ("added_on","-release_date",)
         abstract = True
     def __str__(self):
         return self.title

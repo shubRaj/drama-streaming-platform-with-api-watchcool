@@ -1,0 +1,7 @@
+{% for genre in show.genre.all %}
+{% if forloop.last %}
+<a href="#">{{genre.name}}</a>
+{% else %}
+<a href="#">{{genre.name}}</a>,
+{% endif %}
+{% endfor %}

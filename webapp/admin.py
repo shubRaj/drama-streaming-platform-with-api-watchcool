@@ -4,11 +4,13 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib import admin
 from django.db import models
 from django.utils import timesince
+
+from webapp.models.common import Language
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from .models import (Movie, WatchMovie, MovieSubtitle, Genre,
                      Status, Cast, TV, Type, WatchEpisode,
                      EpisodeSubtitle, Episode, Season, Report,
-                     Page, Configuration, Review)
+                     Page, Configuration, Review,Language)
 CustomUser = get_user_model()
 
 
@@ -19,6 +21,7 @@ class CustomUserAdmin(UserAdmin):
         "email",
         "username",
     )
+    list_display_links = ("username","email",)
 
 
 class DisplayAbsShow(admin.ModelAdmin):
@@ -37,7 +40,6 @@ class DisplayAbsShow(admin.ModelAdmin):
     )
     list_filter = (
         "vote_average",
-        "original_language"
     )
     date_hierarchy = 'release_date'
     list_per_page = 200
@@ -236,6 +238,7 @@ class DisplaySeason(admin.ModelAdmin):
 
 class DisplayGenre(admin.ModelAdmin):
     list_display = (
+        "name",
         "num_movie",
         "num_tv",
     )
@@ -380,7 +383,7 @@ admin.site.register(Episode, DisplayEpisode)
 admin.site.register(Season, DisplaySeason)
 admin.site.register(EpisodeSubtitle, DisplayEpisodeSubtitle)
 admin.site.register(MovieSubtitle, DisplayMovieSubtitle)
-admin.site.register(Genre, DisplayGenre)
+admin.site.register([Genre,Language], DisplayGenre)
 admin.site.register(Cast, DisplayCast)
 admin.site.register(Status, DisplayStatus)
 admin.site.register(Type, DisplayType)

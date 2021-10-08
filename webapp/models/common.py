@@ -9,22 +9,28 @@ GENDER_CHOICES = (
 )
 USER = get_user_model()
 class Genre(models.Model):
-    movie = models.ManyToManyField(Movie)
-    tv = models.ManyToManyField(TV)
+    movie = models.ManyToManyField(Movie,related_name="genre",related_query_name="has_genre")
+    tv = models.ManyToManyField(TV,related_name="genre",related_query_name="has_genre")
+    name = models.CharField(max_length=20,unique=True)
+    def __str__(self):
+        return self.name
+class Language(models.Model):
+    movie = models.ManyToManyField(Movie,related_name="language",related_query_name="has_language")
+    tv = models.ManyToManyField(TV,related_name="language",related_query_name="has_language")
     name = models.CharField(max_length=20,unique=True)
     def __str__(self):
         return self.name
 class Status(models.Model):
-    movie = models.ManyToManyField(Movie)
-    tv = models.ManyToManyField(TV)
+    movie = models.ManyToManyField(Movie,related_name="status",related_query_name="has_status")
+    tv = models.ManyToManyField(TV,related_name="status",related_query_name="has_status")
     name = models.CharField(max_length=20,unique=True)
     def __str__(self):
         return self.name
     class Meta:
         verbose_name_plural = "Status"
 class Cast(models.Model):
-    movie = models.ManyToManyField(Movie)
-    tv = models.ManyToManyField(TV)
+    movie = models.ManyToManyField(Movie,related_name="cast",related_query_name="has_cast")
+    tv = models.ManyToManyField(TV,related_name="cast",related_query_name="has_cast")
     gender = models.CharField(max_length=1,choices=GENDER_CHOICES,default=1)
     name = models.CharField(max_length=100)
     tmdb_cast_id = models.IntegerField()

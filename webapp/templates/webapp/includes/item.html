@@ -1,0 +1,18 @@
+{% load static %}
+<div class="card__cover">
+    <img src="{{show.poster_path}}" alt="{{show.title}}">
+    <a href="details.html" class="card__play">
+        <i class="icon ion-ios-play"></i>
+    </a>
+    <!-- rating -->
+    {% include 'webapp/includes/vote_average.html' with show=show only %}
+    <!-- end rating -->
+</div>
+<div class="card__content">
+    <h3 class="card__title"><a href="details.html">{{show.title}}</a></h3>
+    <span class="card__category">
+        <!-- genre -->
+        {% include 'webapp/includes/genre.html' with show=show only %}
+        <!-- end genre -->
+    </span>
+</div>

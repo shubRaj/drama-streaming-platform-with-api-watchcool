@@ -1,0 +1,191 @@
+{% extends 'adminDashboard/_base.html' %}
+{% block content %}
+<div class="row">
+	<!-- main title -->
+	<div class="col-12">
+		<div class="main__title">
+			<h2>Movies</h2>
+			<span class="main__title-stat">{{movies.count}} Total</span>
+			<div class="main__title-wrap">
+				<!-- filter sort -->
+				<div class="filter" id="filter__sort">
+					<span class="filter__item-label">Sort by:</span>
+
+					<div class="filter__item-btn dropdown-toggle" role="navigation" id="filter-sort"
+						data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<input type="button" value="Date created">
+						<span></span>
+					</div>
+					<ul class="filter__item-menu dropdown-menu scrollbar-dropdown" aria-labelledby="filter-sort">
+						<li>Date created</li>
+						<li>Rating</li>
+						<li>Views</li>
+					</ul>
+				</div>
+				<!-- end filter sort -->
+				<!-- search -->
+				<form action="#" class="main__title-form">
+					<input type="text" placeholder="Find movie / tv series..">
+					<button type="button">
+						<i class="icon ion-ios-search"></i>
+					</button>
+				</form>
+				<!-- end search -->
+				<a href="{% url 'app_adminDashboard:add' %}" class="main__title-link">add movie</a>
+			</div>
+		</div>
+	</div>
+	<!-- end main title -->
+
+	<!-- users -->
+	<div class="col-12">
+		<div class="main__table-wrap">
+			<table class="main__table">
+				<thead>
+					<tr>
+						<th>TMDB ID</th>
+						<th>TITLE</th>
+						<th>RATING</th>
+						<th>GENRE</th>
+						<th>VIEWS</th>
+						<th>STATUS</th>
+						<th>ADDED ON</th>
+						<th>ACTIONS</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<!-- Movies -->
+					{% for movie in page_obj %}
+					<tr>
+						<td>
+							<div class="main__table-text">{{movie.themoviedb_id}}</div>
+						</td>
+						<td>
+							<div class="main__table-text"><a href="#">{{movie.title}}</a></div>
+						</td>
+						<td>
+							<div class="main__table-text main__table-text--rate"><i class="icon ion-ios-star"></i>
+								{{movie.vote_average}}
+							</div>
+						</td>
+						<td>
+							<div class="main__table-text">
+								{% if movie.genre.all %}
+									{% for genre in movie.genre.all %}
+										{{genre.name}}
+									{% endfor %}
+								{% else %}
+									None
+								{% endif %}
+							</div>
+						</td>
+						<td>
+							<div class="main__table-text">{{movie.views}}</div>
+						</td>
+						<td>
+							{% if movie.published %}
+							<div class="main__table-text main__table-text--green">Published</div>
+							{% else %}
+							<div class="main__table-text main__table-text--red">Draft</div>
+							{% endif %}
+						</td>
+						<td>
+							<div class="main__table-text">{{movie.added_on|date:"j F, Y"}}</div>
+						</td>
+						<td>
+							<div class="main__table-btns">
+								{% if movie.published %}
+									<a href="#modal-status" class="main__table-btn main__table-btn--banned open-modal">
+										<i class="icon ion-ios-lock"></i>
+									</a>
+								{% else %}
+									<a href="#modal-status" class="main__table-btn main__table-btn--delete open-modal">
+										<i class="icon ion-ios-lock"></i>
+									</a>
+								{% endif %}
+								<a href="#" class="main__table-btn main__table-btn--view">
+									<i class="icon ion-ios-eye"></i>
+								</a>
+								<a href="#" class="main__table-btn main__table-btn--edit">
+									<i class="icon ion-ios-create"></i>
+								</a>
+								<a href="#modal-delete" class="main__table-btn main__table-btn--delete open-modal">
+									<i class="icon ion-ios-trash"></i>
+								</a>
+							</div>
+							<!-- modal status -->
+							<div id="modal-status" class="zoom-anim-dialog mfp-hide modal">
+								<h6 class="modal__title">Status change</h6>
+
+								<p class="modal__text">Are you sure about immediately change status?</p>
+								<form method="post" action="{% url 'app_adminDashboard:movies' %}" >
+									<div class="modal__btns">
+										{% csrf_token %}
+										<input type="hidden" name="id" value="{{movie.id}}">
+										<input type="hidden" name="action" value="status">
+										<button class="modal__btn modal__btn--apply" type="submit" >Apply</button>
+										<button class="modal__btn modal__btn--dismiss" type="button">Dismiss</button>
+									</div>
+								</form>
+							</div>
+							<!-- end modal status -->
+
+							<!-- modal delete -->
+							<div id="modal-delete" class="zoom-anim-dialog mfp-hide modal">
+								<h6 class="modal__title">Delete Movie</h6>
+
+								<p class="modal__text">Are you sure to permanently delete "{{movie.title}}"?</p>
+								<form method="post" action="{% url 'app_adminDashboard:delete_movie' movie.id %}" >
+									<div class="modal__btns">
+										{% csrf_token %}
+										<button class="modal__btn modal__btn--apply" type="submit" value="Confirm">Delete</button>
+										<button class="modal__btn modal__btn--dismiss" type="button">Dismiss</button>
+									</div>
+								</form>
+							</div>
+						</td>
+					</tr>
+					{% endfor %}
+					<!-- end movies -->
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- end users -->
+
+	<!-- paginator -->
+	{% if page_obj.has_next or page_obj.has_previous %}
+	<div class="col-12">
+		<div class="paginator-wrap">
+			<span>{{page_obj.number}} from {{page_obj.paginator.num_pages}}</span>
+
+			<ul class="paginator">
+				{% if page_obj.has_previous %}
+				<li class="paginator__item paginator__item--prev">
+					<a href="?page={{page_obj.previous_page_number}}"><i class="icon ion-ios-arrow-back"></i></a>
+				</li>
+				{% endif %}
+				{% if page_obj.previous_page_number != 1 %}
+					<li class="paginator__item"><a href="?page=1">1</a></li>
+				{% endif %}
+				{% for page_num in page_obj.paginator.page_range %}
+					{% if page_num == page_obj.number %}
+						<li class="paginator__item paginator__item--active"><a href="?page={{page_obj.number}}">{{page_obj.number}}</a></li>
+					{% elif page_num > page_obj.number|add:"-4" and page_num < page_obj.number|add:"4" %}
+					<li class="paginator__item"><a href="?page={{page_num}}">{{page_num}}</a></li>
+					{% endif %}
+        		{% endfor %}
+				{% if page_obj.has_next %}
+				<li class="paginator__item paginator__item--next">
+					<a href="?page={{page_obj.next_page_number}}"><i class="icon ion-ios-arrow-forward"></i></a>
+				</li>
+				{% endif %}
+			</ul>
+		</div>
+	</div>
+	{% endif %}
+	<!-- end paginator -->
+</div>
+
+{% endblock content %}
