@@ -1,0 +1,12 @@
+<div class="col">
+    <a href="{% url 'app_webapp:watch_episode' episode.slug %}" class="list-movie list-episode">
+        <div class="list-media">
+            <div class="media media-episode" data-src="{{episode.still_path}}"></div>
+        </div>
+        <div class="list-caption">
+            <div class="list-title">{{episode.season.tv.title}}</div>
+            <div class="list-category">{{episode.season_number}}. Season {{episode.episode_number}}. Episode</div>
+        </div>
+        <div class="list-date">{{episode.added_on|date:"jS M"}}</div>
+    </a>
+</div>

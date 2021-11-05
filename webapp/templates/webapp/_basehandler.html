@@ -1,0 +1,141 @@
+<!DOCTYPE html> {% load static %}
+<html lang="en">
+
+<head>
+    <title>
+        {{title}}
+    </title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="{{description}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#000">
+    <meta name="HandheldFriendly" content="True">
+    <meta http-equiv="cleartype" content="on">
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="//ajax.googleapis.com" />
+    <link rel="dns-prefetch" href="//www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+    <link rel="dns-prefetch" href="//code.jquery.com" />
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com" />
+    <link rel="dns-prefetch" href="//www.google-analytics.com">
+    <link as="style" media="all" rel="stylesheet preload prefetch" href="{% static 'webapp/css/app.css' %}"
+        type="text/css" crossorigin="anonymous" />
+    <link rel="preload" href="{% static 'webapp/public/assets/webfonts/inter/Inter-Regular.woff2' %}" as="font"
+        crossorigin="anonymous" />
+    <link rel="preload" href="{% static 'webapp/public/assets/webfonts/inter/Inter-Medium.woff2' %}" as="font"
+        crossorigin="anonymous" />
+    <link rel="preload" href="{% static 'webapp/public/assets/webfonts/inter/Inter-SemiBold.woff2' %}" as="font"
+        crossorigin="anonymous" />
+    <link rel="preload" href="{% static 'webapp/public/assets/webfonts/inter/Inter-Bold.woff2' %}" as="font"
+        crossorigin="anonymous" />
+    <link rel="preload" href="{% static 'webapp/public/assets/webfonts/inter/Inter-Black.woff2' %}" as="font"
+        crossorigin="anonymous" />
+    <meta property="og:site_name" content="{{request.get_host}}">
+    <meta property="og:locale" content="en_US"/>
+    <meta property="og:url" content="{{request.build_absolute_uri}}">
+    <meta property="og:type" content="video.drama">
+    <meta property="og:title" content="{{title}}">
+    <meta property="og:description" content="{{description}}">
+    <meta property="og:image" content="{tv.backdrop_path}">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@">
+    <meta name="twitter:title" content="{{title}}">
+    <meta name="twitter:url" content="{{request.build_absolute_uri}}">
+    <meta name="twitter:description" content="{{description}}">
+    <meta name="twitter:image" content="{{tv.backdrop_path}}" />
+    <link rel="canonical" href="{{request.build_absolute_uri}}" />
+    <link rel="alternate" hreflang="en-us" href="{{request.build_absolute_uri}}" />
+    <script type="text/javascript">
+        var _URL = "{{request.scheme}}://{{request.get_host}}";
+        var _ASSETS = "{% static 'webapp/public/assets' %}";
+        var _Auth = false;
+        var __ = function (msgid) {
+            return window.i18n[msgid] || msgid;
+        };
+        window.i18n = {
+            'No comments yet': 'No comments yet',
+            'You must sign in': 'You must sign in',
+            'Follow': 'Follow',
+            'Following': 'Following',
+            'Show more': 'Show more',
+            'Show less': 'Show less',
+            'no results': 'no results',
+            'Results': 'Results',
+            'Comment': 'Comment',
+            'Actors': 'Actors',
+        };
+    </script>
+    <style type="text/css">
+        :root {
+            --theme-color: #f5c518;
+            --button-color: #f5c518;
+            --background-color: ;
+        }
+
+        @font-face {
+            font-family: inter;
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: url("{% static 'webapp/public/assets/webfonts/inter/Inter-Regular.woff2' %}") format("woff2"),
+            url("{% static 'webapp/public/assets/webfonts/inter/Inter-Regular.woff' %}") format("woff")
+        }
+
+        @font-face {
+            font-family: inter;
+            font-style: normal;
+            font-weight: 500;
+            font-display: swap;
+            src: url("{% static 'webapp/public/assets/webfonts/inter/Inter-Medium.woff2' %}") format("woff2"),
+            url("{% static 'webapp/public/assets/webfonts/inter/Inter-Medium.woff' %}") format("woff")
+        }
+
+        @font-face {
+            font-family: inter;
+            font-style: normal;
+            font-weight: 600;
+            font-display: swap;
+            src: url("{% static 'webapp/public/assets/webfonts/inter/Inter-SemiBold.woff2' %}") format("woff2"),
+            url("{% static 'webapp/public/assets/webfonts/inter/Inter-SemiBold.woff' %}") format("woff")
+        }
+
+        @font-face {
+            font-family: inter;
+            font-style: normal;
+            font-weight: 700;
+            font-display: swap;
+            src: url("{% static 'webapp/public/assets/webfonts/inter/Inter-Bold.woff2' %}") format("woff2"),
+            url("{% static 'webapp/public/assets/webfonts/inter/Inter-Bold.woff' %}") format("woff")
+        }
+
+        @font-face {
+            font-family: inter;
+            font-style: normal;
+            font-weight: 800;
+            font-display: swap;
+            src: url("{% static 'webapp/public/assets/webfonts/inter/Inter-ExtraBold.woff2' %}") format("woff2"),
+            url("{% static 'webapp/public/assets/webfonts/inter/Inter-ExtraBold.woff' %}") format("woff")
+        }
+
+        @font-face {
+            font-family: inter;
+            font-style: normal;
+            font-weight: 900;
+            font-display: swap;
+            src: url("{% static 'webapp/public/assets/webfonts/inter/Inter-Black.woff2' %}") format("woff2"),
+            url("{% static 'webapp/public/assets/webfonts/inter/Inter-Black.woff' %}") format("woff")
+        }
+    </style>
+    <link rel="shortcut icon" href="{{favicon.url}}">
+    {{custom_header|safe}}
+    {% block custom_head %}
+    {% endblock custom_head %}
+</head>
+<body>
+{% block content %}
+{% endblock content %}
+</body>
+</html>

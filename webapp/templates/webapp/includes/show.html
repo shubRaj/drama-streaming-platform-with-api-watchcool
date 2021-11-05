@@ -1,0 +1,53 @@
+{% load static classname %}
+<div class="col">
+    <div class="list-movie">
+        <a href="
+        {% if show|getClassName|lower == 'tv' %}
+            {% url 'app_webapp:tv_detail' show.slug %}
+        {% else %}
+            {% url 'app_webapp:movie_detail' show.slug %}
+        {% endif %}
+        " class="list-media">
+            <div class="list-media-attr">
+                {% comment 'for future update' %}
+                <div class="quality">
+                    HD
+                </div>
+                {% endcomment %}
+                <div class="imdb">
+                    <span>{{show.vote_average}}</span>
+                    <svg x="0px" y="0px" width="36px" height="36px" viewBox="0 0 36 36">
+            <circle fill="none" stroke-width="1" cx="18" cy="18" r="16" stroke-dasharray="{% widthratio show.vote_average 1 10 %} 100" stroke-dashoffset="0" transform="rotate(-90 18 18)"></circle>
+         </svg>
+                </div>
+            </div>
+            <div class="play-btn">
+                <svg class="icon">
+         <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#play" />
+      </svg>
+            </div>
+            <div class="media media-cover" data-src="{{show.poster_path}}"></div>
+        </a>
+        <div class="list-caption">
+            <a href="
+            {% if show|getClassName|lower == 'tv' %}
+                {% url 'app_webapp:tv_detail' show.slug %}
+            {% else %}
+                {% url 'app_webapp:movie_detail' show.slug %}
+            {% endif %}
+        " class="list-titlesub">{{show.tagline}} </a>
+            <a href="
+            {% if show|getClassName|lower == 'tv' %}
+                {% url 'app_webapp:tv_detail' show.slug %}
+            {% else %}
+                {% url 'app_webapp:movie_detail' show.slug %}
+            {% endif %}
+            " class="list-title">{{show.title}}</a>
+            {% with genre=show.genre.all.0 %}
+                {% if genre %}
+                    <a href="{% url 'app_webapp:category' genre.name %}" class="list-category">{{genre.name}}</a>
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+</div>

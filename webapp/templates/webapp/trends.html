@@ -1,0 +1,74 @@
+{% extends 'webapp/_base.html' %}
+{% load static %}
+{% block content %}
+<div class="app-content">
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'app_webapp:home' %}">
+                    Home</a></li>
+            <li class="breadcrumb-item active">
+                Trends</li>
+        </ol>
+    </nav>
+    <div class="app-content">
+        <div class="app-section">
+            <div class="mb-4">
+                <div class="text-24 text-white font-weight-bold">
+                    Trends </div>
+                <div class="subtext text-12">
+                    Discover the best Movies and TV Shows with english subtitle in HD Quality. </div>
+            </div>
+            {% for show in shows %}
+            <a href="
+            {% if show.tv %}
+                {% url 'app_webapp:tv_detail' show.slug %}
+            {% else %}
+                {% url 'app_webapp:movie_detail' show.slug %}
+            {% endif %}
+            " class="list-trend">
+                <div class="list-media">
+                    <div class="media media-cover" style="background-image: url(&quot;{{show.poster_path}}&quot;);">
+                    </div>
+                </div>
+                <div class="list-caption">
+                    <div class="list-title-sub">
+                        {{show.tagline}} </div>
+                    <div class="list-title">
+                        {{show.title}} </div>
+                    <div class="list-attr-box mb-2">
+                        {% comment 'for future update' %}
+                        <div class="list-attr">
+                            <div class="attr">
+                                Category </div>
+                            <div class="text">
+                                {{show.tv.title}} </div>
+                        </div>
+                        {% endcomment %}
+                        <div class="list-attr">
+                            <div class="attr">
+                                Rating</div>
+                            <div class="text">
+                                {{show.vote_average}} </div>
+                        </div>
+                        <div class="list-attr">
+                            <div class="attr">
+                                Release Date </div>
+                            <div class="text">
+                                {{show.release_date.year}} </div>
+                        </div>
+                    </div>
+                    <div class="list-description">{{show.overview}}</div>
+                    <div class="list-view">
+                        <svg>
+                            <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#trend"></use>
+                        </svg>
+                        {{show.views}} <span>views</span>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% include 'webapp/includes/pagination.html' with page_obj=page_obj is_paginated=is_paginated only %}
+    </div>
+</div>
+{% endblock content %}

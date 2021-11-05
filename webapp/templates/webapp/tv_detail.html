@@ -1,0 +1,121 @@
+{% extends 'webapp/_base.html' %}
+{% block content %}
+<div class="app-detail flex-fill">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'app_webapp:tv_list' %}">
+                    TV</a></li>
+            <li class="breadcrumb-item active" aria-current="page">
+                {{tv.title}} </li>
+        </ol>
+    </nav>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="media media-cover mb-2"
+                data-src="{{tv.poster_path}}">
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="pl-md-4">
+                <div class="categories">
+                    {% for genre in tv.genre.all %}
+                    <a href="{% url 'app_webapp:category' genre.name %}">
+                        {{genre.name|title}}</a>
+                    {% endfor %}
+                </div>
+                <h1>
+                    {{tv.title}} </h1>
+                <h2>
+                    {{tv.tagline}} </h2>
+                {% if watch_now %}
+                <a href="{% url 'app_webapp:watch_episode' watch_now.slug %}"><button type="button" class="btn btn-theme px-5 my-3 mr-2">Watch Now</button></a>
+                {% endif %}
+                {% if tv.trailer %}
+                <button type="button" class="btn btn-theme px-5 my-3 mr-2" data-toggle="modal" data-target="#lg"
+                    data-remote="{% url 'app_webapp:trailer' %}?trailer={{tv.trailer}}">
+                    Trailer</button>
+                {% endif %}
+                <div class="featured-box">
+                    <div class="featured-attr">
+                        <div class="attr">
+                            Rating </div>
+                        <div class="text">
+                            {{tv.vote_average}} </div>
+                    </div>
+                    <div class="featured-attr">
+                        <div class="attr">
+                            Release Date </div>
+                        <div class="text">
+                            {% if tv.release_date %}{{tv.release_date|date:"jS M, Y"}}{% endif %} </div>
+                    </div>
+                    <div class="featured-attr">
+                        <div class="attr">
+                            Duration </div>
+                        <div class="text">
+                            {{tv.runtime|default:"0"}} min </div>
+                    </div>
+                </div>
+                <div class="detail-attr">
+                    <div class="attr">
+                        Overview </div>
+                    <div class="text">
+                        <div class="text-content">{{tv.overview}}</div>
+                    </div>
+                </div>
+                <div class="featured-attr">
+                    <div class="attr">
+                        Actors </div>
+                    <div class="text" data-more="" data-element="a" data-limit="6">
+                        {% for cast in tv.cast.all %}
+                        <a href="{% url 'app_webapp:actor_detail' cast.slug %}">
+                            {{cast.name}} </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="nav-social">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="season-list">
+                <div class="seasons">
+                    <ul class="nav" role="tablist">
+                        {% for season in tv.season.all %}
+                        <li class="nav-item">
+                            <a class="nav-link {% if forloop.counter == 1 %} active {% endif %}" id="season-{{season.season_number}}-tab" data-toggle="tab" href="#season-{{season.season_number}}" role="tab"
+                                aria-controls="season-{{season.season_number}}" aria-selected="true">
+                                {{season.season_number}}.{{season.name}} </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="episodes tab-content">
+                    {% for season in tv.season.all %}
+                    <div class="tab-pane show {% if forloop.counter == 1 %} active {% endif %}" id="season-{{season.season_number}}" role="tabpanel" aria-labelledby="season-{{season.season_number}}-tab">
+                        {% for episode in season.episode.all %}
+                        <a
+                            href="{% url 'app_webapp:watch_episode' episode.slug %}">
+                            <div class="episode">
+                                Episode {{episode.episode_number}} </div>
+                            <div class="name">
+                                {{episode.name}} </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="comments app-section pt-0" data-content="22" data-type="post">
+                        <div class="app-heading">
+                            <div class="text">Comments</div>
+                        </div>
+                        {% include 'webapp/includes/comment.html' with show=tv %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

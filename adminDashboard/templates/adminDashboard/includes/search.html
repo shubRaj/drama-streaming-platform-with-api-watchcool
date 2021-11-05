@@ -1,0 +1,32 @@
+<div class="main__title-wrap">
+    <!-- filter sort -->
+    <div class="filter" id="filter__sort">
+        <span class="filter__item-label">Sort by:</span>
+
+        <div class="filter__item-btn dropdown-toggle" role="navigation" id="filter-sort"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <input type="button" id="filter-value" value="Date created">
+            <span></span>
+        </div>
+        <ul class="filter__item-menu dropdown-menu scrollbar-dropdown" aria-labelledby="filter-sort">
+            <li>Date created</li>
+            <li>Rating</li>
+        </ul>
+    </div>
+    <!-- end filter sort -->
+    <!-- search -->
+    <form action="{% url 'app_adminDashboard:search' %}" class="main__title-form" onsubmit="formSubmit()">
+        <input type="text" name="q" placeholder="Find movie / tv shows..">
+        <input type="hidden" id="filter" name="filter">
+        <button type="button">
+            <i class="icon ion-ios-search"></i>
+        </button>
+    </form>
+    <script>
+        function formSubmit(){
+            const filter_element = document.getElementById("filter-value");
+            document.getElementById("filter").value = filter_element.value;
+        }
+    </script>
+    <!-- end search -->
+</div>

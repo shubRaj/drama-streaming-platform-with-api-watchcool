@@ -1,0 +1,232 @@
+{% extends 'webapp/_base.html' %}
+{% load static classname %}
+{% block content %}
+<div class="app-detail flex-fill">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'app_webapp:tv_list' %}">
+                    TV</a></li>
+            <li class="breadcrumb-item d-none d-md-block"><a href="{% url 'app_webapp:tv_detail' tv.slug %}">
+                    {{tv.title}}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">
+                Season {{episode.season_number}}, Episode {{episode.episode_number}}</li>
+        </ol>
+    </nav>
+    <div class="detail-header d-flex align-items-center">
+        <div class="nav-player-select dropdown">
+            <a class="dropdown-toggle btn-service" href="#" role="button" id="videoSource" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                Source : <span></span>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="videoSource">
+                {% if download_links %}
+                {% for download in download_links %}
+                <button type="button" class="btn-service dropdown-source selected" data-embed="{{download.slug}}">
+                    <span class="name">CoolServer</span>
+                    {% comment 'for future update' %}
+                    <span class="language">English Subtitle</span>
+                    {% endcomment %}
+                </button>
+                {% endfor %}
+                {% endif %}
+                {% for source in sources %}
+                <button type="button" class="btn-service dropdown-source selected" data-embed="{{source.id}}">
+                    <span class="name">{{source.source}}</span>
+                    {% comment 'for future update' %}
+                    <span class="language">English Subtitle</span>
+                    {% endcomment %}
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+        {% comment 'for future update' %}
+        {% if download_links %}
+        <div class="nav-player-select dropdown fadein_out" style="margin:0px;" id="download_button">
+            {% for download in download_links %}
+            <a class="dropdown-toggle btn-service" href="https://player.watchcool.in/d/{{download.slug}}"
+                target="_blank" title="Click here to download the Episode">
+                Download episode {{episode.episode_number}} </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endcomment %}
+        <div class="d-flex align-items-center" style="margin-left:15px;">
+            <div class="dropdown">
+                <button type="button" class="btn-svg share" role="button" id="shareDropdown" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <svg class="icon">
+                        <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#share"></use>
+                    </svg>
+                    <span>Share</span>
+                </button>
+                <div class="dropdown-menu dropdown-share" aria-labelledby="shareDropdown">
+                    <a href="#" class="bg-facebook share-link" data-type="facebook"
+                        data-sef="{{request.build_absolute_uri}}">
+                        <svg class="icon">
+                            <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#facebook"></use>
+                        </svg>
+                    </a>
+                    <a href="#" class="bg-twitter share-link" data-type="twitter" data-title="{{tv.title}}"
+                        data-sef="{{request.build_absolute_uri}}">
+                        <svg class="icon">
+                            <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#twitter"></use>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <button type="button" class="btn-svg report mr-0" data-toggle="modal" data-target="#m"
+                data-remote="{% url 'app_webapp:report_modal_tv' episode.id %}">
+                <svg class="icon" stroke-width="3">
+                    <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#alert"></use>
+                </svg>
+                <span>Report</span>
+            </button>
+        </div>
+    </div>
+    <div class="app-detail-embed">
+        <div class="embed-col">
+            <div class="spinner d-none">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+            </div>
+            <div class="embed-code d-none"></div>
+            <div class="embed-play">
+                <div class="embed-cover lazy" data-src="{{tv.backdrop_path}}">
+                </div>
+                <div class="play-btn" data-id="" _token="{{csrf_token}}" type="tv">
+                    <svg class="icon">
+                        <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#play" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if next_episode %}
+    <div class="episode-nav">
+        <a href="{% url 'app_webapp:watch_episode' next_episode.slug %}" class="pl-md-5 ml-auto">
+            <div class="mr-3 text-right">
+                <div class="name">
+                    Next episode </div>
+                <div class="episode">
+                    Season {{next_episode.season_number}}, Episode {{next_episode.episode_number}} </div>
+            </div>
+            <div class="svg-icon">
+                <svg>
+                    <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#chevron-right" />
+                </svg>
+            </div>
+        </a>
+    </div>
+    {% endif %}
+    <div class="detail-content">
+        <div class="cover">
+            <a href="{% url 'app_webapp:tv_detail' tv.slug %}" class="media media-cover"
+                data-src="{{tv.poster_path}}"></a>
+        </div>
+        <div class="detail-text flex-fill">
+            <div class="caption">
+                <div class="caption-content">
+                    <h3 class="mb-1">
+                        Season {{episode.season_number}}, Episode {{episode.episode_number}}</h3>
+                    <a href="{% url 'app_webapp:tv_detail' tv.slug %}">
+                        <h1>
+                            {{tv.title}} </h1>
+                    </a>
+                    <h2>{{tv.tagline}}</h2>
+                    <div class="category">
+                        {% for genre in tv.genre.all %}
+                        <a href="{% url 'app_webapp:category' genre.name %}">
+                            {{genre.name|title}}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% if episode.air_date %}
+                <div class="video-attr">
+                    <div class="attr">
+                        Release Date </div>
+                    <div class="text">
+                        {{episode.air_date|date:"jS M, Y"}}</div>
+                </div>
+                {% endif %}
+                <div class="video-attr">
+                    <div class="attr">
+                        Actors </div>
+                    <div class="text" data-more="" data-element="a" data-limit="6">
+                        {% for cast in tv.cast.all %}
+                        <a href="{% url 'app_webapp:actor_detail' cast.slug %}">
+                            {{cast.name}}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% if episode.overview %}
+                <div class="video-attr">
+                    <div class="attr">
+                        Overview </div>
+                    <div class="text">{{episode.overview}}</div>
+                </div>
+                {% endif %}
+            </div>
+            {% comment 'for future update' %}
+            <div class="action">
+                <div class="video-view">
+                    <div class="view-text">
+                        1,237<span>
+                            views</span>
+                    </div>
+                </div>
+                <div class="action-bar"><span style="width: 50%"></span></div>
+                <div class="action-btns">
+                    <div class="action-btn like " data-id="22">
+                        <svg>
+                            <use xlink:href="https://demo.codelug.com/wovie/public/assets/img/sprite.svg#like" />
+                        </svg>
+                        <span data-votes="1">
+                            1</span>
+                    </div>
+                    <div class="action-btn dislike " data-id="22">
+                        <svg>
+                            <use xlink:href="https://demo.codelug.com/wovie/public/assets/img/sprite.svg#dislike" />
+                        </svg>
+                        <span data-votes="1">
+                            1</span>
+                    </div>
+                </div>
+            </div>
+            {% endcomment %}
+        </div>
+    </div>
+    {% include 'webapp/includes/season_list.html' %}
+    {% if similar %}
+    <div class="app-section">
+        <div class="app-heading">
+            <div class="text">
+                Similar content </div>
+        </div>
+        <div class="row row-cols-6 list-scrollable">
+            {% for show in similars %}
+            {% include 'webapp/includes/show.html' with show=show only %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    <div class="row">
+        <div class="col">
+            <div class="comments app-section pt-0" data-content="1296" data-type="episode">
+                <div class="app-heading">
+                    <div class="text">Comments</div>
+                </div>
+
+                {% include 'webapp/includes/comment.html' with show=episode %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+{% block custom_script %}
+<script src="{% static 'webapp/app/theme/assets/js/plyr.hls.js' %}"></script>
+<script src="{% static 'webapp/app/theme/assets/js/plyr.js' %}"></script>
+<script src="{% static 'webapp/app/theme/assets/js/jquery.comment.js' %}"></script>
+<script src="{% static 'webapp/app/theme/assets/js/detail.js' %}"></script>
+{% endblock custom_script %}

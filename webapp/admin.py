@@ -2,7 +2,6 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 from django.contrib import admin
-from django.db import models
 from django.utils import timesince
 
 from webapp.models.common import Language
@@ -10,7 +9,9 @@ from .forms import CustomUserCreationForm, CustomUserChangeForm
 from .models import (Movie, WatchMovie, MovieSubtitle, Genre,
                      Status, Cast, TV, Type, WatchEpisode,
                      EpisodeSubtitle, Episode, Season, Report,
-                     Page, Configuration, Review,Language)
+                     Page, Configuration, Review,Language,ViewLog,
+                     DownloadEpisode,DownloadMovie
+                     )
 CustomUser = get_user_model()
 
 
@@ -50,10 +51,7 @@ class DisplayAbsShow(admin.ModelAdmin):
 
 
 class DisplayMovie(DisplayAbsShow):
-    def __init__(self,*args,**kwargs):
-        self.list_display = super().list_display.copy()
-        self.list_display.insert(len(self.list_display)-1,"views")
-        super(DisplayMovie,self).__init__(*args,**kwargs)
+    pass
 
 
 class DisplayTV(DisplayAbsShow):
@@ -72,12 +70,10 @@ class DisplayAbsWatch(admin.ModelAdmin):
     ]
     list_filter = (
         "source",
-        "is_downloadable",
     )
     list_display = [
         "source",
         "url",
-        "is_downloadable",
     ]
     list_per_page = 200
     list_max_show_all = 1000
@@ -197,7 +193,6 @@ class DisplayEpisode(admin.ModelAdmin):
         "episode_number",
         "tmdb_episode_id",
         "vote_average",
-        "views"
     ]
     list_per_page = 200
     list_max_show_all = 1000
@@ -318,7 +313,7 @@ class DisplayType(admin.ModelAdmin):
 class DisplayReport(admin.ModelAdmin):
     list_display = (
         "title",
-        "status",
+        "option",
         "description",
         "reported",
     )
@@ -327,7 +322,7 @@ class DisplayReport(admin.ModelAdmin):
         "episode__name",
     )
     list_filter = (
-        "status",
+        "option",
     )
     date_hierarchy = "added_on"
 
@@ -355,16 +350,18 @@ class DisplayConfiguration(admin.ModelAdmin):
 
 class DisplayReview(admin.ModelAdmin):
     list_display = (
-        "title",
+        "show",
         "user",
+        "title",
         "description",
-        "rate",
+        "rating",
+        "approved",
         "added",
     )
     list_filter = (
-        "rate",
+        "rating",
     )
-    def title(self,obj):
+    def show(self,obj):
         if obj.movie:
             return obj.movie
         elif obj.tv:
@@ -373,6 +370,21 @@ class DisplayReview(admin.ModelAdmin):
         if obj.user:
             return obj.user.get_full_name()
         return "Anonymous"
+    def added(self,obj):
+        return f"{timesince.timesince(obj.added_on)} ago"
+class DisplayViewLog(admin.ModelAdmin):
+    list_display = ("show","viewed",)
+    def show(self,obj):
+        return str(obj.tv or obj.movie)
+    def viewed(self,obj):
+        return f"{timesince.timesince(obj.viewed_on)} ago"
+class DisplayAbsDownload(admin.ModelAdmin):
+    list_display = ("show","source","original_url","slug","added",)
+    def show(self,obj):
+        try:
+            return str(obj.movie)
+        except AttributeError:
+            return f"{obj.episode.season.tv} s{obj.episode.season_number}e{obj.episode.episode_number} "
     def added(self,obj):
         return f"{timesince.timesince(obj.added_on)} ago"
 admin.site.register(Movie, DisplayMovie)
@@ -390,5 +402,7 @@ admin.site.register(Type, DisplayType)
 admin.site.register(Report, DisplayReport)
 admin.site.register(Page, DisplayPage)
 admin.site.register(Configuration,DisplayConfiguration)
+admin.site.register([DownloadEpisode,DownloadMovie],DisplayAbsDownload)
 admin.site.register(Review,DisplayReview)
+admin.site.register(ViewLog,DisplayViewLog)
 admin.site.register(CustomUser, CustomUserAdmin)

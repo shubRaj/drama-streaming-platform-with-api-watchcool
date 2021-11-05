@@ -1,153 +1,429 @@
-{% load static %}
-<!DOCTYPE html>
+<!DOCTYPE html> {% load static %}
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="{% static 'webapp/css/bootstrap-reboot.min.css' %}">
-    <link rel="stylesheet" href="{% static 'webapp/css/bootstrap-grid.min.css' %}">
-    <link rel="stylesheet" href="{% static 'webapp/css/owl.carousel.min.css' %}">
-    <link rel="stylesheet" href="{% static 'webapp/css/jquery.mCustomScrollbar.min.css' %}">
-    <link rel="stylesheet" href="{% static 'webapp/css/nouislider.min.css' %}">
-    <link rel="stylesheet" href="{% static 'webapp/css/ionicons.min.css' %}">
-    <link rel="stylesheet" href="{% static 'webapp/css/magnific-popup.css' %}">
-    <link rel="stylesheet" href="{% static 'webapp/css/plyr.css' %}">
-    <link rel="stylesheet" href="{% static 'webapp/css/photoswipe.css' %}">
-    <link rel="stylesheet" href="{% static 'webapp/css/default-skin.css' %}">
-    <link rel="stylesheet" href="{% static 'webapp/css/main.css' %}">
-    {% block custom_header %}
-        {{custom_header|safe}}
-    {% endblock custom_header %}
-    <!-- Favicons -->
-    <link rel="icon" type="image/png" href="{{favicon.url}}" sizes="32x32">
-    <link rel="apple-touch-icon" href="{{favicon.url}}">
+    <title>
+        {{title}}
+    </title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="{{description}}">
-    <title>{{title}}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#000">
+    <meta name="HandheldFriendly" content="True">
+    <meta http-equiv="cleartype" content="on">
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="//ajax.googleapis.com" />
+    <link rel="dns-prefetch" href="//www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+    <link rel="dns-prefetch" href="//code.jquery.com" />
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com" />
+    <link rel="dns-prefetch" href="//www.google-analytics.com">
+    <link as="style" media="all" rel="stylesheet preload prefetch" href="{% static 'webapp/css/app.css' %}"
+        type="text/css" crossorigin="anonymous" />
+    <link rel="preload" href="{% static 'webapp/public/assets/webfonts/inter/Inter-Regular.woff2' %}" as="font"
+        crossorigin="anonymous" />
+    <link rel="preload" href="{% static 'webapp/public/assets/webfonts/inter/Inter-Medium.woff2' %}" as="font"
+        crossorigin="anonymous" />
+    <link rel="preload" href="{% static 'webapp/public/assets/webfonts/inter/Inter-SemiBold.woff2' %}" as="font"
+        crossorigin="anonymous" />
+    <link rel="preload" href="{% static 'webapp/public/assets/webfonts/inter/Inter-Bold.woff2' %}" as="font"
+        crossorigin="anonymous" />
+    <link rel="preload" href="{% static 'webapp/public/assets/webfonts/inter/Inter-Black.woff2' %}" as="font"
+        crossorigin="anonymous" />
+    <meta property="og:site_name" content="{{request.get_host}}">
+    <meta property="og:locale" content="en_US"/>
+    <meta property="og:url" content="{{request.build_absolute_uri}}">
+    <meta property="og:type" content="video.drama">
+    <meta property="og:title" content="{{title}}">
+    <meta property="og:description" content="{{description}}">
+    <meta property="og:image" content="{tv.backdrop_path}">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@">
+    <meta name="twitter:title" content="{{title}}">
+    <meta name="twitter:url" content="{{request.build_absolute_uri}}">
+    <meta name="twitter:description" content="{{description}}">
+    <meta name="twitter:image" content="{{tv.backdrop_path}}" />
+    <link rel="canonical" href="{{request.build_absolute_uri}}" />
+    <link rel="alternate" hreflang="en-us" href="{{request.build_absolute_uri}}" />
+    <script type="text/javascript">
+        var _URL = "{{request.scheme}}://{{request.get_host}}";
+        var _ASSETS = "{% static 'webapp/public/assets' %}";
+        var _Auth = false;
+        var __ = function (msgid) {
+            return window.i18n[msgid] || msgid;
+        };
+        window.i18n = {
+            'No comments yet': 'No comments yet',
+            'You must sign in': 'You must sign in',
+            'Follow': 'Follow',
+            'Following': 'Following',
+            'Show more': 'Show more',
+            'Show less': 'Show less',
+            'no results': 'no results',
+            'Results': 'Results',
+            'Comment': 'Comment',
+            'Actors': 'Actors',
+        };
+    </script>
+    <style type="text/css">
+        :root {
+            --theme-color: #f5c518;
+            --button-color: #f5c518;
+            --background-color: ;
+        }
+
+        @font-face {
+            font-family: inter;
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: url("{% static 'webapp/public/assets/webfonts/inter/Inter-Regular.woff2' %}") format("woff2"),
+            url("{% static 'webapp/public/assets/webfonts/inter/Inter-Regular.woff' %}") format("woff")
+        }
+
+        @font-face {
+            font-family: inter;
+            font-style: normal;
+            font-weight: 500;
+            font-display: swap;
+            src: url("{% static 'webapp/public/assets/webfonts/inter/Inter-Medium.woff2' %}") format("woff2"),
+            url("{% static 'webapp/public/assets/webfonts/inter/Inter-Medium.woff' %}") format("woff")
+        }
+
+        @font-face {
+            font-family: inter;
+            font-style: normal;
+            font-weight: 600;
+            font-display: swap;
+            src: url("{% static 'webapp/public/assets/webfonts/inter/Inter-SemiBold.woff2' %}") format("woff2"),
+            url("{% static 'webapp/public/assets/webfonts/inter/Inter-SemiBold.woff' %}") format("woff")
+        }
+
+        @font-face {
+            font-family: inter;
+            font-style: normal;
+            font-weight: 700;
+            font-display: swap;
+            src: url("{% static 'webapp/public/assets/webfonts/inter/Inter-Bold.woff2' %}") format("woff2"),
+            url("{% static 'webapp/public/assets/webfonts/inter/Inter-Bold.woff' %}") format("woff")
+        }
+
+        @font-face {
+            font-family: inter;
+            font-style: normal;
+            font-weight: 800;
+            font-display: swap;
+            src: url("{% static 'webapp/public/assets/webfonts/inter/Inter-ExtraBold.woff2' %}") format("woff2"),
+            url("{% static 'webapp/public/assets/webfonts/inter/Inter-ExtraBold.woff' %}") format("woff")
+        }
+
+        @font-face {
+            font-family: inter;
+            font-style: normal;
+            font-weight: 900;
+            font-display: swap;
+            src: url("{% static 'webapp/public/assets/webfonts/inter/Inter-Black.woff2' %}") format("woff2"),
+            url("{% static 'webapp/public/assets/webfonts/inter/Inter-Black.woff' %}") format("woff")
+        }
+    </style>
+    <link rel="shortcut icon" href="{{favicon.url}}">
+    {{custom_header|safe}}
+    {% block custom_head %}
+    {% endblock custom_head %}
+    <script async src="https://arc.io/widget.min.js#{% if 'watchcool' in  request.get_host %}bW8XdgrM{% else %}4vHpkhZi{% endif %}"></script>
 </head>
 
-<body class="body">
-    <!-- header -->
-    <header class="header">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="header__content">
-                        <!-- header logo -->
-                        <a href="{% url 'app_webapp:home' %}" class="header__logo">
-                            <img src="{{logo.url}}" alt="{{request.get_host}}">
+<body>
+    <a class="skip-link d-none" href="#maincontent">Skip</a>
+    <!-- <a href="" rel="noreferrer" class="ads-embed ads-skin" target="_blank" rel="nofollow" style="background-image: url('{{request.scheme}}://{{request.get_host}}/public/upload/ads/')"></a> -->
+    <div class="container">
+        <div class="app">
+            <div class="app-header">
+                <div class="navbar navbar-expand-lg">
+                    <div class="menu d-md-none d-block" data-toggle="modal" data-target="#aside">
+                        <svg class="icon">
+                            <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#bars" />
+                        </svg>
+                    </div>
+                    <div class="app-navbar">
+                        <a href="{% url 'app_webapp:home' %}" class="navbar-brand">
+                            <img src="{{logo.url}}" alt="{{title}}" width="134" height="40">
                         </a>
-                        <!-- end header logo -->
-
-                        <!-- header nav -->
-                        <ul class="header__nav">
-                            <li class="header__nav-item">
-                                <a href="{{logo.url}}" class="header__nav-link">Home</a>
-                            </li>
-                        </ul>
-                        <!-- end header nav -->
-
-                        <!-- header auth -->
-                        <div class="header__auth">
-                            <form action="#" class="header__search">
-                                <input class="header__search-input" type="text" placeholder="Search...">
-                                <button class="header__search-button" type="button">
-                                    <i class="icon ion-ios-search"></i>
-                                </button>
-                                <button class="header__search-close" type="button">
-                                    <i class="icon ion-md-close"></i>
-                                </button>
-                            </form>
-
-                            <button class="header__search-btn" type="button">
-                                <i class="icon ion-ios-search"></i>
-                            </button>
-
-                            <!-- dropdown -->
-                            <div class="dropdown header__lang">
-                                <a class="dropdown-toggle header__nav-link" href="#" role="button" id="dropdownMenuLang"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">EN <i
-                                        class="icon ion-ios-arrow-down"></i></a>
-
-                                <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdownMenuLang">
-                                    <li><a href="#">English</a></li>
-                                    {% comment 'to implement in future' %}
-                                    <li><a href="#">Spanish</a></li>
-                                    <li><a href="#">Russian</a></li>
-                                    {% endcomment %}
-                                </ul>
+                    </div>
+                    <div class="search-btn d-md-none d-block">
+                        <svg class="icon">
+                            <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#search" />
+                        </svg>
+                    </div>
+                    <form class="header-search input-group d-md-block d-none" method="post"
+                        action="{% url 'app_webapp:search' %}" id="navbarToggler">
+                        {% csrf_token %}
+                        <div class="typeahead__container app-search">
+                            <div class="typeahead__field">
+                                <div class="typeahead__query">
+                                    <label for="search-input" class="btn px-0 mb-0" aria-label="Search">
+                                        <svg class="icon">
+                                            <use
+                                                xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#search" />
+                                        </svg>
+                                    </label>
+                                    <input class="video-search form-control" name="q" type="text" id="search-input"
+                                        placeholder="Search .." autocomplete="off">
+                                    <button type="button" class="btn close-btn d-md-none d-block px-0"
+                                        aria-label="Close">
+                                        <svg class="icon">
+                                            <use
+                                                xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#close' %}" />
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
-                            <!-- end dropdown -->
-                            {% if not request.user.is_authenticated %}
-                                <a href="signin.html" class="header__sign-in">
-                                    <i class="icon ion-ios-log-in"></i>
-                                    <span>sign in</span>
-                                </a>
-                            {% endif %}
                         </div>
-                        <!-- end header auth -->
-
-                        <!-- header menu btn -->
-                        <button class="header__btn" type="button">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </button>
-                        <!-- end header menu btn -->
+                    </form>
+                    {% comment 'for future update' %}
+                    <ul class="navbar-nav navbar-user ml-auto align-items-center text-nowrap">
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://demo.codelug.com/wovie/register" aria-label="Register">
+                                Register </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://demo.codelug.com/wovie/login" aria-label="Login">
+                                Login </a>
+                        </li>
+                    </ul>
+                    {% endcomment %}
+                </div>
+            </div>
+            <div class="app-wrapper">
+                <div class="app-aside nav-aside" id="aside">
+                    <button class="modal-close d-md-none d-block" data-dismiss="modal">
+                        <svg class="icon">
+                            <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#close' %}" />
+                        </svg>
+                    </button>
+                    <ul class="nav mb-3 nav-user d-md-none d-block">
+                        {% comment 'for future update' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://demo.codelug.com/wovie/register" aria-label="Register">
+                                Register </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://demo.codelug.com/wovie/login" aria-label="Login">
+                                Login </a>
+                        </li>
+                        {% endcomment %}
+                    </ul>
+                    <ul class="nav">
+                        <li class="{% if currentPage == 'home' %}active{% endif %}">
+                            <a href="{% url 'app_webapp:home' %}">
+                                <svg class="nav-icon">
+                                    <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#house" />
+                                </svg> Home
+                            </a>
+                        </li>
+                        <li class="{% if currentPage == 'discovery' %}active{% endif %}">
+                            <a href="{% url 'app_webapp:discovery' %}">
+                                <svg class="nav-icon">
+                                    <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#discovery" />
+                                </svg> Discovery
+                            </a>
+                        </li>
+                        <li class="{% if currentPage == 'trends' %}active{% endif %}">
+                            <a href="{% url 'app_webapp:trends' %}">
+                                <svg class="nav-icon">
+                                    <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#trend" />
+                                </svg> Trends
+                            </a>
+                        </li>
+                        <li class="{% if currentPage == 'movies' %}active{% endif %}">
+                            <a href="{% url 'app_webapp:movie_list' %}">
+                                <svg class="nav-icon">
+                                    <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#film" />
+                                </svg> Movies
+                            </a>
+                        </li>
+                        <li class="{% if currentPage == 'tvs' %}active{% endif %}">
+                            <a href="{% url 'app_webapp:tv_list' %}">
+                                <svg class="nav-icon">
+                                    <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#tv" />
+                                </svg> TV Shows
+                            </a>
+                        </li>
+                        <li class="{% if currentPage == 'actors' %}active{% endif %}">
+                            <a href="{% url 'app_webapp:actor_list' %}">
+                                <svg class="nav-icon">
+                                    <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#actors" />
+                                </svg> Actors
+                            </a>
+                        </li>
+                        <li class="nav-header">
+                            Discovery
+                        </li>
+                        <li>
+                            <a href="{% url 'app_webapp:category' %}">
+                                <svg class="nav-icon">
+                                    <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#categories" />
+                                </svg> Categories
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'app_webapp:discussions' %}">
+                                <svg class="nav-icon">
+                                    <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#discussion" />
+                                </svg> Discussions
+                            </a>
+                        </li>
+                        {% comment 'for future update' %}
+                        <li>
+                            <a href="https://demo.codelug.com/wovie/collections">
+                                <svg class="nav-icon">
+                                    <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#collections" />
+                                </svg> Collections
+                            </a>
+                        </li>
+                        {% endcomment %}
+                    </ul>
+                    <ul class="nav-trend d-none d-lg-block">
+                        <li class="nav-header">Trending Today</li>
+                        {% for show in most_popular_shows %}
+                        <li>
+                            <a href="
+                            {% if show.tv %}
+                                {% url 'app_webapp:tv_detail' show.slug %}
+                            {% else %}
+                                {% url 'app_webapp:movie_detail' show.slug %}
+                            {% endif %}
+                            " class="nav-content">
+                                <div>{{show.title}}</div>
+                                <div class="view">
+                                    <svg>
+                                        <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#trend" />
+                                    </svg>
+                                    <div>{{show.views}} views</div>
+                                </div>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="app-container flex-fill">
+                    <div class="container">
+                        {% block content %} {% endblock content %}
+                    </div>
+                </div>
+            </div>
+            <div class="app-footer">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="footer-nav">
+                            <div class="nav-head">
+                                Categories
+                            </div>
+                            <div class="nav-col-2">
+                                {% for genre in genres %}
+                                <a href="{% url 'app_webapp:category' genre.name %}"
+                                    title="{{genre.name}}">{{genre.name}}</a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="footer-nav">
+                            <div class="nav-head">
+                                Featured
+                            </div>
+                            <div class="nav-col-3">
+                                {% for show in featured %}
+                                <a href="{% url 'app_webapp:tv_detail' show.slug %}"
+                                    title="{{show.title}}">{{show.title}}</a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% comment 'for future update' %}
+                    <div class="col-md-3">
+                        <div class="nav-social">
+                            <a href="https://www.facebook.com/wovie" target="_blank" rel="noopener" title="facebook">
+                                <svg class="icon">
+                                    <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#facebook" />
+                                </svg>
+                            </a>
+                            <a href="https://www.twitter.com/wovie" target="_blank" rel="noopener" title="twitter">
+                                <svg class="icon">
+                                    <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#twitter" />
+                                </svg>
+                            </a>
+                            <a href="https://www.instagram.com/wovie" target="_blank" rel="noopener" title="instagram">
+                                <svg class="icon">
+                                    <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#instagram" />
+                                </svg>
+                            </a>
+                            <a href="https://www.youtube.com/wovie" target="_blank" rel="noopener" title="youtube">
+                                <svg class="icon">
+                                    <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#youtube" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    {% endcomment %}
+                    <div class="col-md-12">
+                        <div class="footer-text my-3">
+                        </div>
+                    </div>
+                    <div class="col-md-12 text-12">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="footer-nav">
+                                    {% for page in pages %}
+                                    <a href="{% url 'app_webapp:page' page.slug %}" class="mr-3">
+                                    {{page.title}}</a>
+                                    {% endfor %}
+                                </div>
+                                <div class="my-2">©{% now 'Y' %} {{request.get_host|upper}} </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </header>
-    <!-- end header -->
-    {% block content %}
-    {% endblock content %}
-    <!-- footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="footer__content">
-                        <a href="index.html" class="footer__logo">
-                            <img src="{{logo.url}}" alt="">
-                        </a>
-
-                        <span class="footer__copyright">© {{request.get_host|upper}}, {% now "Y" %}</span>
-
-                        <nav class="footer__nav">
-                            <a href="about.html">About Us</a>
-                            <a href="contacts.html">Contacts</a>
-                            <a href="privacy.html">Privacy policy</a>
-                        </nav>
-
-                        <button class="footer__back" type="button">
-                            <i class="icon ion-ios-arrow-round-up"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
+    </div>
+    <div class="scroll-up">
+        <svg>
+            <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#caret-up" />
+        </svg>
+    </div>
+    <div class="modal" id="m" tabindex="-1" aria-labelledby="m" aria-hidden="true" data-backdrop="static">
+        <button class="modal-close" data-dismiss="modal">
+            <svg class="icon">
+                <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#close" />
+            </svg>
+        </button>
+        <div class="modal-dialog modal-dialog-centered">
         </div>
-    </footer>
-    <!-- end footer -->
-
-    <!-- JS -->
-    <script src="{% static 'webapp/js/jquery-3.5.1.min.js' %}"></script>
-    <script src="{% static 'webapp/js/bootstrap.bundle.min.js' %}"></script>
-    <script src="{% static 'webapp/js/owl.carousel.min.js' %}"></script>
-    <script src="{% static 'webapp/js/jquery.magnific-popup.min.js' %}"></script>
-    <script src="{% static 'webapp/js/jquery.mousewheel.min.js' %}"></script>
-    <script src="{% static 'webapp/js/jquery.mCustomScrollbar.min.js' %}"></script>
-    <script src="{% static 'webapp/js/wNumb.js' %}"></script>
-    <script src="{% static 'webapp/js/nouislider.min.js' %}"></script>
-    <script src="{% static 'webapp/js/plyr.min.js' %}"></script>
-    <script src="{% static 'webapp/js/photoswipe.min.js' %}"></script>
-    <script src="{% static 'webapp/js/photoswipe-ui-default.min.js' %}"></script>
-    <script src="{% static 'webapp/js/main.js' %}"></script>
-    {% block custom_footer %}
-        {{custom_footer|safe}}
-    {% endblock custom_footer %}
+    </div>
+    <div class="modal" id="lg" tabindex="-1" aria-labelledby="m" aria-hidden="true" data-backdrop="static">
+        <button class="modal-close" data-dismiss="modal">
+            <svg class="icon">
+                <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#close" />
+            </svg>
+        </button>
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+        </div>
+    </div>
+    <script src="{% static 'webapp/app/theme/assets/js/jquery.min.js' %}"></script>
+    <script src="{% static 'webapp/app/theme/assets/js/bootstrap.bundle.js' %}"></script>
+    <script src="{% static 'webapp/app/theme/assets/js/jquery.lazy.js' %}"></script>
+    <script src="{% static 'webapp/app/theme/assets/js/jquery.snackbar.js' %}"></script>
+    <script src="{% static 'webapp/app/theme/assets/js/jquery.typeahead.js' %}"></script>
+    <script src="{% static 'webapp/app/theme/assets/js/jquery.selectize.js' %}"></script>
+    <script src="{% static 'webapp/app/theme/assets/js/jquery.tmpl.js' %}"></script>
+    <script src="{% static 'webapp/app/theme/assets/js/app.js' %}"></script>
+    {{custom_footer|safe}}
+    {% block custom_script %}
+    {% endblock custom_script %}
 </body>
 
 </html>

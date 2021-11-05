@@ -1,0 +1,59 @@
+{% extends 'webapp/_base.html' %}
+{% block content %}
+<div class="flex-fill">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a
+                    href="https://demo.codelug.com/wovie/actors">Actors</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{actor.name}}</li>
+        </ol>
+    </nav>
+    <div class="app-section">
+        <div class="actor-profile">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="media"
+                        data-src="{{actor.profile_path}}">
+                    </div>
+                    <div class="profile-attr-small">
+                        <div class="attr">Gender</div>
+                        <div class="text">
+                            {% if actor.gender == "1" %}Female{% else %}Male{% endif %} </div>
+                    </div>
+                    <div class="nav-social">
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="pl-lg-4">
+                        <h1>
+                            {{actor.name}} 
+                        </h1>
+                        {% comment 'for future update' %}
+                        <div class="profile-attr">
+                            <div class="attr">Biography</div>
+                            <div class="text">
+                                From Wikipedia, the free encyclopedia
+                                Ross Shor Lynch (born December 29, 1995) is an American singer,
+                                songwriter, and actor. He is one of the founding members of the
+                                pop rock band R5. As an actor, he is known for his debut role as
+                                Austin Moon on the Disney Channel original series Austin & Ally,
+                                and for his role as Brady in the Teen Beach Movie series. </div>
+                        </div>
+                        {% endcomment %}
+                        <div class="profile-attr">
+                            <div class="attr">Acting ( {{shows|length}} )</div>
+
+                            <div class="row row-cols-5 my-3">
+                                {% for show in shows %}
+                                    {% include 'webapp/includes/show.html' with show=show only %}
+                                {% endfor %}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

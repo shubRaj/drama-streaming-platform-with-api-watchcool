@@ -1,0 +1,32 @@
+{% extends 'webapp/_base.html' %}
+{% load classname %}
+{% block content %}
+<div class="flex-fill">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'app_webapp:home' %}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Categories</li>
+        </ol>
+    </nav>
+    <div class="d-flex">
+        <div class="app-content">
+            <div class="app-section">
+                <div class="mb-3">
+                    <div class="text-24 text-white font-weight-bold">Categories</div>
+                </div>
+                <div class="row row-cols-md-5 row-cols-2">
+                    {% for category in categories %}
+                    <div class="col">
+                        <a href="{% url 'app_webapp:category' category.name %}"
+                            class="list-category-box" style="background-color: {{category.color}}"
+                            title="{{category.name}}">
+                            {{category.name}}
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

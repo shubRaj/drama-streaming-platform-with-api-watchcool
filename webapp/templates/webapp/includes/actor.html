@@ -1,0 +1,15 @@
+<div class="col">
+    <div class="list-actor">
+        <a href="{% url 'app_webapp:actor_detail' actor.slug %}"
+            class="list-media" title="{{actor.name}}">
+            <div class="media"
+                data-src="{{actor.profile_path}}">
+            </div>
+        </a>
+        <div class="list-caption">
+            <a href="{% url 'app_webapp:actor_detail' actor.slug %}"
+                class="list-title" title="{{actor.name}}">
+                {{actor.name}}</a>
+        </div>
+    </div>
+</div>

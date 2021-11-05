@@ -1,263 +1,122 @@
-{% extends 'webapp/_base.html' %}
-{% load static %}
-{% block content %}
-<!-- home -->
-<section class="home">
-	<!-- home bg -->
-	<div class="owl-carousel home__bg">
-		{% for show in popular_this_month %}
-		<div class="item home__cover" data-bg="{{show.backdrop_path}}"></div>
-		{% endfor %}
-	</div>
-	<!-- end home bg -->
-
-	<div class="container">
-		<div class="row">
-			<div class="col-12">
-				<h1 class="home__title"><b>POPULAR</b> THIS {% now 'F' %}</h1>
-
-				<button class="home__nav home__nav--prev" type="button">
-					<i class="icon ion-ios-arrow-round-back"></i>
-				</button>
-				<button class="home__nav home__nav--next" type="button">
-					<i class="icon ion-ios-arrow-round-forward"></i>
-				</button>
-			</div>
-			
-			<div class="col-12">
-				<div class="owl-carousel home__carousel home__carousel--bg">
-					{% for show in popular_this_month %}
-					<div class="card card--big">
-						<!-- add item -->
-						{% include 'webapp/includes/item.html' with show=show only %}
-						<!-- end item -->
-					</div>
-					{% endfor %}
-				</div>
-			</div>
-		</div>
-	</div>
-</section>
-<!-- end home -->
-
-<!-- content -->
-<section class="content">
-	<div class="content__head">
-		<div class="container">
-			<div class="row">
-				<div class="col-12">
-					<!-- content title -->
-					<h2 class="content__title">NEW RELEASES</h2>
-					<!-- end content title -->
-
-					<!-- content tabs nav -->
-					<ul class="nav nav-tabs content__tabs" id="content__tabs" role="tablist">
-						{% comment 'for future update' %}
-						<li class="nav-item">
-							<a class="nav-link active" data-toggle="tab" href="#tab-1" role="tab" aria-controls="tab-1"
-								aria-selected="true">NEW RELEASES</a>
-						</li>
-						{% endcomment %}
-
-						<li class="nav-item">
-							<a class="nav-link active" data-toggle="tab" href="#tab-2" role="tab" aria-controls="tab-2"
-								aria-selected="true">MOVIES</a>
-						</li>
-
-						<li class="nav-item">
-							<a class="nav-link" data-toggle="tab" href="#tab-3" role="tab" aria-controls="tab-3"
-								aria-selected="false">DRAMAS</a>
-						</li>
-						{% comment 'for future update' %}
-						<li class="nav-item">
-							<a class="nav-link" data-toggle="tab" href="#tab-4" role="tab" aria-controls="tab-4"
-								aria-selected="false">ANIMES</a>
-						</li>
-						{% endcomment %}
-					</ul>
-					<!-- end content tabs nav -->
-
-					<!-- content mobile tabs nav -->
-					<div class="content__mobile-tabs" id="content__mobile-tabs">
-						<div class="content__mobile-tabs-btn dropdown-toggle" role="navigation" id="mobile-tabs"
-							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							<input type="button" value="Movies">
-							<span></span>
-						</div>
-
-						<div class="content__mobile-tabs-menu dropdown-menu" aria-labelledby="mobile-tabs">
-							<ul class="nav nav-tabs" role="tablist">
-								{% comment 'for future update' %}
-								<li class="nav-item"><a class="nav-link active" id="1-tab" data-toggle="tab"
-										href="#tab-1" role="tab" aria-controls="tab-1" aria-selected="true">NEW
-										RELEASES</a></li>
-								{% endcomment %}
-								<li class="nav-item"><a class="nav-link active" id="2-tab" data-toggle="tab" href="#tab-2"
-										role="tab" aria-controls="tab-2" aria-selected="true">MOVIES</a></li>
-
-								<li class="nav-item"><a class="nav-link" id="3-tab" data-toggle="tab" href="#tab-3"
-										role="tab" aria-controls="tab-3" aria-selected="false">DRAMAs</a></li>
-								{% comment 'for future update' %}
-								<li class="nav-item"><a class="nav-link" id="4-tab" data-toggle="tab" href="#tab-4"
-										role="tab" aria-controls="tab-4" aria-selected="false">ANIMES</a></li>
-								{% endcomment %}
-							</ul>
-						</div>
-					</div>
-					<!-- end content mobile tabs nav -->
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="container">
-		<!-- content tabs -->
-		<div class="tab-content">
-			{% comment 'for future update' %}
-			<div class="tab-pane fade show active" id="tab-1" role="tabpanel" aria-labelledby="1-tab">
-				<div class="row row--grid">
-					<!-- card -->
-					<div class="col-6 col-sm-4 col-md-3 col-xl-2">
-						<div class="card">
-							<div class="card__cover">
-								<img src="{% static 'webapp/img/covers/cover.jpg' %}" alt="">
-								<a href="details.html" class="card__play">
-									<i class="icon ion-ios-play"></i>
-								</a>
-								<span class="card__rate card__rate--green">8.4</span>
-							</div>
-							<div class="card__content">
-								<h3 class="card__title"><a href="details.html">I Dream in Another Language</a></h3>
-								<span class="card__category">
-									<a href="#">Action</a>
-									<a href="#">Triler</a>
-								</span>
-							</div>
-						</div>
-					</div>
-					<!-- end card -->
-				</div>
-			</div>
-			{% endcomment %}
-			<div class="tab-pane fade show active" id="tab-2" role="tabpanel" aria-labelledby="2-tab">
-				<div class="row row--grid">
-					{% for movie in latest_movies %}
-					<!-- card -->
-					<div class="col-6 col-sm-4 col-md-3 col-xl-2">
-						<div class="card">
-							<!-- add item -->
-							{% include 'webapp/includes/item.html' with show=movie only %}
-							<!-- end item -->
-						</div>
-					</div>
-					<!-- end card -->
-					{% endfor %}
-				</div>
-			</div>
-
-			<div class="tab-pane fade" id="tab-3" role="tabpanel" aria-labelledby="3-tab">
-				<div class="row row--grid">
-					{% for drama in latest_dramas %}
-					<!-- card -->
-					<div class="col-6 col-sm-4 col-md-3 col-xl-2">
-						<div class="card">
-							<!-- add item -->
-							{% include 'webapp/includes/item.html' with show=drama only %}
-							<!-- end item -->
-						</div>
-					</div>
-					<!-- end card -->
-					{% endfor %}
-				</div>
-			</div>
-			{% comment 'for future update' %}
-			<div class="tab-pane fade" id="tab-4" role="tabpanel" aria-labelledby="4-tab">
-				<div class="row row--grid">
-					<!-- card -->
-					<div class="col-6 col-sm-4 col-md-3 col-xl-2">
-						<div class="card">
-							<div class="card__cover">
-								<img src="{% static 'webapp/img/covers/cover.jpg' %}" alt="">
-								<a href="details.html" class="card__play">
-									<i class="icon ion-ios-play"></i>
-								</a>
-								<span class="card__rate card__rate--green">8.4</span>
-							</div>
-							<div class="card__content">
-								<h3 class="card__title"><a href="details.html">I Dream in Another Language</a></h3>
-								<span class="card__category">
-									<a href="#">Action</a>
-									<a href="#">Triler</a>
-								</span>
-							</div>
-						</div>
-					</div>
-					<!-- end card -->
-				</div>
-			</div>
-			{% endcomment %}
-		</div>
-		<!-- end content tabs -->
-	</div>
-</section>
-<!-- end content -->
-
-<!-- section -->
-<section class="section section--border">
-	<div class="container">
-		<div class="row">
-			<!-- section title -->
-			<div class="col-12">
-				<div class="section__title-wrap">
-					<h2 class="section__title">Expected premiere</h2>
-
-					<div class="section__nav-wrap">
-						{% comment 'for future update' %}
-						<a href="catalog.html" class="section__view">View All</a>
-						{% endcomment %}
-						<button class="section__nav section__nav--prev" type="button" data-nav="#carousel1">
-							<i class="icon ion-ios-arrow-back"></i>
-						</button>
-
-						<button class="section__nav section__nav--next" type="button" data-nav="#carousel1">
-							<i class="icon ion-ios-arrow-forward"></i>
-						</button>
-					</div>
-				</div>
-			</div>
-			<!-- end section title -->
-
-			<!-- carousel -->
-			<div class="col-12">
-				<div class="owl-carousel section__carousel" id="carousel1">
-					{% for show in upcoming %}
-					<!-- card -->
-					<div class="card">
-						<!-- add item -->
-						{% include 'webapp/includes/item.html' with show=show only %}
-						<!-- end item -->
-					</div>
-					<!-- end card -->
-					{% endfor %}
-				</div>
-			</div>
-			<!-- carousel -->
-		</div>
-	</div>
-</section>
-<!-- end section -->
-
-<!-- section -->
-<section class="section section--border">
-	<div class="container">
-		<div class="row">
-			<div class="col-12 col-xl-10">
-				<h2 class="section__title section__title--mb"><b>{{request.get_host|upper}}</b> – {{tagline}}</h2>
-
-				<p class="section__text">{{description}}</p>
-			</div>
-		</div>
-	</div>
-</section>
-<!-- end section -->
-{% endblock content %}
+{% extends 'webapp/_base.html' %} {% load static %} {% block content %}
+<div class="app-content pt-md-3">
+    <div class="app-section">
+        {% if sliders %}
+        <div class="app-slider">
+            <div id="slider" class="carousel slide carousel-fade" data-ride="carousel">
+                <div class="carousel-inner">
+                    <ol class="carousel-indicators">
+                        {% for slider in sliders %}
+                        <li data-target="#slider" data-slide-to="{{forloop.counter}}" class="{% if forloop.counter == 1 %}active{% endif %}">
+                        </li>
+                        {% endfor %}
+                    </ol>
+                    {% include 'webapp/includes/slider.html' with sliders=sliders only %}
+                </div>
+                <div class="carousel-control">
+                    <a class="control-prev" href="#slider" role="button" data-slide="prev" aria-label="Prev">
+                        <svg>
+                  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#chevron-left" />
+               </svg>
+                    </a>
+                    <a class="control-next" href="#slider" role="button" data-slide="next" aria-label="Next">
+                        <svg>
+                  <use xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#chevron-right" />
+               </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% if stories %}
+    <div class="app-section">
+        <div class="app-trailer">
+            <div class="row row-cols-7 list-story">
+                {% for story in stories %}
+                    {% include 'webapp/includes/story.html' with story=story only %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% if new_episodes %}
+    <div class="app-section">
+        <div class="app-heading">
+            <div class="text">
+                Latest Episodes
+            </div>
+        </div>
+        <div class="row row-cols-1 row-cols-md-4 list-scrollable">
+            {% for episode in new_episodes %}
+                {% include 'webapp/includes/episode.html' with episode=episode only %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    {% if new_movies %}
+    <div class="app-section">
+        <div class="app-heading">
+            <div class="text">
+                Latest Movies
+            </div>
+            <a href="{% url 'app_webapp:movie_list' %}" class="all">All</a>
+        </div>
+        <div class="row row-cols-5 list-scrollable">
+            {% for movie in new_movies %}
+                {% include 'webapp/includes/show.html' with show=movie only %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    {% if collections %}
+    <div class="app-section">
+        <div class="app-heading">
+            <div class="text">
+                Collections
+            </div>
+            <a href="https://demo.codelug.com/wovie/collections" class="all">All</a>
+        </div>
+        <div class="row row-wrap row-cols-lg-3 row-cols-md-2 list-scrollable list-scrollablev2 list-grouped">
+            {% include 'webapp/includes/collection.html' %}
+        </div>
+    </div>
+    {% endif %}
+    {% if new_series %}
+    <div class="app-section">
+        <div class="app-heading">
+            <div class="text">
+                Latest TV Shows
+            </div>
+            <a href="{% url 'app_webapp:tv_list' %}" class="all">All</a>
+        </div>
+        <div class="row row-cols-5 list-scrollable">
+            {% for tv in new_series %}
+            {% include 'webapp/includes/show.html' with show=tv only %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    {% comment 'for future update' %}
+    <div class="app-section">
+        <div class="row row-cols-5 list-scrollable">
+            {% include 'webapp/includes/genre.html' %}
+        </div>
+    </div>
+    {% endcomment %}
+    {% if popular_actors %}
+    <div class="app-section">
+        <div class="app-heading">
+            <div class="text">
+                Popular Actors
+            </div>
+            <a href="{% url 'app_webapp:actor_list' %}" class="all">All</a>
+        </div>
+        <div class="row row-cols-6 list-scrollable">
+            {% for actor in popular_actors %}
+            {% include 'webapp/includes/actor.html' with actor=actor only %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div> {% endblock content %}

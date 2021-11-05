@@ -6,6 +6,15 @@ name = "pypi"
 [packages]
 django = "*"
 pillow = "*"
+requests = "*"
+google-api-python-client = "*"
+oauth2client = "*"
+mysqlclient = "*"
+gunicorn = "*"
+djangorestframework = "*"
+aiohttp = "*"
+random-user-agent = "*"
+bs4 = "*"
 
 [dev-packages]
 

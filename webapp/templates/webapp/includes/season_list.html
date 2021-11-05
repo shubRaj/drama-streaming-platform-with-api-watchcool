@@ -1,0 +1,29 @@
+<div class="season-list">
+    <div class="seasons">
+
+        <ul class="nav" role="tablist">
+            <li class="nav-item">
+                {% for season_obj in tv.season.all %}
+                <a class="nav-link {% if season_obj == season %} active {% endif %}" id="season-{{season_obj.season_number}}-tab" data-toggle="tab" href="#season-{{season_obj.season_number}}" role="tab"
+                    aria-controls="season-1" aria-selected="true">
+                    {{season_obj.season_number}}.{{season_obj.name}}</a>
+                {% endfor %}
+            </li>
+        </ul>
+    </div>
+    <div class="episodes tab-content">
+        {% for season_obj in tv.season.all %}
+            <div class="tab-pane show {% if season_obj == season %} active {% endif %}" id="season-{{season_obj.season_number}}" role="tabpanel" aria-labelledby="season-{{season_obj.season_number}}-tab">
+                {% for episode_obj in season_obj.episode.all %}
+                <a
+                    href="{% url 'app_webapp:watch_episode' episode_obj.slug %}" class="{% if episode_obj == episode %}active{% endif %}">
+                    <div class="episode">
+                        Episode {{episode_obj.episode_number}} </div>
+                    <div class="name">
+                        {{episode_obj.name}} </div>
+                </a>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+</div>

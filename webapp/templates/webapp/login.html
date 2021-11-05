@@ -1,0 +1,35 @@
+{% extends 'webapp/_base.html' %}
+{% block content %}
+<div class="container d-flex flex-column">
+    <div class="row align-items-center justify-content-center">
+        <div class="col-md-6 col-lg-6 col-xl-6 py-3 py-md-5">
+            <form method="post" class="py-5" autocomplete="off">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="form-control-label">Email or Username</label>
+                    <input type="text" name="username" class="form-control" id="input-email" placeholder="Email or Username" 
+                        required="true" autocomplete="off">
+                </div>
+                <div class="form-group mb-0">
+                    <label class="form-control-label">Password</label>
+                    <input type="password" name="password" class="form-control" id="input-password"
+                        placeholder="Password" required="true" autocomplete="off">
+                        {% comment 'for future update' %}
+                            <a href="https://demo.codelug.com/wovie/forgot-password" class="d-inline-block mt-2 text-12">Forgot
+                                password
+                            </a>
+                        {% endcomment %}
+                </div>
+                <div class="my-3">
+                    <button type="submit" class="btn btn-block btn-theme btn-lg">Login</button>
+                </div>
+                {% comment 'for future update' %}
+                <div class="text-center">Don't have an account ? <a href="https://demo.codelug.com/wovie/register"
+                        class="text-white">Register</a>
+                </div>
+                {% endcomment %}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

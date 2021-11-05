@@ -1,0 +1,89 @@
+{% extends 'webapp/_base.html' %}
+{% load static %}
+{% block content %}
+<div class="app-content">
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'app_webapp:home' %}">Home</a></li>
+            <li class="breadcrumb-item active">Search Results</li>
+        </ol>
+    </nav>
+    <div class="filter-btn" data-toggle="modal" data-target="#filter">
+        <svg class="icon">
+            <use
+                xlink:href="{% static 'webapp/public/assets/img/sprite.svg' %}#filter" />
+        </svg>
+    </div>
+    <div class="d-flex">
+        <div class="app-content">
+            <div class="app-section">
+                <div class="mb-4">
+                    <div class="text-24 text-white font-weight-bold">
+                        Search Results </div>
+                    <div class="subtext text-12">
+                        "{{query}}" verbal {{total_results}} result found </div>
+                    <div class="nav-active-border text-12 b-primary bottom mt-3">
+                        <ul class="nav pt-0" id="myTab" role="tablist">
+                            {% if movies %}
+                            <li>
+                                <a class="nav-link active" id="movies-tab" data-toggle="tab"
+                                    href="#movies" role="tab" aria-controls="movies"
+                                    aria-selected="true">Movies</a>
+                            </li>
+                            {% endif %}
+                            {% if tvs %}
+                            <li>
+                                <a class="nav-link" id="series-tab" data-toggle="tab"
+                                    href="#tvs" role="tab" aria-controls="series"
+                                    aria-selected="false">TV Shows</a>
+                            </li>
+                            {% endif %}
+                            {% if actors %}
+                            <li>
+                                <a class="nav-link" id="actors-tab" data-toggle="tab"
+                                    href="#actors" role="tab" aria-controls="actors"
+                                    aria-selected="false">Actors</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="tab-content">
+                    {% if movies %}
+                    <div class="tab-pane active" id="movies" role="tabpanel"
+                        aria-labelledby="movies-tab">
+                        <div class="row row-cols-5">
+                            {% for movie in movies %}
+                            {% include 'webapp/includes/show.html' with show=movie only %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if tvs %}
+                    <div class="tab-pane" id="tvs" role="tabpanel"
+                        aria-labelledby="series-tab">
+                        <div class="row row-cols-5">
+                            {% for tv in tvs %}
+                            {% include 'webapp/includes/show.html' with show=tv only %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if actors %}
+                    <div class="tab-pane" id="actors" role="tabpanel"
+                        aria-labelledby="actors-tab">
+                        <div class="row row-cols-5">
+
+                            {% for actor in actors %}
+                                {% include 'webapp/includes/actor.html' with actor=actor only %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,122 @@
+{% extends 'adminDashboard/_base.html' %}
+{% block content %}
+<div class="row">
+	<!-- main title -->
+	<div class="col-12">
+		<div class="main__title">
+			<h2>Search & Import TV/Movie</h2>
+            {% if total %}
+            <span class="main__title-stat">{{total}} Total</span>
+            {% endif %}
+		</div>
+	</div>
+	{% include 'adminDashboard/includes/messages.html' with messages=messages only %}
+	<!-- end main title -->
+    <div class="col-12">
+		<div class="main__table-wrap">
+            <form method="POST" action="{% url 'app_adminDashboard:import' %}">
+                {% csrf_token %}
+                <input name="q" placeholder="Search" style="display: block;
+                width:100%;
+                color:#9ca8b3;
+                background-color:#2e3648;
+                border:1px solid #363e54;
+                border-radius: .25rem;
+                height: calc(1.5em + .94rem + 2px);
+                padding: .47rem .75rem;
+                line-height: 1.5;
+                font-weight: 400;
+                background-clip: padding-box;
+                font-size: .875rem;
+                overflow: visible;
+                margin: 0;
+                font-family: inherit;
+                box-sizing: border-box;">
+                <p><small style="color:#e9ecef;">Search TV/Movie by Title.</small></p>
+            </form>
+            {% if shows %}
+            <table class="main__table">
+				<thead>
+					<tr>
+						<th>TMDB ID</th>
+						<th>TITLE</th>
+						<th>OVERVIEW</th>
+                        <th>CATEGORY</th>
+                        <th>ACTION</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					{% for show in shows %}
+					<tr>
+						<td>
+							<div class="main__table-text">{{show.id}}</div>
+						</td>
+						<td>
+							<div class="main__user">
+								<div class="main__avatar">
+									<img src="{{show.poster_path}}" alt="{{show.title}}">
+								</div>
+								<div class="main__meta">
+									<h3>{{show.title}}</h3>
+									<span>{{show.release_date}}</span>
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class="main__table-text">{{show.overview|truncatechars:40|default:"No Overview"}}</div>
+						</td>
+                        <td>
+							<div class="main__table-text">{{show.media_type|upper}}</div>
+						</td>
+						<td>
+							<div class="main__table-btns">
+								<a href="#modal-status-{{show.id}}" class="main__table-btn main__table-btn--banned open-modal">
+									<i class="icon ion-ios-cloud-upload"></i>
+								</a>
+                                <a href="#modal-view-{{show.id}}" class="main__table-btn main__table-btn--view open-modal">
+									<i class="icon ion-ios-eye"></i>
+								</a>
+							</div>
+						</td>
+					</tr>
+                    <!-- modal view -->
+						<div id="modal-view-{{show.id}}" class="zoom-anim-dialog mfp-hide modal modal--view">
+							<p class="reviews__text">{{show.overview}}</p>
+						</div>
+						<!-- end modal view -->
+                    <!-- modal status -->
+						<div id="modal-status-{{show.id}}" class="zoom-anim-dialog mfp-hide modal">
+							<h6 class="modal__title">IMPORT {% if show.media_type|lower == "tv" %} 
+                                    {{show.media_type|upper}} Show 
+                                {% else %} 
+                                    {{show.media_type|upper}}
+                                {% endif %}
+                            </h6>
+
+							<p class="modal__text">Are you sure about importing "{{show.title}}"?</p>
+							<form method="POST" action="
+                            {% if show.media_type|lower == 'tv' %}
+                            {% url 'app_adminDashboard:import_tv' %}
+                            {% else %}
+                            {% url 'app_adminDashboard:import_movie' %}
+                            {% endif %}
+                            " >
+								<div class="modal__btns">
+									{% csrf_token %}
+									<input type="hidden" name="id" value="{{show.id}}">
+									<button class="modal__btn modal__btn--apply" type="submit" >Import</button>
+									<button class="modal__btn modal__btn--dismiss" type="button">Dismiss</button>
+								</div>
+							</form>
+						</div>
+						<!-- end modal status -->
+                    {% endfor %}
+				</tbody>
+			</table>
+            {% endif %}
+		</div>
+	</div>
+
+</div>
+{% endblock content %}

@@ -17,13 +17,11 @@
 
     {% block extra_headers %} {% endblock extra_headers %}
     <!-- Favicons -->
-    <link rel="icon" type="image/png" href="{% static 'adminDashboard/icon/favicon-32x32.png' %}" sizes="32x32">
-    <link rel="apple-touch-icon" href="icon/favicon-32x32.png">
-
-    <meta name="description" content="">
-    <meta name="keywords" content="">
+    <link rel="icon" type="image/png" href="{{favicon.url}}" sizes="32x32">
+    <link rel="apple-touch-icon" href="{{favicon.url}}">
+    <meta name="keywords" content="{{description}}">
     <meta name="author" content="{{request.get_host}}">
-    <title>{{title}}</title>
+    <title>{{title}} - Dashboard</title>
 </head>
 
 <body>
@@ -31,8 +29,8 @@
     <header class="header">
         <div class="header__content">
             <!-- header logo -->
-            <a href="index.html" class="header__logo">
-                <img src="img/logo.svg" alt="">
+            <a href="{% url 'app_adminDashboard:home' %}" class="header__logo">
+                <img src="{{logo.url}}" alt="">
             </a>
             <!-- end header logo -->
 
@@ -50,15 +48,15 @@
     <!-- sidebar -->
     <div class="sidebar">
         <!-- sidebar logo -->
-        <a href="index.html" class="sidebar__logo">
-            <img src="{% static 'adminDashboard/img/logo.svg' %}" alt="">
+        <a href="{% url 'app_adminDashboard:home' %}" class="sidebar__logo">
+            <img src="{{logo.url}}" alt="logo">
         </a>
         <!-- end sidebar logo -->
 
         <!-- sidebar user -->
         <div class="sidebar__user">
             <div class="sidebar__user-img">
-                <img src="{% static 'adminDashboard/img/user.svg' %}" alt="{{request.user.username}}">
+                <img src="{{request.user.profile.url}}" alt="{{request.user.username}}">
             </div>
 
             <div class="sidebar__user-title">
@@ -66,7 +64,7 @@
                 <p>{{request.user.get_full_name}}</p>
             </div>
 
-            <button class="sidebar__user-btn" type="button" onclick="window.location.href='/logout'">
+            <button class="sidebar__user-btn" type="button" onclick=window.location.href="{% url 'app_webapp:logout' %}">
                 <i class="icon ion-ios-log-out"></i>
             </button>
         </div>
@@ -87,11 +85,16 @@
                 </li>
 
                 <li class="sidebar__nav-item">
-                    <a href="{% url 'app_adminDashboard:movies' %}" class="sidebar__nav-link"><i
-                            class="icon ion-ios-film"></i>
+                    <a href="{% url 'app_adminDashboard:tvs' %}" class="sidebar__nav-link"><i
+                            class="icon ion-ios-tv"></i>
                         <span>TV Shows</span></a>
                 </li>
-
+                <li class="sidebar__nav-item">
+                    <a href="{% url 'app_adminDashboard:import' %}" class="sidebar__nav-link"><i
+                            class="icon ion-ios-search"></i>
+                        <span>Import</span></a>
+                </li>
+                {% comment 'for future update' %}
                 <!-- collapse -->
                 <li class="sidebar__nav-item">
                     <a class="sidebar__nav-link" data-toggle="collapse" href="#collapseMenu" role="button"
@@ -103,25 +106,20 @@
                     </ul>
                 </li>
                 <!-- end collapse -->
-
+                {% endcomment %}
                 <li class="sidebar__nav-item">
-                    <a href="users.html" class="sidebar__nav-link"><i class="icon ion-ios-contacts"></i>
+                    <a href="{% url 'app_adminDashboard:users' %}" class="sidebar__nav-link"><i class="icon ion-ios-contacts"></i>
                         <span>Users</span></a>
                 </li>
 
                 <li class="sidebar__nav-item">
-                    <a href="comments.html" class="sidebar__nav-link"><i class="icon ion-ios-chatbubbles"></i>
-                        <span>Comments</span></a>
-                </li>
-
-                <li class="sidebar__nav-item">
-                    <a href="reviews.html" class="sidebar__nav-link"><i class="icon ion-ios-star-half"></i>
+                    <a href="{% url 'app_adminDashboard:reviews' %}" class="sidebar__nav-link"><i class="icon ion-ios-star-half"></i>
                         <span>Reviews</span></a>
                 </li>
 
                 <li class="sidebar__nav-item">
-                    <a href="../main/index.html" class="sidebar__nav-link"><i class="icon ion-ios-arrow-round-back"></i>
-                        <span>Back to HotFlix</span></a>
+                    <a href="{% url 'app_webapp:home' %}" class="sidebar__nav-link"><i class="icon ion-ios-arrow-round-back"></i>
+                        <span>Back to {{request.get_host|upper}}</span></a>
                 </li>
             </ul>
         </div>

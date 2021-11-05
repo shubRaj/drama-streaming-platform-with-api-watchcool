@@ -1,0 +1,38 @@
+{% for slider in sliders %}
+<div class="carousel-item {% if forloop.counter == 1 %}active{% endif %}">
+    <a href="
+    {% if slider.tv %}
+        {% url 'app_webapp:tv_detail' slider.slug %}
+    {% else %}
+        {% url 'app_webapp:movie_detail' slider.slug %}
+    {% endif %}
+
+    " class="slide media media-slide" data-src="{{slider.backdrop_path}}">
+        <div class="slide-caption">
+            <div class="d-flex align-items-center">
+                <div>
+                    <div class="slide-header">
+                        <div class="imdb">Rating : {{slider.vote_average}} </div>
+                        <div>
+                            {{slider.release_date.year}}
+                        </div>
+                        <div class="category text-12">
+                            {% if slider.tv %}
+                            TV
+                            {% else %}
+                            Movie
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="title">
+                        {{slider.title}}
+                    </div>
+                    <div class="description">
+                       {{slider.overview}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </a>
+</div>
+{% endfor %}

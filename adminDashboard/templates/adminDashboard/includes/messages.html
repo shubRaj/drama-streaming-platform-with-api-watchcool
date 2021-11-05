@@ -1,0 +1,21 @@
+{% if messages %}
+	{% for message in messages %}
+		{% if message.level_tag == 'error' %}
+			<div style="margin: auto;width: 50%;color: #721c24;background-color: #f8d7da;border-color: #f5c6cb;position: relative;padding: .75rem 1.25rem;margin-bottom: 1rem;border: 1px solid transparent;border-radius: .25rem;">
+				{{message.message}}
+			</div>
+		{% elif message.level_tag == 'info' %}
+			<div style="margin: auto;width: 50%;color: #004085;background-color: #cce5ff;border-color: #b8daff;position: relative;padding: .75rem 1.25rem;margin-bottom: 1rem;border: 1px solid transparent;border-radius: .25rem;">
+				{{message.message}}
+			</div>
+		{% elif message.level_tag == 'success' %}
+			<div style="margin: auto;width: 50%;color: #155724;background-color: #d4edda;border-color: #c3e6cb;position: relative;padding: .75rem 1.25rem;margin-bottom: 1rem;border: 1px solid transparent;border-radius: .25rem;">
+				{{message.message}}
+			</div>
+		{% else %}
+			<div style="margin: auto;width: 50%;color: #383d41;background-color: #e2e3e5;border-color: #d6d8db;position: relative;padding: .75rem 1.25rem;margin-bottom: 1rem;border: 1px solid transparent;border-radius: .25rem;">
+				{{message.message}}
+			</div>
+		{% endif %}
+	{% endfor %}
+{% endif %}

@@ -1,0 +1,18 @@
+{% load classname %}
+<div class="col">
+    <a href="
+    {% if story|getClassName|lower == 'tv' %}
+        {% url 'app_webapp:tv_detail' story.slug %}
+    {% else %}
+        {% url 'app_webapp:movie_detail' story.slug %}
+    {% endif %}
+    " class="list-trailer">
+        <div class="media-story {% if story|isActive %}active{% endif %}" style="background-color: #f5c518">
+            <div class="media" data-src="{{story.poster_path}}"></div>
+        </div>
+        <div class="list-caption">
+            <div class="list-title">{{story.title}}</div>
+            <div class="list-description">{{story|getClassName}}</div>
+        </div>
+    </a>
+</div>

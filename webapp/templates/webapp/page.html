@@ -1,0 +1,30 @@
+{% extends 'webapp/_base.html' %}
+{% block content %}
+<div class="app-content d-flex">
+    <div class="flex-fill">
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'app_webapp:home' %}">Home</a></li>
+                <li class="breadcrumb-item active">{{page.title}}</li>
+            </ol>
+        </nav>
+        <div class="mb-4">
+            <div class="text-24 text-white font-weight-bold">{{page.title}}</div>
+            <div class="subtext mt-3">
+                {{page.description|safe}}
+            </div>
+        </div>
+    </div>
+    <div class="app-page pt-md-4">
+        <ul class="nav flex-column nav-filter pl-md-4">
+            <li class="nav-item nav-header mt-0 pb-2">Pages</li>
+            {% for p in pages %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'app_webapp:page' p.slug %}">
+                    {{p.title}}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock content %}
