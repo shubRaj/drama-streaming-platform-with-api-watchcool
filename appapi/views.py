@@ -121,7 +121,7 @@ class SuggestedContentAPIView(SearchAPIView):
     def get(self, request, **kwargs):
         most_popular_shows = cache.get("most_popular_shows", [])
         if not most_popular_shows:
-            most_popular_shows = config(request).get("most_popular_show",[])
+            most_popular_shows = config(request).get("most_popular_shows",[])
         for most_popular_show in most_popular_shows:
             most_popular_show.pop("slug")
             most_popular_show["id"] = most_popular_show.pop(
@@ -221,7 +221,7 @@ class NewEpisodeAPIView(ListAPIView):
             if watch_links.exists():
                 watch_link = watch_links.first()
                 episode['link'] = f'https://asian.watchcool.in/watch/?source={watch_link["url"]}'
-                episode['server'] = "Watch Only Server"
+                episode['server'] = "Stream Only"
                 episode['lang'] = watch_link["language"]
             else:
                 episode['link'] = ''

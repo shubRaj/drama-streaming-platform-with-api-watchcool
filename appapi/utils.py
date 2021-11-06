@@ -73,7 +73,7 @@ def singleMovie(resp_data):
                 watchmovie["supported_hosts"] = 1
                 watchmovie["hls"] = 0
             else:
-                watchmovie["server"] = "Watch Only Server"
+                watchmovie["server"] = "Stream Only"
                 watchmovie["link"] = f'https://asian.watchcool.in/watch/?source={watchmovie.pop("url")}'
                 watchmovie["lang"] = watchmovie.pop("language")
                 watchmovie["supported_hosts"] = 0
