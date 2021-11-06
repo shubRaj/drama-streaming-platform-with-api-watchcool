@@ -318,7 +318,7 @@ class GenreRecommendedAPIView(ListAPIView):
     serializer_class = serializers.MovieSerializer
     def get(self,request,**kwargs):
         resp = super().get(request,**kwargs)
-        resp.data  = paginate(request,resp.data)
+        resp.data  = paginate(request,replaceMeta(resp.data))
         return resp
 class GenrePopularSerieAPIView(APIView):
     def get(self,request,**kwargs):
