@@ -116,9 +116,11 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
                 watchepisode["supported_hosts"] = 1
                 watchepisode["hls"] = 0
             elif "sb" in watchepisode["server"]:
-                episode["videos"].append(watchepisode)
+                stream_url = getStreamSBSource(watchepisode.pop("url"))
+                if stream_url:
+                    stream_url = episode["videos"].append(watchepisode) # don't add if source doesnt exists anymore
                 watchepisode["server"] = "Stream Only Server"
-                watchepisode["link"] = getStreamSBSource(watchepisode.pop("url"))
+                watchepisode["link"] = stream_url
                 watchepisode["lang"] = watchepisode.pop("language")
                 watchepisode["supported_hosts"] = 0
                 watchepisode["hls"] = 1
