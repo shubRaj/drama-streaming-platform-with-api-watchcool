@@ -5,7 +5,6 @@ from urllib.parse import urlparse
 from django.core.paginator import Paginator,EmptyPage
 from webapp.context_processors import moviesViewin, tvsViewin
 from django.db.models import Q
-from .streamsb import getStreamSBSource
 def replaceSingle(single):
     single["tmdb_id"] = str(single.pop("themoviedb_id"))
     single["imdb_external_id"] = single.pop("imdb_id")
@@ -61,7 +60,7 @@ def singleMovie(resp_data):
     resp_data = replaceMeta(resp_data)
     resp_data["videos"] = []
     watchmovie_serializer = serializers.WatchMovieSerializer(
-        WatchMovie.objects.filter(Q(source="XStreamCDN")|Q(source__icontains="sb"), movie=resp_data["id"],), many=True)
+        WatchMovie.objects.filter(Q(source="XStreamCDN")|Q(url__icontains="streaming.php"), movie=resp_data["id"],), many=True)
     if watchmovie_serializer.data:
         for watchmovie in watchmovie_serializer.data:
             resp_data["videos"].append(watchmovie)
@@ -72,18 +71,12 @@ def singleMovie(resp_data):
                 watchmovie["lang"] = watchmovie.pop("language")
                 watchmovie["supported_hosts"] = 1
                 watchmovie["hls"] = 0
-            elif "sb" in watchmovie["server"]:
-                watchmovie["server"] = "Stream Only Server"
-                watchmovie["link"] = getStreamSBSource(watchmovie.pop("url"))
+            else:
+                watchmovie["server"] = "Stream Only"
+                watchmovie["link"] = f'https://asian.watchcool.in/watch/?source={watchmovie.pop("url")}'
                 watchmovie["lang"] = watchmovie.pop("language")
                 watchmovie["supported_hosts"] = 0
                 watchmovie["hls"] = 1
-            # else:
-            #     watchmovie["server"] = "Stream Only"
-            #     watchmovie["link"] = f'https://asian.watchcool.in/watch/?source={watchmovie.pop("url")}'
-            #     watchmovie["lang"] = watchmovie.pop("language")
-            #     watchmovie["supported_hosts"] = 0
-            #     watchmovie["hls"] = 1
             watchmovie["embed"] = 0
             watchmovie["youtubelink"] = 0
             watchmovie['status'] = "1"
@@ -102,28 +95,19 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
     episode["videos"] = []
     episode["substitles"] = []
     watchepisode_serializer = serializers.WatchEpisodeSerializer(
-        WatchEpisode.objects.filter(Q(source="XStreamCDN")|Q(source__icontains="sb"), episode=episode["id"],),
+        WatchEpisode.objects.filter(source="XStreamCDN", episode=episode["id"],),
         many=True)
     if watchepisode_serializer.data:
         for watchepisode in watchepisode_serializer.data:
+            episode["videos"].append(watchepisode)
             watchepisode["episode_id"] = watchepisode.pop(
                 "episode")
             watchepisode["server"] = watchepisode.pop("source")
-            if watchepisode["server"] == "XStreamCDN":
-                episode["videos"].append(watchepisode)
-                watchepisode["link"] = f'https://fembed.com{urlparse(watchepisode.pop("url")).path}'
-                watchepisode["lang"] = watchepisode.pop("language")
-                watchepisode["supported_hosts"] = 1
-                watchepisode["hls"] = 0
-            elif "sb" in watchepisode["server"]:
-                stream_url = getStreamSBSource(watchepisode.pop("url"))
-                if stream_url:
-                    episode["videos"].append(watchepisode) # don't add if source doesnt exists anymore
-                watchepisode["server"] = "Stream Only Server"
-                watchepisode["link"] = stream_url
-                watchepisode["lang"] = watchepisode.pop("language")
-                watchepisode["supported_hosts"] = 0
-                watchepisode["hls"] = 1
+            # if watchepisode["server"]=="XStreamCDN":
+            watchepisode["link"] = f'https://fembed.com{urlparse(watchepisode.pop("url")).path}'
+            watchepisode["lang"] = watchepisode.pop("language")
+            watchepisode["supported_hosts"] = 1
+            watchepisode["hls"] = 0
             # else:
             #     watchepisode["link"] = f'https://asian.watchcool.in/watch/?source={watchepisode.pop("url")}'
             #     watchepisode["lang"] = watchepisode.pop("language")
