@@ -53,7 +53,7 @@ class Configuration(models.Model):
     custom_banner_link = models.URLField(null=True,blank=True)
     maintenance_mode = models.BooleanField(default=False)
     mantenance_mode_message = models.TextField(null=True,blank=True)
-    splash_image = models.ImageField(upload_to="splash",null=True,blank=True)
+    splash_image = models.URLField(null=True,blank=True)
     allow_external_player_to_download = models.BooleanField(default=False) 
     default_youtube_quality  = models.CharField(null=True,blank=True,max_length=20)
     enable_previews = models.BooleanField(default=False)
