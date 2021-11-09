@@ -34,7 +34,7 @@ class Season(models.Model):
             return str(self.season_number)
         return self.name
     class Meta:
-        ordering = ("-added_on","-season_number",)
+        ordering = ("-season_number","-added_on",)
     def save(self,*args,**kwargs):
         if self.id:
             self.updated_on = timezone.now()
@@ -54,7 +54,7 @@ class Episode(models.Model):
     added_on = models.DateTimeField(default=timezone.now,editable=False)
     updated_on = models.DateTimeField(default=timezone.now,editable=False)
     class Meta:
-        ordering = ("-added_on","-episode_number",)
+        ordering = ("-episode_number","-added_on",)
     def get_absolute_url(self):
         return reverse("app_webapp:watch_episode",args=(self.slug,))
     def __str__(self):
@@ -65,10 +65,10 @@ class Episode(models.Model):
         if self.still_path and self.still_path.startswith("/"):
             self.still_path = f"https://www.themoviedb.org/t/p/original{self.still_path}"
         if self.id:
-            self.updated_on = timezone.now() 
+            self.updated_on = self.season.updated_on =timezone.now() 
         if not self.slug:
             added_on_hash = hashlib.md5(str(self.added_on).encode()).hexdigest()
-            year = f'-{datetime.datetime.strptime(self.season.tv.release_date,"%Y-%m-%d").year}' if self.season.tv.release_date else ''
+            year = f'-{datetime.datetime.strptime(str(self.season.tv.release_date),"%Y-%m-%d").year}' if self.season.tv.release_date else ''
             self.slug = slugify(f"{self.season.tv.title}{year}-season-{self.season.season_number}-episode-{self.episode_number}-{added_on_hash}")
         super(Episode,self).save(*args,**kwargs)
 class WatchEpisode(AbsWatch):

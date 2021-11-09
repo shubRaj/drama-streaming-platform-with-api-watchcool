@@ -80,7 +80,7 @@
             <div class="season-list">
                 <div class="seasons">
                     <ul class="nav" role="tablist">
-                        {% for season in tv.season.all %}
+                        {% for season in seasons %}
                         <li class="nav-item">
                             <a class="nav-link {% if forloop.counter == 1 %} active {% endif %}" id="season-{{season.season_number}}-tab" data-toggle="tab" href="#season-{{season.season_number}}" role="tab"
                                 aria-controls="season-{{season.season_number}}" aria-selected="true">
@@ -90,7 +90,7 @@
                     </ul>
                 </div>
                 <div class="episodes tab-content">
-                    {% for season in tv.season.all %}
+                    {% for season in seasons %}
                     <div class="tab-pane show {% if forloop.counter == 1 %} active {% endif %}" id="season-{{season.season_number}}" role="tabpanel" aria-labelledby="season-{{season.season_number}}-tab">
                         {% for episode in season.episode.all %}
                         <a

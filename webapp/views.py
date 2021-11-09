@@ -12,26 +12,25 @@ from rest_framework import generics
 from .serializers import TVSerializer
 from django.http import Http404,JsonResponse
 from rest_framework.response import Response
-from adminDashboard.utils import getDirectLinks
 import datetime
 
 class HomeView(TemplateView):
     template_name = "webapp/index.html"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["new_series"] = TV.objects.filter(published=True)[:30]
-        context["new_movies"] = Movie.objects.filter(published=True)[:30]
+        context["new_series"] = TV.objects.filter(~Q(poster_path__endswith="None"),published=True,)[:30]
+        context["new_movies"] = Movie.objects.filter(~Q(poster_path__endswith="None"),published=True)[:30]
         context["stories"] = sorted(
             list(
                 chain(
-                    TV.objects.filter(added_on__gte=(datetime.date.today()-datetime.timedelta(days=7))).order_by("-vote_average")[:7],
-                    Movie.objects.filter(added_on__gte=(datetime.date.today()-datetime.timedelta(days=7))).order_by("-vote_average")[:7],
+                    TV.objects.filter(~Q(poster_path__endswith="None"),published=True,added_on__gte=(datetime.date.today()-datetime.timedelta(days=7))).order_by("-vote_average")[:7],
+                    Movie.objects.filter(~Q(poster_path__endswith="None"),published=True,added_on__gte=(datetime.date.today()-datetime.timedelta(days=7))).order_by("-vote_average")[:7],
                 )
             ),
             key=lambda a:a.vote_average,
             reverse=True
         )[:7]
-        context["new_episodes"] = Episode.objects.filter(~Q(still_path__endswith="None"))[:16]
+        context["new_episodes"] = Episode.objects.filter(~Q(still_path__endswith="None"),season__tv__published=True)[:16]
         context["popular_actors"] =  Cast.objects.filter(~Q(profile_path__endswith="None"),added_on__gte=(datetime.date.today()-datetime.timedelta(days=30)))[:12]
         context["currentPage"] = "home"
         return context
@@ -42,9 +41,10 @@ class TVDetailView(DetailView):
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
         context["currentPage"] = "tvs"
-        title = f"List all episodes of {self.object.title} ({self.object.release_date.year}) | {self.request.get_host()}"
+        title = f"Watch full episode of {self.object.title} ({self.object.release_date.year}) | {self.request.get_host()}"
         context["title"] = title
         context["description"] = title
+        context["seasons"] = self.object.season.all()
         context["watch_now"] = self.object.season.order_by("season_number").first().episode.order_by("episode_number").first()
         return context
 class MovieDetailView(DetailView):
@@ -101,6 +101,8 @@ class TVList(ListView):
     # def post(self,request):
     #     filter,category,rating,released,sorting=itemgetter("_ACTION","category","rating","released","sorting")(request.POST)
     #     return super().get(request)
+    def get_queryset(self):
+        return self.model.objects.filter(published=True)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["currentPage"] = "tvs"
@@ -116,6 +118,8 @@ class MovieList(TVList):
     # def post(self,request):
     #     filter,category,rating,released,sorting=itemgetter("_ACTION","category","rating","released","sorting")(request.POST)
     #     return super().get(request)
+    def get_queryset(self):
+        return self.model.objects.filter(published=True)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         title = f"List all Movies | {self.request.get_host()}"

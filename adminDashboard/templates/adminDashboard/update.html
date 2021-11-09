@@ -1,0 +1,53 @@
+{% extends 'adminDashboard/_base.html' %}
+{% block content %}
+<div class="row">
+	<!-- form -->
+	<div class="col-12">
+		<form action="
+		{% if watchlink %}
+			{% if watchlink.episode %}
+				{% url 'app_adminDashboard:update_episode_link' watchlink.id %}
+			{% else %}
+				{% url 'app_adminDashboard:update_movie_link' watchlink.id %}
+			{% endif %}
+		{% elif show_id %}
+			{% url 'app_adminDashboard:create_movie_link' show_id %}
+		{% else %}
+			{% url 'app_adminDashboard:create_episode_link' episode_id %}
+		{% endif %}
+		" method="post" class="form">
+			{% csrf_token %}
+			<div class="row row--form">
+				<div class="col-12 col-md-7 form__content">
+					{% include 'adminDashboard/includes/messages.html' with messages=messages only %}
+					<div class="row row--form">
+						<div class="col-12 col-sm-6 col-lg-3">
+							<input type="text" class="form__input" name="source" placeholder="Source" autocomplete="off" value="{{watchlink.source}}">
+						</div>
+
+						<div class="col-12 col-sm-6 col-lg-3">
+							<input type="text" class="form__input" name="quality" placeholder="Quality" autocomplete="off" value="{{watchlink.quality}}">
+						</div>
+
+						<div class="col-12 col-sm-6 col-lg-3">
+							<input type="text" class="form__input" name="language" placeholder="Language" autocomplete="off" value={{watchlink.language}}>
+						</div>
+						<div class="col-12 col-sm-6 col-lg-3">
+							<input type="text" class="form__input" name="url" placeholder="URL" autocomplete="off" value={{watchlink.url}}>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-12">
+					<div class="row row--form">
+						<div class="col-12">
+							<button type="submit" class="form__btn">{% if watchlink %} update {% else %} create {% endif %}</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<!-- end form -->
+</div>
+{% endblock content %}

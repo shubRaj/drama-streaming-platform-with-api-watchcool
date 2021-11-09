@@ -73,7 +73,7 @@ class Report(models.Model):
         max_length=10, choices=STATUS_CHOICES, default="p")
     option = models.CharField(
         max_length=50, choices=OPTIONS, default="1")
-    description = models.TextField()
+    description = models.TextField(null=True,blank=True)
     added_on = models.DateTimeField(default=timezone.now, editable=False)
 
     def __str__(self):

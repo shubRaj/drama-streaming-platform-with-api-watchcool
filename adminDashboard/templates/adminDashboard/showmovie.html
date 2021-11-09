@@ -1,0 +1,96 @@
+{% extends 'adminDashboard/_base.html' %}
+{% load classname %}
+{% block content %}
+<!-- main title -->
+<div class="col-12">
+    <div class="main__title">
+        <h2>{{label}}</h2>
+        <span class="main__title-stat">{{page_obj.paginator.count}} Watch Links</span>
+        <a href="
+        {%  if show_id %}
+            {% url 'app_adminDashboard:create_movie_link' show_id %}
+        {% else %}
+            {% url 'app_adminDashboard:create_episode_link' episode_id %}
+        {% endif %}
+        " class="main__title-link">ADD LINK</a>
+    </div>
+</div>
+<!-- end main title -->
+<!-- users -->
+<div class="col-12">
+    {% include 'adminDashboard/includes/messages.html' with messages=messages only %}
+    <div class="main__table-wrap">
+        <table class="main__table">
+            <thead>
+                <tr>
+                    <th>SOURCE</th>
+                    <th>QUALITY</th>
+                    <th>URL</th>
+                    <th>ADDED_on</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <!-- Shows -->
+                {% for watchlink in page_obj %}
+                <tr>
+                    <td>
+                        <div class="main__table-text">{{watchlink.source}}</div>
+                    </td>
+                    <td>
+                        <div class="main__table-text">{{watchlink.quality}}</div>
+                    </td>
+                    <td>
+                        <div class="main__table-text"><a href="{{watchlink.url}}" target="_blank">{{watchlink.url}}</a></div>
+                    </td>
+                    <td>
+                        <div class="main__table-text">{{watchlink.added_on|date:"j F, Y"}}</div>
+                    </td>
+                    <td>
+                        <div class="main__table-btns">
+                            <a href="
+                            {% if show_id %}
+                                {% url 'app_adminDashboard:update_movie_link' watchlink.id %}
+                            {% else %}
+                                {% url 'app_adminDashboard:update_episode_link' watchlink.id %}
+                            {% endif %}
+                            " class="main__table-btn main__table-btn--edit">
+                                <i class="icon ion-ios-create"></i>
+                            </a>
+                            <a href="#modal-delete-{{watchlink.id}}"
+                                class="main__table-btn main__table-btn--delete open-modal">
+                                <i class="icon ion-ios-trash"></i>
+                            </a>
+                        </div>
+
+                        <!-- modal delete -->
+                        <div id="modal-delete-{{watchlink.id}}" class="zoom-anim-dialog mfp-hide modal">
+                            <h6 class="modal__title">Delete Watch Link</h6>
+
+                            <p class="modal__text">Are you sure about permanently deleting "{{watchlink.source}}" ?</p>
+                            <form method="post" action="
+                            {% if show_id %}
+                                {% url 'app_adminDashboard:delete_movie_link' watchlink.id %}
+                            {% else %}
+                                {% url 'app_adminDashboard:delete_episode_link' watchlink.id %}
+                            {% endif %}
+                            ">
+                                <div class="modal__btns">
+                                    {% csrf_token %}
+                                    <button class="modal__btn modal__btn--apply" type="submit" value="DELETE">Delete</button>
+                                    <button class="modal__btn modal__btn--dismiss" type="button">Dismiss</button>
+                                </div>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                <!-- end Shows -->
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- end users -->
+{% include 'adminDashboard/includes/pagination.html' with page_obj=page_obj only %}
+{% endblock content %}

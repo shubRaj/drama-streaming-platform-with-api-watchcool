@@ -1,0 +1,112 @@
+{% extends 'adminDashboard/_base.html' %}
+{% load classname %}
+{% block content %}
+<!-- main title -->
+<div class="col-12">
+    <div class="main__title">
+        <span class="main__title-stat">{{page_obj.paginator.count}} Episodes</span>
+        <a href="#add-episode" class="main__title-link open-modal ">ADD EPISODE</a>
+    </div>
+</div>
+<!-- end main title -->
+<!-- users -->
+<div class="col-12">
+    <div class="main__table-wrap">
+        {% include 'adminDashboard/includes/messages.html' with messages=messages only %}
+        <table class="main__table">
+            <thead>
+                <tr>
+                    <th>TITLE</th>
+                    <th>SEASON</th>
+                    <th>EPISODE</th>
+                    <th>ADDED_ON</th>
+                    <th>UPDATED_ON</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <!-- Shows -->
+                {% for episode in page_obj %}
+                <tr>
+                    <td>
+                        <div class="main__user">
+                            <div class="main__avatar">
+                                <img src="{{episode.poster_path}}" alt="{{episode.name}}">
+                            </div>
+                            <div class="main__meta">
+                                <h3>{{episode.name}}</h3>
+                                <span>{{episode.air_date}}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="main__table-text">{{episode.season_number}}</div>
+                    </td>
+                    <td>
+                        <div class="main__table-text">{{episode.episode_number}}</div>
+                    </td>
+                    <td>
+                        <div class="main__table-text">{{episode.added_on}}</div>
+                    </td>
+                    <td>
+                        <div class="main__table-text">
+                            {% if episode.added_on.date == episode.updated_on.date %}
+                            Never Updated
+                            {% else %}
+                            {{episode.updated_on}}
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="main__table-btns">
+                            <a href="{% url 'app_adminDashboard:show_episode_link' episode.id %}" class="main__table-btn main__table-btn--edit">
+                                <i class="icon ion-ios-create"></i>
+                            </a>
+                            <a href="#modal-delete-{{episode.id}}"
+                                class="main__table-btn main__table-btn--delete open-modal">
+                                <i class="icon ion-ios-trash"></i>
+                            </a>
+                        </div>
+                         <!-- modal delete -->
+                         <div id="modal-delete-{{episode.id}}" class="zoom-anim-dialog mfp-hide modal">
+                            <h6 class="modal__title">Delete {{episode|getClassName}}</h6>
+
+                            <p class="modal__text">Are you sure to permanently delete "{{episode.name}}"?</p>
+                            <form method="post" action="{% url 'app_adminDashboard:delete_tv_episode' episode.id %}">
+                                <div class="modal__btns">
+                                    {% csrf_token %}
+                                    <button class="modal__btn modal__btn--apply" type="submit"
+                                        value="DELETE">Delete</button>
+                                    <button class="modal__btn modal__btn--dismiss" type="button">Dismiss</button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- end modal delete -->
+
+                    </td>
+                </tr>
+                {% endfor %}
+                <!-- end Shows -->
+            </tbody>
+        </table>
+        <!-- add season modal -->
+        <div id="add-episode" class="zoom-anim-dialog mfp-hide modal">
+            <h6 class="modal__title">Add Episode</h6>
+            <form method="post" action="{% url 'app_adminDashboard:add_tv_season_episode' season_id %}">
+                {% csrf_token %}
+                <div class="col-12">
+                    <input type="number" class="form__input" name="episode_number" placeholder="Episode Number" autocomplete="off" required>
+                    <div class="modal__btns">
+                        <button class="modal__btn modal__btn--apply" type="submit" value="CONFIRM">Add</button>
+                        <button class="modal__btn modal__btn--dismiss" type="button">Dismiss</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- end season modal -->
+    </div>
+</div>
+<!-- end users -->
+{% include 'adminDashboard/includes/pagination.html' with page_obj=page_obj only %}
+{% endblock content %}

@@ -74,5 +74,6 @@ KEYS = ['title', 'favicon', 'logo', 'tagline', 'custom_header','gdplayer_auth','
 def config(request): 
     data = cache.get_many(KEYS)
     if not data:
-        data = cache.set_many(cache_context(),settings.CACHE_TIME)
+        data = cache_context()
+        cache.set_many(data,settings.CACHE_TIME)
     return data

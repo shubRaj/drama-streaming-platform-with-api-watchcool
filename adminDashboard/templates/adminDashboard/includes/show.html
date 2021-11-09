@@ -16,7 +16,6 @@
 			<table class="main__table">
 				<thead>
 					<tr>
-						<th>TMDB ID</th>
 						<th>TITLE</th>
 						<th>RATING</th>
 						<th>GENRE</th>
@@ -32,10 +31,15 @@
 					{% for show in page_obj %}
 					<tr>
 						<td>
-							<div class="main__table-text">{{show.themoviedb_id}}</div>
-						</td>
-						<td>
-							<div class="main__table-text"><a href="#">{{show.title}}</a></div>
+							<div class="main__user">
+								<div class="main__avatar">
+									<img src="{{show.poster_path}}" alt="{{show.title}}">
+								</div>
+								<div class="main__meta">
+									<h3>{{show.title}}</h3>
+									<span>{{show.release_date}}</span>
+								</div>
+							</div>
 						</td>
 						<td>
 							<div class="main__table-text main__table-text--rate"><i class="icon ion-ios-star"></i>
@@ -90,11 +94,15 @@
 									<i class="icon ion-ios-eye"></i>
 								</a>
                                 {% endif %}
-								{% comment 'for future update' %}
-								<a href="#" class="main__table-btn main__table-btn--edit">
+								<a href="
+								{% if show|getClassName == 'Movie' %}
+									{% url 'app_adminDashboard:show_movie_link' show.id %}
+								{% else %}
+									{% url 'app_adminDashboard:show_tv_season' show.id %}
+								{% endif %}
+								" class="main__table-btn main__table-btn--edit">
 									<i class="icon ion-ios-create"></i>
 								</a>
-								{% endcomment %}
 								<a href="#modal-delete-{{show.id}}" class="main__table-btn main__table-btn--delete open-modal">
 									<i class="icon ion-ios-trash"></i>
 								</a>
@@ -135,7 +143,7 @@
                                     {% endif %}" >
 									<div class="modal__btns">
 										{% csrf_token %}
-										<button class="modal__btn modal__btn--apply" type="submit" value="Confirm">Delete</button>
+										<button class="modal__btn modal__btn--apply" type="submit" value="DELETE">Delete</button>
 										<button class="modal__btn modal__btn--dismiss" type="button">Dismiss</button>
 									</div>
 								</form>

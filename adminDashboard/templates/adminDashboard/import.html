@@ -16,7 +16,7 @@
 		<div class="main__table-wrap">
             <form method="POST" action="{% url 'app_adminDashboard:import' %}">
                 {% csrf_token %}
-                <input name="q" placeholder="Search" style="display: block;
+                <input name="q" placeholder="Search" autocomplete="off" style="display: block;
                 width:100%;
                 color:#9ca8b3;
                 background-color:#2e3648;

@@ -16,7 +16,7 @@
     <!-- end filter sort -->
     <!-- search -->
     <form action="{% url 'app_adminDashboard:search' %}" class="main__title-form" onsubmit="formSubmit()">
-        <input type="text" name="q" placeholder="Find movie / tv shows..">
+        <input type="text" name="q" autocomplete="off" placeholder="Find movie / tv shows..">
         <input type="hidden" id="filter" name="filter">
         <button type="button">
             <i class="icon ion-ios-search"></i>

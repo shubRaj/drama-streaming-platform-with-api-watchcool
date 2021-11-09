@@ -5,7 +5,7 @@
 	<!-- main title -->
 	<div class="col-12">
 		<div class="main__title">
-			<h2>Reviews</h2>
+			<h2>Reports</h2>
 
 			<span class="main__title-stat">{{page_obj.paginator.count}} Total</span>
 
@@ -46,10 +46,9 @@
 				<thead>
 					<tr>
 						<th>SHOW</th>
-						<th>CATEGORY</th>
-						<th>AUTHOR</th>
+						<th>STATUS</th>
+						<th>REASON</th>
 						<th>DESCRIPTION</th>
-						<th>RATING</th>
 						<th>ADDED ON</th>
 						<th>ACTIONS</th>
 					</tr>
@@ -59,31 +58,23 @@
 					{% for obj in page_obj %}
 					<tr>
 						<td>
-							<div class="main__table-text"><a href="#">{{obj.show}}</a></div>
+							<div class="main__table-text"><a href="#">{{obj}}</a></div>
 						</td>
 						<td>
-							<div class="main__table-text"><a href="
-								{% if obj.show|getClassName == 'Movie' %}
-									{% url 'app_adminDashboard:movies' %}
-								{% else %}
-									{% url 'app_adminDashboard:tvs' %}
-								{% endif %}">{{obj.show|getClassName}}</a></div>
+							<div class="main__table-text">{{obj.get_status_display}}</div>
 						</td>
 						<td>
-							<div class="main__table-text">{{obj.user.get_full_name|default:"Anonymous"}}</div>
+							<div class="main__table-text">{{obj.get_option_display}}</div>
 						</td>
 						<td>
 							<div class="main__table-text">{{obj.description|truncatewords:10}}</div>
-						</td>
-						<td>
-							<div class="main__table-text main__table-text--rate"><i class="icon ion-ios-star"></i>{{obj.rating}}</div>
 						</td>
 						<td>
 							<div class="main__table-text">{{obj.added_on|date:"jS F, Y"}}</div>
 						</td>
 						<td>
 							<div class="main__table-btns">
-								{% if obj.approved %}
+								{% if obj.status == 's' %}
 									<a href="#modal-status-{{obj.id}}" class="main__table-btn main__table-btn--banned open-modal">
 										<i class="icon ion-ios-lock"></i>
 									</a>
@@ -102,10 +93,10 @@
 						</td>
 						<!-- modal status -->
 						<div id="modal-status-{{obj.id}}" class="zoom-anim-dialog mfp-hide modal">
-							<h6 class="modal__title">Approve review</h6>
+							<h6 class="modal__title">Approve report</h6>
 
-							<p class="modal__text">Are you sure about immediately approving review?</p>
-							<form method="post" action="{% url 'app_adminDashboard:reviews' %}" >
+							<p class="modal__text">Are you sure about changing the report status to {% if obj.status == "s" %} Cancelled {% else %} Solved {% endif %}?</p>
+							<form method="post" action="{% url 'app_adminDashboard:reports' %}" >
 								<div class="modal__btns">
 									{% csrf_token %}
 									<input type="hidden" name="id" value="{{obj.id}}">
@@ -119,20 +110,18 @@
 						<!-- modal view -->
 						<div id="modal-view-{{obj.id}}" class="zoom-anim-dialog mfp-hide modal modal--view">
 							<div class="reviews__autor">
-								<img class="reviews__avatar" src="{{obj.user.profile.url}}" alt="{{obj.user.get_full_name}}">
-								<span class="reviews__name">{{obj.title}}</span>
-								<span class="reviews__time">{{obj.added_on|date:"jS F, Y, H:i"}} by {{obj.user.get_full_name|default:"Anonymous"}}</span>
+								<span class="reviews__name">{{obj.get_option_display}}</span>
+								<span class="reviews__time">{{obj.added_on|date:"jS F, Y, H:i"}}</span>
 
-								<span class="reviews__rating"><i class="icon ion-ios-star"></i>{{obj.rating}}</span>
 							</div>
 							<p class="reviews__text">{{obj.description}}</p>
 						</div>
 						<!-- end modal view -->
 						<div id="modal-delete-{{obj.id}}" class="zoom-anim-dialog mfp-hide modal">
-							<h6 class="modal__title">Delete Review</h6>
+							<h6 class="modal__title">Delete Report</h6>
 
-							<p class="modal__text">Are you sure to permanently delete "{{obj.title}}"?</p>
-							<form method="post" action="{% url 'app_adminDashboard:delete_review' obj.id %}" >
+							<p class="modal__text">Are you sure to permanently delete report on "{{obj}}"?</p>
+							<form method="post" action="{% url 'app_adminDashboard:delete_report' obj.id %}" >
 								<div class="modal__btns">
 									{% csrf_token %}
 									<button class="modal__btn modal__btn--apply" type="submit" value="Confirm">Delete</button>

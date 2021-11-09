@@ -52,9 +52,9 @@
 	<!-- stats -->
 	<div class="col-12 col-sm-6 col-lg-3">
 		<div class="stats">
-			<span>New reviews today</span>
-			<p>{{new_reviews_today}}</p>
-			<i class="icon ion-ios-star-half"></i>
+			<span>New reports today</span>
+			<p>{{new_reports_today}}</p>
+			<i class="icon ion-ios-text"></i>
 		</div>
 	</div>
 	<!-- end stats -->
@@ -203,10 +203,10 @@
 	<div class="col-12 col-xl-6">
 		<div class="dashbox">
 			<div class="dashbox__title">
-				<h3><i class="icon ion-ios-star-half"></i> Latest reviews</h3>
+				<h3><i class="icon ion-ios-text"></i>Latest Reports</h3>
 
 				<div class="dashbox__wrap">
-					<a class="dashbox__more" href="{% url 'app_adminDashboard:reviews' %}">View All</a>
+					<a class="dashbox__more" href="{% url 'app_adminDashboard:reports' %}">View All</a>
 				</div>
 			</div>
 
@@ -216,25 +216,34 @@
 						<tr>
 							<th>SHOW</th>
 							<th>CATEGORY</th>
-							<th>AUTHOR</th>
-							<th>RATING</th>
+							<th>STATUS</th>
+							<th>REASON</th>
 						</tr>
 					</thead>
 					<tbody>
-						{% for review in latest_reviews %}
+						{% for report in  latest_reports %}
 						<tr>
 							<td>
-								<div class="main__table-text"><a href="#">{{review.show}}</a></div>
+								<div class="main__table-text"><a href="#">{{report}}</a></div>
+							</td>
+							{% if report.episode %}
+							<td>
+								<div class="main__table-text"><a href="#">TV</a></div>
+							</td>
+							{% elif report.movie %}
+							<td>
+								<div class="main__table-text"><a href="#">Movie</a></div>
+							</td>
+							{% else %}
+							<td>
+								<div class="main__table-text"><a href="#">Suggestion</a></div>
+							</td>
+							{% endif %}
+							<td>
+								<div class="main__table-text">{{report.get_status_display}}</div>
 							</td>
 							<td>
-								<div class="main__table-text"><a href="#">{{review.show|getClassName}}</a></div>
-							</td>
-							<td>
-								<div class="main__table-text">{{review.user.get_full_name}}</div>
-							</td>
-							<td>
-								<div class="main__table-text main__table-text--rate"><i class="icon ion-ios-star"></i>
-									{{review.rating}}</div>
+								<div class="main__table-text">{{report.get_option_display}}</div>
 							</td>
 						</tr>
 						{% endfor %}
