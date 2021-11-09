@@ -54,7 +54,7 @@ class Configuration(models.Model):
     maintenance_mode = models.BooleanField(default=False)
     mantenance_mode_message = models.TextField(null=True,blank=True)
     splash_image = models.URLField(null=True,blank=True)
-    allow_external_player_to_download = models.BooleanField(default=False) 
+    allow_adm = models.BooleanField(default=False) 
     default_youtube_quality  = models.CharField(null=True,blank=True,max_length=20)
     enable_previews = models.BooleanField(default=False)
     enable_pinned = models.BooleanField(default=False)
