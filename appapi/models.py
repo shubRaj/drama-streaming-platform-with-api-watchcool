@@ -44,7 +44,7 @@ class Configuration(models.Model):
     instagram_url =models.URLField(null=True,blank=True)
     telegram_url = models.URLField(null=True,blank=True)
     media_placehoder_path = models.CharField(max_length=100,null=True,blank=True)
-    server_choices = models.BooleanField(default=False)
+    server_dialog_selection = models.BooleanField(default=False)
     download_premium_only = models.BooleanField(default=False)
     default_downloads_options = models.CharField(max_length=13,choices=DOWNLOAD_OPTIONS,default="Free")
     wach_ads_to_unlock_player = models.BooleanField(default=False)

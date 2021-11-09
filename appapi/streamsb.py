@@ -15,7 +15,8 @@ def getStreamSBSource(streamsb_url):
         if not stream_url:
             char = string.ascii_letters+string.digits
             first_identifier = f"{''.join(random.choices(char,k=5))}streamsb1@{''.join(random.choices(char,k=5))}@{id}@streamsb2".encode("utf-8").hex()
-            resp_data = requests.get(f"https://playersb.com/sources/{first_identifier}/{first_identifier}", headers={
+            s = requests.Session()
+            resp_data = s.get(f"https://playersb.com/sources/{first_identifier}/{first_identifier}", headers={
                 "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36",
                 "Xstreamsb": "sbembed",
             }).json()
@@ -23,6 +24,7 @@ def getStreamSBSource(streamsb_url):
             if stream_data:
                 parsed_url = urlparse(stream_data.get("backup"))
                 stream_url = f"{parsed_url.scheme}://{parsed_url.netloc}{parsed_url.path}"
+                s.head(stream_url)
                 cache.set(f"streamsb_{id}",stream_url,60*60*3)
     except:
         pass

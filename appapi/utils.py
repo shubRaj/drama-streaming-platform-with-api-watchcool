@@ -5,6 +5,7 @@ from urllib.parse import urlparse
 from django.core.paginator import Paginator,EmptyPage
 from webapp.context_processors import moviesViewin, tvsViewin
 from django.db.models import Q
+from .streamsb import getStreamSBSource
 def replaceSingle(single):
     single["tmdb_id"] = str(single.pop("themoviedb_id"))
     single["imdb_external_id"] = single.pop("imdb_id")
@@ -60,7 +61,7 @@ def singleMovie(resp_data):
     resp_data = replaceMeta(resp_data)
     resp_data["videos"] = []
     watchmovie_serializer = serializers.WatchMovieSerializer(
-        WatchMovie.objects.filter(Q(source="XStreamCDN")|Q(url__icontains="streaming.php"), movie=resp_data["id"],), many=True)
+        WatchMovie.objects.filter(Q(source="XStreamCDN")|Q(source__icontains="sb"), movie=resp_data["id"],), many=True)
     if watchmovie_serializer.data:
         for watchmovie in watchmovie_serializer.data:
             resp_data["videos"].append(watchmovie)
@@ -71,9 +72,11 @@ def singleMovie(resp_data):
                 watchmovie["lang"] = watchmovie.pop("language")
                 watchmovie["supported_hosts"] = 1
                 watchmovie["hls"] = 0
-            else:
-                watchmovie["server"] = "Stream Only"
-                watchmovie["link"] = f'https://asian.watchcool.in/watch/?source={watchmovie.pop("url")}'
+            elif "sb" in watchmovie["server"]:
+                watchmovie["link"] = getStreamSBSource(watchmovie.pop("url"))
+                # else:
+                #     watchmovie["link"] = f'https://asian.watchcool.in/watch/?source={watchmovie.pop("url")}'
+                watchmovie["server"] = "Stream Only Server"
                 watchmovie["lang"] = watchmovie.pop("language")
                 watchmovie["supported_hosts"] = 0
                 watchmovie["hls"] = 1
@@ -95,7 +98,7 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
     episode["videos"] = []
     episode["substitles"] = []
     watchepisode_serializer = serializers.WatchEpisodeSerializer(
-        WatchEpisode.objects.filter(source="XStreamCDN", episode=episode["id"],),
+        WatchEpisode.objects.filter(Q(source="XStreamCDN")|Q(source__icontains="sb"), episode=episode["id"],),
         many=True)
     if watchepisode_serializer.data:
         for watchepisode in watchepisode_serializer.data:
@@ -103,16 +106,17 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
             watchepisode["episode_id"] = watchepisode.pop(
                 "episode")
             watchepisode["server"] = watchepisode.pop("source")
-            # if watchepisode["server"]=="XStreamCDN":
-            watchepisode["link"] = f'https://fembed.com{urlparse(watchepisode.pop("url")).path}'
-            watchepisode["lang"] = watchepisode.pop("language")
-            watchepisode["supported_hosts"] = 1
-            watchepisode["hls"] = 0
-            # else:
-            #     watchepisode["link"] = f'https://asian.watchcool.in/watch/?source={watchepisode.pop("url")}'
-            #     watchepisode["lang"] = watchepisode.pop("language")
-            #     watchepisode["supported_hosts"] = 0
-            #     watchepisode["hls"] = 1
+            if watchepisode["server"]=="XStreamCDN":
+                watchepisode["link"] = f'https://fembed.com{urlparse(watchepisode.pop("url")).path}'
+                watchepisode["lang"] = watchepisode.pop("language")
+                watchepisode["supported_hosts"] = 1
+                watchepisode["hls"] = 0
+            elif "sb" in watchepisode["server"]:
+                watchepisode["server"] = "Stream Only Server"
+                watchepisode["link"] = getStreamSBSource(watchepisode.pop("url"))
+                watchepisode["lang"] = watchepisode.pop("language")
+                watchepisode["supported_hosts"] = 0
+                watchepisode["hls"] = 1
             
             watchepisode["embed"] = 0
             watchepisode["youtubelink"] = 0
