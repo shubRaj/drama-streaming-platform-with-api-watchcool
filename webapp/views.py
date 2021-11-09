@@ -1,6 +1,5 @@
 from django.views.generic import TemplateView,DetailView,View,ListView,CreateView
 from django.contrib.auth.views import LogoutView,LoginView
-from operator import itemgetter
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from webapp.models.config import Page
 from .models import Movie,TV,ViewLog,Episode,WatchEpisode,ViewLog,WatchMovie,Cast,Report,Genre,DownloadMovie,DownloadEpisode,Page

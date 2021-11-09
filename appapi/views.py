@@ -1,14 +1,12 @@
 from rest_framework.views import APIView
-from rest_framework.generics import RetrieveAPIView, ListAPIView, GenericAPIView,CreateAPIView
+from rest_framework.generics import RetrieveAPIView, ListAPIView,CreateAPIView
 from rest_framework.response import Response
-from django.http import JsonResponse
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from .models import Configuration
-from webapp.models import Movie, TV, ViewLog, Season, Episode, WatchEpisode,Report
+from webapp.models import Movie, TV, ViewLog, Season, Episode, WatchEpisode
 from django.db.models import Q, F
 from itertools import chain
-from urllib.parse import urlparse
 from . import serializers
 import requests
 from django.contrib.auth import get_user_model
@@ -17,6 +15,7 @@ from .utils import (replaceMeta, getEpisodes, singleEpisode,
 topMovie, topTV,paginate,latestTV,latestMovie,popularTV,popularMovie,singleMovie)
 from webapp.context_processors import config
 import datetime
+
 _BASE_URL = "https://myapp.watchcool.in/public/api"
 class ConfigAPIView(RetrieveAPIView):
     queryset = Configuration.objects.all()

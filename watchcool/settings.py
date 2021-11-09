@@ -152,8 +152,8 @@ CACHES = {
         'BACKEND':'django.core.cache.backends.db.DatabaseCache',
         'LOCATION':'cache',
         'OPTIONS':{
-            "MAX_ENTRIES":4000,
-        }
+            "MAX_ENTRIES":8000,
+        },
     }
 }
 REST_FRAMEWORK = {
