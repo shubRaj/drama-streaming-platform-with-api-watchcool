@@ -106,16 +106,17 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
         many=True)
     if watchepisode_serializer.data:
         for watchepisode in watchepisode_serializer.data:
-            episode["videos"].append(watchepisode)
             watchepisode["episode_id"] = watchepisode.pop(
                 "episode")
             watchepisode["server"] = watchepisode.pop("source")
             if watchepisode["server"] == "XStreamCDN":
+                episode["videos"].append(watchepisode)
                 watchepisode["link"] = f'https://fembed.com{urlparse(watchepisode.pop("url")).path}'
                 watchepisode["lang"] = watchepisode.pop("language")
                 watchepisode["supported_hosts"] = 1
                 watchepisode["hls"] = 0
             elif "sb" in watchepisode["server"]:
+                episode["videos"].append(watchepisode)
                 watchepisode["server"] = "Stream Only Server"
                 watchepisode["link"] = getStreamSBSource(watchepisode.pop("url"))
                 watchepisode["lang"] = watchepisode.pop("language")
