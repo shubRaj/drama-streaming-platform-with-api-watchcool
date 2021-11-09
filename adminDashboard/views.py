@@ -358,7 +358,7 @@ class HomeView(DashboardBaseView, View):
 
 class MoviesView(DashboardBaseView, ListView):
     template_name = "adminDashboard/movies.html"
-    paginate_by = 50
+    paginate_by = 20
     model = Movie
     context_object_name = "movies"
 
@@ -391,7 +391,7 @@ class TVsView(MoviesView):
 class ReportView(DashboardBaseView,ListView):
     template_name = "adminDashboard/reports.html"
     model = Report
-    paginate_by = 50
+    paginate_by = 20
     context_object_name = "reports"
     @csrf_protected_method
     def post(self, request, *args, **kwargs):
@@ -410,7 +410,7 @@ class ReportView(DashboardBaseView,ListView):
 class UsersView(DashboardBaseView,ListView):
     template_name = "adminDashboard/users.html"
     model = USER
-    paginate_by = 50
+    paginate_by = 20
     context_object_name = "users"
     def get_queryset(self):
         return self.model.objects.filter(~Q(is_superuser=True))
@@ -492,7 +492,7 @@ class RemoteImport(DashboardBaseView,View):
                 return JsonResponse({"status":"NOT FOUND"},status=404)
         return JsonResponse({"status":"Bad Request"},status=400)
 class SearchView(DashboardBaseView,ListView):
-    paginate_by = 40
+    paginate_by = 20
     template_name = "adminDashboard/movies.html"
     def get_queryset(self):
         query = self.request.GET.get("q")
@@ -509,7 +509,7 @@ class SearchView(DashboardBaseView,ListView):
         context["label"] = "Search Results"
         return context
 class ShowWatchMovieView(DashboardBaseView,ListView):
-    paginate_by = 40
+    paginate_by = 20
     model = WatchMovie
     template_name = "adminDashboard/showmovie.html"
     def get(self,request,**kwargs):
@@ -561,7 +561,7 @@ class CreateWatchMovieLinkView(DashboardBaseView,SuccessMessageMixin,CreateView)
 class TVSeasonView(DashboardBaseView,ListView):
     model = Season
     template_name = "adminDashboard/tvseason.html"
-    paginate_by = 40
+    paginate_by = 20
     def get(self,request,**kwargs):
         self.pk = self.kwargs["pk"]
         return super().get(request,**kwargs)
@@ -610,7 +610,7 @@ class AddTVSeasonView(DashboardBaseView,View):
 class TVEpisodeView(DashboardBaseView,ListView):
     model = Episode
     template_name = "adminDashboard/tvepisode.html"
-    paginate_by = 40
+    paginate_by = 20
     def get(self,request,**kwargs):
         self.pk = self.kwargs["pk"]
         return super().get(request,**kwargs)

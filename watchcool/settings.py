@@ -95,7 +95,7 @@ if not DEBUG:
         'default': {
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'watchcool_webapp',
-            'HOST':'localhost' if not DEBUG else "45.13.132.154",
+            'HOST':'localhost',
             'USER':'cooluser',
             'PASSWORD':'Imcooluser@2021',
             'PORT':3306,
