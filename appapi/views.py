@@ -24,15 +24,15 @@ class ConfigAPIView(RetrieveAPIView):
     def get(self, request, **kwargs):
         self.kwargs["pk"] = 1
         resp = super().get(request)
-        resp.data = requests.get(
-            f"{_BASE_URL}/params").json()
-        # for key in resp.data.keys():
-        #     if isinstance(resp.data[key], bool):
+        # resp.data = requests.get(
+        #     f"{_BASE_URL}/params").json()
+        for key in resp.data.keys():
+            if isinstance(resp.data[key], bool):
 
-        #         if resp.data[key]:
-        #             resp.data[key] = 1
-        #         else:
-        #             resp.data[key] = 0
+                if resp.data[key]:
+                    resp.data[key] = 1
+                else:
+                    resp.data[key] = 0
         return resp
 
 
