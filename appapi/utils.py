@@ -73,7 +73,7 @@ def singleMovie(resp_data):
                 watchmovie["supported_hosts"] = 1
                 watchmovie["hls"] = 0
             elif "sb" in watchmovie["server"]:
-                watchmovie["link"] = getStreamSBSource(watchmovie.pop("url"))
+                watchmovie["link"] = f"https://asian.watchcool.in/watch/?source={watchmovie.pop('url')}"
                 # else:
                 #     watchmovie["link"] = f'https://asian.watchcool.in/watch/?source={watchmovie.pop("url")}'
                 watchmovie["server"] = "Stream Only Server"
@@ -98,7 +98,7 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
     episode["videos"] = []
     episode["substitles"] = []
     watchepisode_serializer = serializers.WatchEpisodeSerializer(
-        WatchEpisode.objects.filter(Q(source="XStreamCDN")|Q(source__icontains="sb"), episode=episode["id"],),
+        WatchEpisode.objects.filter(Q(source="XStreamCDN"), episode=episode["id"],),
         many=True)
     if watchepisode_serializer.data:
         for watchepisode in watchepisode_serializer.data:
