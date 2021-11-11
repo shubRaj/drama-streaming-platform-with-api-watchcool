@@ -39,13 +39,13 @@
     <meta property="og:type" content="video.drama">
     <meta property="og:title" content="{{title}}">
     <meta property="og:description" content="{{description}}">
-    <meta property="og:image" content="{tv.backdrop_path}">
+    <meta property="og:image" content="{% if tv %} {{tv.backdrop_path}} {% elif movie %} {{movie.backdrop_path}} {% else %} {{episode.still_path}} {% endif %} ">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@">
     <meta name="twitter:title" content="{{title}}">
     <meta name="twitter:url" content="{{request.build_absolute_uri}}">
     <meta name="twitter:description" content="{{description}}">
-    <meta name="twitter:image" content="{{tv.backdrop_path}}" />
+    <meta name="twitter:image" content="{% if tv %} {{tv.backdrop_path}} {% elif movie %} {{movie.backdrop_path}} {% else %} {{episode.still_path}} {% endif %} " />
     <link rel="canonical" href="{{request.build_absolute_uri}}" />
     <link rel="alternate" hreflang="en-us" href="{{request.build_absolute_uri}}" />
     <script type="text/javascript">

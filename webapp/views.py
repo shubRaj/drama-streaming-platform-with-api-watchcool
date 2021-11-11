@@ -40,9 +40,9 @@ class TVDetailView(DetailView):
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
         context["currentPage"] = "tvs"
-        title = f"Watch full episode of {self.object.title} ({self.object.release_date.year}) | {self.request.get_host()}"
+        title = f"Watch full episodes of {self.object.title} {'({})'.format(self.object.release_date.year) if self.object.release_date else '' } | {self.request.get_host()}"
         context["title"] = title
-        context["description"] = title
+        context["description"] = f"{self.request.get_host()}, you can watch full episodes of {self.object.title} {'({})'.format(self.object.release_date.year) if self.object.release_date else '' } online with English Subtitle. Watch korean dramas,japanese dramas,chinese dramas and asian dramas online for free and more free dramas online in high quality, without downloading."
         context["seasons"] = self.object.season.all()
         context["watch_now"] = self.object.season.order_by("season_number").first().episode.order_by("episode_number").first()
         return context
@@ -54,9 +54,9 @@ class MovieDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         ViewLog.objects.create(movie=self.object,user=self.request.user if self.request.user.is_authenticated else None)
         context["currentPage"] = "movies"
-        title = f"Watch {self.object.title} Online With English subtitle in FullHD quality | {self.request.get_host()}"
+        title = f"Watch {self.object.title} {'({})'.format(self.object.release_date.year) if self.object.release_date else '' } Online With English subtitle in FullHD quality | {self.request.get_host()}"
         context["title"] = title
-        context["description"] = title
+        context["description"] = f"{self.request.get_host()}, you can watch {self.object.title} {'({})'.format(self.object.release_date.year) if self.object.release_date else '' } with English Subtitle. Watch korean dramas,japanese dramas,chinese dramas and asian dramas online for free and more free dramas online in high quality, without downloading."
         if self.object.genre.exists():
             context["similars"] = Movie.objects.filter(~Q(id=self.object.id),published=True,has_genre__name=self.object.genre.first()).order_by("-release_date")[:6]
         context["download_links"] = self.object.download.all()
@@ -81,7 +81,7 @@ class EpisodeDetailView(DetailView):
         context["season"] = self.season
         title = f"Watch {self.tv.title}{f' Season {self.object.season_number}' if self.object.season_number>1 else ''} Episode {self.object.episode_number} Online With English subtitle in FullHD quality | {self.request.get_host()}"
         context["title"] = title
-        context["description"] = title
+        context["description"] =  f"{self.request.get_host()}, you can watch {self.tv.title} {'({})'.format(self.tv.release_date.year) if self.tv.release_date else '' } {f' Season {self.object.season_number}' if self.object.season_number>1 else ''} Episode {self.object.episode_number} online with English Subtitle. Watch korean dramas,japanese dramas,chinese dramas and asian dramas online for free and more free dramas online in high quality, without downloading."
         context["download_links"] = self.object.download_episode.all()
         next_episode = self.season.episode.filter(episode_number=(self.object.episode_number+1))
         if not next_episode.exists():
