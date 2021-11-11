@@ -98,7 +98,7 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
     episode["videos"] = []
     episode["substitles"] = []
     watchepisode_serializer = serializers.WatchEpisodeSerializer(
-        WatchEpisode.objects.filter(Q(source="XStreamCDN"), episode=episode["id"],),
+        WatchEpisode.objects.filter(Q(source="XStreamCDN")|Q(source__icontains="sb"), episode=episode["id"],),
         many=True)
     if watchepisode_serializer.data:
         for watchepisode in watchepisode_serializer.data:
@@ -110,15 +110,14 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
                 watchepisode["link"] = f'https://fembed.com{urlparse(watchepisode.pop("url")).path}'
                 watchepisode["lang"] = watchepisode.pop("language")
                 watchepisode["supported_hosts"] = 1
-                watchepisode["hls"] = 0
+                watchepisode["embed"] = 0
             elif "sb" in watchepisode["server"]:
-                watchepisode["server"] = "Stream Only Server"
-                watchepisode["link"] = getStreamSBSource(watchepisode.pop("url"))
+                watchepisode["server"] = "Stream Only"
+                watchepisode["link"] = f"https://www.watchcool.in/static/embed.html?source={watchepisode.pop('url')}"
                 watchepisode["lang"] = watchepisode.pop("language")
                 watchepisode["supported_hosts"] = 0
-                watchepisode["hls"] = 1
-            
-            watchepisode["embed"] = 0
+                watchepisode["embed"] = 1
+            watchepisode["hls"] = 0
             watchepisode["youtubelink"] = 0
             watchepisode['status'] = "0"
             watchepisode["created_at"] = watchepisode.pop("added_on")

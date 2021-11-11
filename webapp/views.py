@@ -60,7 +60,12 @@ class MovieDetailView(DetailView):
         if self.object.genre.exists():
             context["similars"] = Movie.objects.filter(~Q(id=self.object.id),published=True,has_genre__name=self.object.genre.first()).order_by("-release_date")[:6]
         context["download_links"] = self.object.download.all()
-        context["sources"] = self.object.watch.filter(~Q(source__contains="asian")).order_by("-source").values("id","url","source")
+        sources = list(self.object.watch.filter(~Q(source__contains="asian")).order_by("-source").values("id","url","source"))
+        for index,source in enumerate(sources):
+            if "sb" in source.get("source",""):
+                sources.append(source)
+                sources.pop(index)
+        context["sources"] = sources
         return context
 class EpisodeDetailView(DetailView):
     template = "webapp/episode_detail.html"
@@ -90,7 +95,12 @@ class EpisodeDetailView(DetailView):
         if self.tv.genre.exists():
             context["similars"] = TV.objects.filter(~Q(id=self.tv.id),published=True,has_genre__name=self.tv.genre.first()).order_by("-release_date")[:6]
         context["next_episode"] = next_episode
-        context["sources"] = self.object.watch_episode.filter(~Q(source__contains="asian")).order_by("-source").values("id","url","source")
+        sources = list(self.object.watch_episode.filter(~Q(source__contains="asian")).order_by("-source").values("id","url","source"))
+        for index,source in enumerate(sources):
+            if "sb" in source.get("source",""):
+                sources.append(source)
+                sources.pop(index)
+        context["sources"] = sources
         return context
 class TVList(ListView):
     model = TV
@@ -225,7 +235,11 @@ class AjaxEmbed(View):
                     else:
                         source = WatchMovie.objects.filter(id=int(id))
                     if source.exists():
-                        source_url = source.first().url
+                        source = source.first()
+                        if "sb" in source.source:
+                            source_url = f"https://www.watchcool.in/static/embed.html?source={source.url}"
+                        else:
+                            source_url = source.url
                         sandbox = False
                 else:
                     source_url = f"https://gdplayer.top/embed/?{id}"
