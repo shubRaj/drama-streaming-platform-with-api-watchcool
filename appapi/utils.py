@@ -5,7 +5,6 @@ from urllib.parse import urlparse
 from django.core.paginator import Paginator,EmptyPage
 from webapp.context_processors import moviesViewin, tvsViewin
 from django.db.models import Q
-from .streamsb import getStreamSBSource
 def replaceSingle(single):
     single["tmdb_id"] = str(single.pop("themoviedb_id"))
     single["imdb_external_id"] = single.pop("imdb_id")
@@ -73,7 +72,7 @@ def singleMovie(resp_data):
                 watchmovie["supported_hosts"] = 1
                 watchmovie["hls"] = 0
             elif "sb" in watchmovie["server"]:
-                watchmovie["link"] = f"https://asian.watchcool.in/watch/?source={watchmovie.pop('url')}"
+                watchmovie["link"] = f"https://www.watchcool.in/api/watch/?source={watchmovie.pop('url')}"
                 # else:
                 #     watchmovie["link"] = f'https://asian.watchcool.in/watch/?source={watchmovie.pop("url")}'
                 watchmovie["server"] = "Stream Only Server"
