@@ -85,7 +85,7 @@ def addSeason(request,tv_show,season,api_key):
             episodes_data = episodes_resp.json()
             episodes = episodes_data["episodes"]
             watchasian_url = requests.get(watchasian_search.format(
-                title = title,year = year)
+                title = f"{title} {year}",year = year)
                 ).json().get("url")
             if watchasian_url:
                 watchasian_episodes = requests.get(watchasian_episodes_url.format(
@@ -190,7 +190,7 @@ def importMovie(request,id):
             for char in f"{string.punctuation}·":
                 if char in title:
                     title = title.replace(char," ")
-            watchasian_url = requests.get(watchasian_search.format(title = title,year = year)).json().get("url")
+            watchasian_url = requests.get(watchasian_search.format(title = f"{title} {year}",year = year)).json().get("url")
             if watchasian_url:
                 watchasian_episodes = requests.get(watchasian_episodes.format(url=watchasian_url)).json()["sources"]
                 gdplayer_auth = cache.get("gdplayer_auth",None)
@@ -659,7 +659,7 @@ class AddTVEpisodeView(DashboardBaseView,View):
                             tmdbid=season_instance.tv.themoviedb_id
                         )             
                     if episode:
-                        tv_show = requests.get(self.watchasian_search.format(title=title,year=year)).json().get("url")
+                        tv_show = requests.get(self.watchasian_search.format(title= f"{title} {year}",year=year)).json().get("url")
                         watchasian_episodes = requests.get(self.watchasian_episodes_url.format(url=tv_show)).json().get("sources")
                         for watchasian_episode in watchasian_episodes:
                             if f"episode-{episode_number}" in watchasian_episode:
