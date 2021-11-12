@@ -4,8 +4,8 @@ from . import dramaAPIViews
 from django.views.decorators.cache import cache_page
 app_name = "app_appapi"
 urlpatterns = [
-    path("params/",cache_page(60*60)(views.ConfigAPIView.as_view()),name="params"),# cache for 1 hour
-    path("settings/",cache_page(60*60)(views.ConfigAPIView.as_view()),name="settings"),#cache for 1 hour
+    path("params/",views.ConfigAPIView.as_view(),name="params"),# cache for 1 hour
+    path("settings/",views.ConfigAPIView.as_view(),name="settings"),#cache for 1 hour
     path("search/<str:query>/",views.SearchAPIView.as_view(),name="search"),
     path("series/show/<int:pk>/",views.SerieAPIView.as_view(),name="serie"),
     path("media/detail/<int:pk>/",views.MovieAPIView.as_view(),name="movie"),

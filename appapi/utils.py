@@ -111,7 +111,7 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
                 watchepisode["supported_hosts"] = 1
                 watchepisode["embed"] = 0
             elif "sb" in watchepisode["server"]:
-                watchepisode["server"] = "Stream Only"
+                watchepisode["server"] = "Embedded Stream"
                 watchepisode["link"] = f"https://www.watchcool.in/static/embed.html?source={watchepisode.pop('url')}"
                 watchepisode["lang"] = watchepisode.pop("language")
                 watchepisode["supported_hosts"] = 0
