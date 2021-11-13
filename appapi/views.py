@@ -149,15 +149,12 @@ class FeaturedAPIView(SearchAPIView):
         featured_shows = sorted(
             list(
                 chain(
-                    moviesViewin(7, 10),
-                    tvsViewin(7, 10)
+                    Movie.objects.filter(published=True,featured=True).order_by("added_on")[:10],
+                    TV.objects.filter(published=True,featured=True).order_by("added_on")[:10]
                 ),
-            ), key=lambda a: a["views"], reverse=True)
-        for featured_show in featured_shows:
-            featured_show.pop("slug")
-            featured_show["id"] = featured_show.pop(
-                "movie") if featured_show.get("movie") else featured_show.pop("tv")
-        resp_data = replaceMeta(featured_shows)
+            ), key=lambda a: a.added_on, reverse=True)
+        featured_serializer = serializers.MovieSerializer(featured_shows,many=True)
+        resp_data = replaceMeta(featured_serializer.data)
         return Response({"featured": resp_data})
 
 
