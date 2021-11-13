@@ -36,7 +36,6 @@
     <meta property="og:site_name" content="{{request.get_host}}">
     <meta property="og:locale" content="en_US"/>
     <meta property="og:url" content="{{request.build_absolute_uri}}">
-    <meta property="og:type" content="video.drama">
     <meta property="og:title" content="{{title}}">
     <meta property="og:description" content="{{description}}">
     <meta property="og:image" content="{% if tv %} {{tv.backdrop_path}} {% elif movie %} {{movie.backdrop_path}} {% else %} {{episode.still_path}} {% endif %} ">

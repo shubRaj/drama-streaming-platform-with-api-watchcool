@@ -8,7 +8,7 @@ class AbsShow(models.Model):
     imdb_id = models.CharField(max_length=13,null=True,blank=True,unique=True)
     original_title = models.CharField(max_length=300,null=True,blank=True)
     featured = models.BooleanField(default=False)
-    overview = models.TextField(null=True)
+    overview = models.TextField(null=True,blank=True)
     backdrop_path = models.URLField(null=True)
     poster_path = models.URLField(null=True)
     release_date = models.DateField(null=True,blank=True)
