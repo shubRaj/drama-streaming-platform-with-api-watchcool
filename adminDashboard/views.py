@@ -190,7 +190,7 @@ def importMovie(request,id):
             for char in f"{string.punctuation}·":
                 if char in title:
                     title = title.replace(char," ")
-            watchasian_url = requests.get(watchasian_search.format(title = f"{title} {year}",year = year)).json().get("url")
+            watchasian_url = requests.get(watchasian_search.format(title = f"{title}",year = year)).json().get("url")
             if watchasian_url:
                 watchasian_episodes = requests.get(watchasian_episodes.format(url=watchasian_url)).json()["sources"]
                 gdplayer_auth = cache.get("gdplayer_auth",None)
