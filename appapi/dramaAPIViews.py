@@ -35,5 +35,5 @@ def watch(request):
     if resp.status_code == 200:
         media = json.loads(resp.content.decode()).get("source", [])
         for source in media:
-            return HttpResponseRedirect(source["file"])
+            return HttpResponseRedirect(source.get("backup"))
     return resp
