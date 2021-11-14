@@ -1,5 +1,5 @@
 from django.db import models
-import hashlib
+import hashlib,datetime
 from django.utils.text import slugify
 from django.utils import timezone
 from django.core.validators import MaxValueValidator
@@ -29,8 +29,9 @@ class AbsShow(models.Model):
         if self.id:
             self.updated_on = timezone.now()
         if not self.slug:
-            added_on_hash = hashlib.md5(str(self.added_on).encode()).hexdigest()
-            self.slug = slugify(f"{self.title}-with-english-subtitle-full-hd-{added_on_hash}")
+            year = f'-{datetime.datetime.strptime(str(self.release_date),"%Y-%m-%d").year}' if self.release_date else ''
+            # added_on_hash = hashlib.md5(str(self.added_on).encode()).hexdigest()
+            self.slug = slugify(f"{self.title}-{year}-with-english-subtitle-full-hd")
         super(AbsShow,self).save(*args,**kwargs)
 class AbsWatch(models.Model):
     source = models.CharField(max_length=30)

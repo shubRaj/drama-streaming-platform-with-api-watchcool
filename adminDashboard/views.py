@@ -87,6 +87,10 @@ def addSeason(request,tv_show,season,api_key):
             watchasian_url = requests.get(watchasian_search.format(
                 title = f"{title} {year}",year = year)
                 ).json().get("url")
+            if not watchasian_url:
+                watchasian_url = requests.get(watchasian_search.format(
+                title = f"{title}",year = year)
+                ).json().get("url")
             if watchasian_url:
                 watchasian_episodes = requests.get(watchasian_episodes_url.format(
                     url=watchasian_url
@@ -98,6 +102,7 @@ def addSeason(request,tv_show,season,api_key):
 
     else:
         messages.info(request,f"Special(0) Season Skipped",fail_silently=True)
+@transaction.atomic
 def addEpisode(request,season_obj,episode,watchasian_episode):
     watchasian_links_url = "https://was.watchcool.in/?url={url}"
     poster_base_url = "https://image.tmdb.org/t/p/w220_and_h330_face"
@@ -250,7 +255,6 @@ def importMovie(request,id):
             messages.error(request,f"Unable to add Movie",fail_silently=True)
     else:
         messages.info(request,f"{movie_show.first().title} already exists in db database.",fail_silently=True)
-@transaction.atomic
 def importTV(request,id):
     base_url = "https://api.themoviedb.org/3/tv/{id}?api_key={api_key}&language=en-US&append_to_response=external_ids"
     tv_videos_url = "https://api.themoviedb.org/3/tv/{id}/videos?api_key={api_key}&language=en-US"

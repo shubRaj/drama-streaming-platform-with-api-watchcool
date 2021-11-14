@@ -67,9 +67,9 @@ class Episode(models.Model):
         if self.id:
             self.updated_on = self.season.updated_on =timezone.now() 
         if not self.slug:
-            added_on_hash = hashlib.md5(str(self.added_on).encode()).hexdigest()
+            # added_on_hash = hashlib.md5(str(self.added_on).encode()).hexdigest()
             year = f'-{datetime.datetime.strptime(str(self.season.tv.release_date),"%Y-%m-%d").year}' if self.season.tv.release_date else ''
-            self.slug = slugify(f"{self.season.tv.title}{year}-season-{self.season.season_number}-episode-{self.episode_number}-{added_on_hash}")
+            self.slug = slugify(f"{self.season.tv.title}{year}-season-{self.season.season_number}-episode-{self.episode_number}")
         super(Episode,self).save(*args,**kwargs)
 class WatchEpisode(AbsWatch):
     episode = models.ForeignKey(Episode,on_delete=models.CASCADE,related_name="watch_episode",related_query_name="has_watch_episode")
