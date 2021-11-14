@@ -96,7 +96,10 @@ def addSeason(request,tv_show,season,api_key):
                     url=watchasian_url
                 )).json()["sources"]
                 for episode,watchasian_episode in list(zip(episodes,watchasian_episodes)):
-                    addEpisode(request,season_obj,episode,watchasian_episode) #adding episode
+                    try:
+                        addEpisode(request,season_obj,episode,watchasian_episode) #adding episode
+                    except Exception: #any exception
+                        pass
             else:
                 messages.error(request,f"Cannot find {tv_show.title} {'season '+str(season['season_number']) if season['season_number'] != 1 else ''} on watchasian",fail_silently=True)
 
