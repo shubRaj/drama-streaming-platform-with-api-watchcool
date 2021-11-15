@@ -1,3 +1,4 @@
+from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView,DetailView,View,ListView,CreateView
 from django.contrib.auth.views import LogoutView,LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -7,6 +8,7 @@ from django.shortcuts import render,redirect
 from django.db.models import Q,Count,F
 from itertools import chain
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import generics
 from .serializers import TVSerializer
 from django.http import Http404,JsonResponse
@@ -289,8 +291,13 @@ class AjaxReport(CreateView):
 
 class SearchView(TemplateView):
     template_name = "webapp/search.html"
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        
+        return super().dispatch(request, *args, **kwargs)
     def get(self,request):
         raise Http404
+    
     def post(self,request):
         return super().get(request)
     def get_context_data(self, **kwargs):
