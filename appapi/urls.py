@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from . import dramaAPIViews
+from django.views.generic import RedirectView
 from django.views.decorators.cache import cache_page
 app_name = "app_appapi"
 urlpatterns = [
@@ -51,6 +52,7 @@ urlpatterns = [
     path("upcoming/latest/",views.UpcomingAPIView.as_view(),name="upcoming_api"),
     # path("account/isSubscribed/",views.IsSubscribedAPIView.as_view(),name="isSubscribed_api"),
     path("suggest/",views.SuggestAPIView.as_view(),name="suggest_api"),
+    # path("image/minilogo",RedirectView()),
     # path("categories/list/<str:userID>",views.AllGenreAPIView.as_view(),name="categories"),
     path("",dramaAPIViews.home,name="home"),
     path("watch/",dramaAPIViews.watch,name="watch"),
