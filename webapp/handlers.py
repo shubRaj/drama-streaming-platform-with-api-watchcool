@@ -6,5 +6,5 @@ def page_not_found(request,exception):
 def server_error(request):
     return JsonResponse({"message":"Server Error - 500"},status=500)
     # return render(request,"webapp/500.html",{"title":"Server Error - 500","description":"page not found"},status=500)
-def bad_request(request):
+def bad_request(request,exception):
     return JsonResponse({"message":"Bad Request - 400"},status=400)
