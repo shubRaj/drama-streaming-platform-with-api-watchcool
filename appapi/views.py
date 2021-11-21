@@ -3,6 +3,8 @@ from rest_framework.generics import RetrieveAPIView, ListAPIView,CreateAPIView
 from rest_framework.response import Response
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
+
+from webapp.models.common import Cast
 from .models import Configuration
 from webapp.models import Movie, TV, ViewLog, Season, Episode, WatchEpisode
 from django.db.models import Q, F
@@ -10,7 +12,6 @@ from itertools import chain
 from . import serializers
 import requests
 from django.contrib.auth import get_user_model
-from webapp.context_processors import moviesViewin, tvsViewin
 from .utils import (replaceMeta, getEpisodes, singleEpisode,
 topMovie, topTV,paginate,latestTV,latestMovie,popularTV,popularMovie,singleMovie)
 from webapp.context_processors import config
@@ -154,7 +155,15 @@ class FeaturedAPIView(SearchAPIView):
                 ),
             ), key=lambda a: a.added_on, reverse=True)
         featured_serializer = serializers.MovieSerializer(featured_shows,many=True)
-        resp_data = replaceMeta(featured_serializer.data)
+        resp_data  = featured_serializer.data
+        if resp_data:
+            for single_data in resp_data:
+                single_data["featured_id"] = single_data.pop("id")
+                single_data["created_at"] = single_data.pop("added_on")
+                single_data["updated_at"] = single_data.pop("updated_on")
+                single_data["type"] = "Movie" if single_data["media_type"] == "MOVIE" else "Serie"
+                single_data["genre"] = None
+        # resp_data = replaceMeta(featured_serializer.data)
         return Response({"featured": resp_data})
 
 
@@ -288,6 +297,8 @@ class MoviesAPIView(APIView):
     def get(self,request,**kwargs):
         serializer = serializers.MovieSerializer(self.model.objects.filter(published=True).order_by("-release_date")[:60],many=True)
         resp_data = replaceMeta(serializer.data)
+        for single_data in resp_data:
+            single_data["type"] = single_data["type"].lower() 
         return Response(paginate(request,resp_data))
 class SeriesAPIView(MoviesAPIView):
     model = TV
@@ -360,7 +371,7 @@ class RegisterAPIView(CreateAPIView):
     serializer_class = serializers.UserSerializer
     def post(self,request,**kwargs):
         super().post(request,**kwargs)
-        return Response(requests.post(f"{_BASE_URL}/register",data=request.POST).json())
+        return Response({})
 class UserAPIView(APIView):
     def get(self,request):
         resp = requests.get(f"{_BASE_URL}/user",headers={"Authorization":request.META.get("HTTP_AUTHORIZATION")})
@@ -373,7 +384,7 @@ class UpdateAccountAPIView(APIView):
         return Response(requests.put(f"{_BASE_URL}/account/update",headers={"Authorization":request.META.get("HTTP_AUTHORIZATION")},data=request.data).json())
 class LoginAPIView(APIView):
     def post(self,request):
-        return Response(requests.post(f"{_BASE_URL}/login",data=request.POST).json())
+        return Response({})
 class UpcomingAPIView(ListAPIView):
     queryset = TV.objects.filter(release_date__gt=datetime.datetime.now())[:20]
     serializer_class = serializers.MovieSerializer
@@ -404,3 +415,49 @@ class SuggestAPIView(APIView):
                 }
             return Response(resp_data)
         return Response({"status":400},status=400)
+class PopularCastersAPIView(ListAPIView):
+    queryset = Cast.objects.filter(~Q(profile_path__endswith="None"),added_on__gte=(datetime.date.today()-datetime.timedelta(days=30)))[:12]
+    serializer_class = serializers.CastSerializer
+    def get(self,request,**kwargs):
+        resp = super().get(request,**kwargs)
+        resp.data = {
+            "popular_casters":resp.data,
+        }
+        return resp
+class PopularCastersGenreAPIView(ListAPIView):
+    queryset = Cast.objects.filter(~Q(profile_path__endswith="None"),added_on__gte=(datetime.date.today()-datetime.timedelta(days=30)))
+    serializer_class = serializers.CastSerializer
+    def get(self,request,**kwargs):
+        resp = super().get(request,**kwargs)
+        resp.data = paginate(request,resp.data)
+        return resp
+class CastDetailAPIView(RetrieveAPIView):
+    queryset = Cast.objects.all()
+    serializer_class = serializers.CastSerializer
+    def get(self,request,**kwargs):
+        resp = super().get(request,**kwargs)
+        resp_data = resp.data
+        if resp_data:
+            resp_data["cast_id"] = resp_data.pop("tmdb_cast_id")
+            for key in ["original_name","place_of_birth","imdb_id",
+                        "known_for_department","biography","character",
+                        "birthday","credit_id","popularity","order"]:
+                resp_data[key] = None
+            resp_data["adult"] = 0
+            resp_data["views"] = 0
+            resp_data["active"] = 1
+            resp_data["created_at"] = resp_data.pop("added_on")
+            resp_data["updated_at"] = resp_data["created_at"]
+        return resp
+class FilmographeAPIView(CastDetailAPIView):
+    def get(self,request,**kwargs):
+        cast = self.queryset.filter(id=kwargs["pk"])
+        if cast.exists():
+            cast = cast.first()
+            shows = sorted(list(chain(cast.movie.all()[:20],cast.tv.all()[:20])),key=lambda a:a.release_date,reverse=True)
+            shows = replaceMeta(serializers.MovieSerializer(shows,many=True).data)
+            for show in shows:
+                show["type"] = show["type"].lower()
+        else:
+            shows = []
+        return Response(paginate(request,shows))

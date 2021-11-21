@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer
 from .models import Configuration
 from django.contrib.auth import get_user_model
-from webapp.models import Movie,Genre,Season,Episode,WatchEpisode,WatchMovie,Report
+from webapp.models import Movie,Genre,Season,Episode,WatchEpisode,WatchMovie,Report,Cast
 class ConfigSerializer(ModelSerializer):
     class Meta:
         model = Configuration
@@ -43,3 +43,7 @@ class ReportSerializer(ModelSerializer):
     class Meta:
         model = Report
         fields = "__all__"
+class CastSerializer(ModelSerializer):
+    class Meta:
+        model = Cast
+        fields = ("id","gender","name","tmdb_cast_id","profile_path","added_on",)

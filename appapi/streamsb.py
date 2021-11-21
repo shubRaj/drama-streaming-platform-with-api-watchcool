@@ -20,7 +20,7 @@ def getSource(streamsb_url):
     if stream_data:
         parsed_url = urlparse(stream_data.get("file"))
         stream_url = f"{parsed_url.scheme}://{parsed_url.netloc}{parsed_url.path}"
-        s.head(stream_url)
+        # s.head(stream_url)
         parsed_url = urlparse(stream_data.get("backup"))
         backup_stream_url = f"{parsed_url.scheme}://{parsed_url.netloc}{parsed_url.path}"
         s.head(backup_stream_url)
@@ -29,6 +29,10 @@ def getSource(streamsb_url):
         stream_data["backup"] = backup_stream_url
         for sub in stream_data.get("subs",[]):
             sub["file"] = f"{streamsb_parsed_url.scheme}://{streamsb_parsed_url.netloc}{sub['file']}"
+        splitted_backup = stream_data['backup'].split(',')
+        splitted_file =  stream_data["file"].split(",")
+        stream_data["dl"] = f"{splitted_file[0]}{splitted_file[-2]}/{stream_data['title'].replace(' ','-')}.mp4".replace("hls/","")
+        stream_data["backup_dl"] = f"{splitted_backup[0]}{splitted_backup[-2]}/{stream_data['title'].replace(' ','-')}.mp4".replace("hls/","")
         return stream_data
 if __name__ == "__main__":
     print(getSource("https://embedsb.com/z976yp4utpcj.html"))

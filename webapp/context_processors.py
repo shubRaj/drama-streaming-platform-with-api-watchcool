@@ -71,7 +71,7 @@ def cache_context():
     data["genres"]=sorted(Genre.objects.all(),key=lambda genre:genre.movie.count()+genre.tv.count(),reverse=True)[:15]
     return data
 KEYS = ['title', 'favicon', 'logo', 'tagline', 'custom_header','gdplayer_auth','custom_footer', 'description', 'site_key', 'app_url', 'pages', 'most_popular_shows', 'sliders', 'featured', 'genres']
-def config(request): 
+def config(request=None): 
     data = cache.get_many(KEYS)
     if not data:
         data = cache_context()

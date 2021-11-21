@@ -1,10 +1,11 @@
-from webapp.models import ViewLog, Genre, WatchEpisode, Movie, TV,WatchMovie
+from webapp.models import ViewLog, Genre, WatchEpisode, Movie, TV,WatchMovie,Cast
 import datetime
 from . import serializers
 from urllib.parse import urlparse
 from django.core.paginator import Paginator,EmptyPage
 from webapp.context_processors import moviesViewin, tvsViewin
 from django.db.models import Q
+import copy
 def replaceSingle(single):
     single["tmdb_id"] = str(single.pop("themoviedb_id"))
     single["imdb_external_id"] = single.pop("imdb_id")
@@ -18,21 +19,25 @@ def replaceSingle(single):
     single[
         "poster_path"] = f'http://image.tmdb.org/t/p/w500/{single["poster_path"].split("/")[-1]}'
     single["original_name"] = single.pop("original_title")
-    single["views"] = ViewLog.objects.filter(tv=single["id"]).count(
-    ) if single["media_type"] == "TV" else ViewLog.objects.filter(movie=single["id"]).count()
     single["featured"] = 0
     single["premium"] = 0
     single["pinned"] = 0
+    single["networks"] = []
+    single["networkslist"] = []
+    single["casters"] = []
+    single["trailer_url"] = None
     single["created_at"] = single.pop("added_on")
     single["updated_at"] = single.pop("updated_on")
-    single["hd"] = 0
     genreslist = Genre.objects.filter(
-        movie=single["id"]) if single["media_type"] == "MOVIE" else Genre.objects.filter(tv=single["id"])
+        movie__id=single["id"]) if single["media_type"] == "MOVIE" else Genre.objects.filter(tv__id=single["id"])
     single["genreslist"] = [
         data["name"] for data in serializers.GenreSerializer(genreslist, many=True,).data
     ]
     if single["media_type"] == "MOVIE":
-        single["type"] = "movie"
+        single["views"] = ViewLog.objects.filter(movie=single["id"]).count() 
+        single["type"] = "Movie"
+        casters_serializer_data = serializers.CastSerializer(Cast.objects.filter(movie__id=single["id"]),many=True).data
+        single["casterslist"] = casters_serializer_data
         single["substitle"] = 0
         single["substype"] = 0
         single["videos"] = []
@@ -40,8 +45,11 @@ def replaceSingle(single):
         single["hasrecap"] = 0
         single["substitles"] = []
     else:
+        single["views"] = ViewLog.objects.filter(tv=single["id"]).count() 
         single["name"] = single.pop("title")
-        single["type"] = "serie"
+        casters_serializer_data = serializers.CastSerializer(Cast.objects.filter(tv__id=single["id"]),many=True).data
+        single["casterslist"] = casters_serializer_data
+        single["type"] = "Serie"
         single["first_air_date"] = single.pop("release_date")
         single["hasubs"] = 0
         single["newEpisodes"] = 0
@@ -59,6 +67,7 @@ def replaceMeta(data):
 def singleMovie(resp_data):
     resp_data = replaceMeta(resp_data)
     resp_data["videos"] = []
+    resp_data["downloads"] = []
     watchmovie_serializer = serializers.WatchMovieSerializer(
         WatchMovie.objects.filter(Q(source="XStreamCDN")|Q(source__icontains="sb"), movie=resp_data["id"],), many=True)
     if watchmovie_serializer.data:
@@ -66,24 +75,31 @@ def singleMovie(resp_data):
             resp_data["videos"].append(watchmovie)
             watchmovie["movie_id"] = watchmovie.pop("movie")
             watchmovie["server"] = watchmovie.pop("source")
+            watchmovie["useragent"] = None
+            watchmovie["header"] = None
+            watchmovie["video_name"] = None
+            watchmovie["lang"] = watchmovie.pop("language")
             if watchmovie["server"] == "XStreamCDN":
                 watchmovie["link"] = f'https://fembed.com{urlparse(watchmovie.pop("url")).path}'
-                watchmovie["lang"] = watchmovie.pop("language")
                 watchmovie["supported_hosts"] = 1
                 watchmovie["hls"] = 0
             elif "sb" in watchmovie["server"]:
                 watchmovie["link"] = f"https://www.watchcool.in/api/watch/?source={watchmovie.pop('url')}"
-                # else:
-                #     watchmovie["link"] = f'https://asian.watchcool.in/watch/?source={watchmovie.pop("url")}'
-                watchmovie["server"] = "Stream Only Server"
-                watchmovie["lang"] = watchmovie.pop("language")
+                watchmovie["server"] = "Stream Exclusive"
                 watchmovie["supported_hosts"] = 0
                 watchmovie["hls"] = 1
             watchmovie["embed"] = 0
             watchmovie["youtubelink"] = 0
-            watchmovie['status'] = "1"
+            watchmovie['status'] = 1
             watchmovie["created_at"] = watchmovie.pop("added_on")
             watchmovie["updated_at"] = watchmovie.pop("created_at")
+            if watchmovie["server"] == "XStreamCDN":
+                downloads = copy.copy(watchmovie)
+                downloads.pop("hls")
+                downloads.pop("embed")
+                downloads["external"] = 0
+                downloads["alldebrid_supported_hosts"] = 0
+                resp_data["downloads"].append(downloads)
     return resp_data
 def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/None"):
     episode["season_id"] = episode.pop("season")
@@ -95,6 +111,7 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
     episode["hasrecap"] = 0
     episode["skiprecap_start_in"] = 0
     episode["videos"] = []
+    episode["downloads"] = []
     episode["substitles"] = []
     watchepisode_serializer = serializers.WatchEpisodeSerializer(
         WatchEpisode.objects.filter(Q(source="XStreamCDN")|Q(source__icontains="sb"), episode=episode["id"],),
@@ -105,22 +122,32 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
             watchepisode["episode_id"] = watchepisode.pop(
                 "episode")
             watchepisode["server"] = watchepisode.pop("source")
+            watchepisode["useragent"] = None
+            watchepisode["header"] = None
+            watchepisode["video_name"] = None
             if watchepisode["server"]=="XStreamCDN":
                 watchepisode["link"] = f'https://fembed.com{urlparse(watchepisode.pop("url")).path}'
                 watchepisode["lang"] = watchepisode.pop("language")
                 watchepisode["supported_hosts"] = 1
-                watchepisode["embed"] = 0
+                watchepisode["hls"] = 0
             elif "sb" in watchepisode["server"]:
-                watchepisode["server"] = "Embedded Stream"
-                watchepisode["link"] = f"https://www.watchcool.in/static/embed.html?source={watchepisode.pop('url')}"
+                watchepisode["server"] = "Stream Exclusive"
+                watchepisode["link"] = f"https://www.watchcool.in/api/watch/?source={watchepisode.pop('url')}"
                 watchepisode["lang"] = watchepisode.pop("language")
                 watchepisode["supported_hosts"] = 0
-                watchepisode["embed"] = 1
-            watchepisode["hls"] = 0
+                watchepisode["hls"] = 1
+            watchepisode["embed"] = 0
             watchepisode["youtubelink"] = 0
-            watchepisode['status'] = "0"
+            watchepisode['status'] = 1
             watchepisode["created_at"] = watchepisode.pop("added_on")
             watchepisode["updated_at"] = watchepisode["created_at"]
+            if watchepisode["server"] == "XStreamCDN":
+                downloads = copy.copy(watchepisode)
+                downloads.pop("hls")
+                downloads.pop("embed")
+                downloads["external"] = 0
+                downloads["alldebrid_supported_hosts"] = 0
+                episode["downloads"].append(downloads)
     return episode
 def getEpisodes(episode_serializer,backdrop_path="http://image.tmdb.org/t/p/w500/None"):
     episodes = []
