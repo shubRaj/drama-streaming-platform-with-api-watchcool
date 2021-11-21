@@ -29,13 +29,14 @@ sitemaps = {
 urlpatterns = [
     path('logmein/', admin.site.urls,name="logmein"),
     path('dashboard/',include("adminDashboard.urls",namespace="adminDashboard")),
-    path("api/",include("appapi.urls",namespace="appapi")),
-    path("watchdog.xml",sitemap_views.index,{"sitemaps":sitemaps},name="django.contrib.sitemaps.views.sitemap"),
-    path('watchdog-<section>.xml', sitemap_views.sitemap, {'sitemaps': sitemaps},name='django.contrib.sitemaps.views.sitemap'),
-    path("",include("webapp.urls",namespace="webapp")),
+    path("",include("appapi.urls",namespace="appapi")),
+    # path("watchdog.xml",sitemap_views.index,{"sitemaps":sitemaps},name="django.contrib.sitemaps.views.sitemap"),
+    # path('watchdog-<section>.xml', sitemap_views.sitemap, {'sitemaps': sitemaps},name='django.contrib.sitemaps.views.sitemap'),
+    path("web16/",include("webapp.urls",namespace="webapp")),
 ]
 if settings.DEBUG:
     urlpatterns +=static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 else:
     handler404 = "webapp.handlers.page_not_found"
     handler500 = "webapp.handlers.server_error"
+    handler400 = "webapp.handlers.bad_request"
