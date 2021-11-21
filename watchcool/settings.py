@@ -34,7 +34,7 @@ if socket.gethostname() == 'dynasty':
     CSRF_COOKIE_SECURE = True
 else:
     DEBUG = True
-ALLOWED_HOSTS = [".watchcool.in",".dramaworld.in","localhost","127.0.0.1","172.16.0.218",]
+ALLOWED_HOSTS = [".watchcool.in","localhost","127.0.0.1","172.16.0.218",]
 # Application definition
 
 INSTALLED_APPS = [
