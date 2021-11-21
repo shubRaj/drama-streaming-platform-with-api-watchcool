@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-v1g$)!1p9)ksqngz^ro_a=5(b_j^@ps%(odf(w5u3#84y!k4&n
 
 if socket.gethostname() == 'dynasty':
     DEBUG = False
-    PREPEND_WWW=True
+    # PREPEND_WWW=True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
