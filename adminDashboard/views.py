@@ -477,26 +477,24 @@ class ImportMovieView(DashboardBaseView,View):
         if id:
             importMovie(request,id)
         return render(request,self.template_name)
-
 class RemoteImport(DashboardBaseView,View):
     def get(self,request):
         watch_asian_url = request.GET.get("url")
         if watch_asian_url:
-            title,season_number,episode_number = asyncio.run(Drama().get_title_from_url(watch_asian_url))
-            tmdb_data = title_to_tmdb(title)
-            if tmdb_data:
-                for tmdb in tmdb_data:
-                    if tmdb.get("original_language") in ("ko","zh","ja","th","es"):
-                        try:
-                            if tmdb.get("media_type")=="movie":
-                                importMovie(request,id=tmdb.get("id"))
-                            else:
-                                importTV(request,id=tmdb.get("id"))
-                            return JsonResponse({"status":"Success"})
-                        except Exception as e:
-                            return JsonResponse({"status":"Server Error","exception":e},status=500)
+            resp_data = requests.get(f"https://was.watchcool.in/episodes/?url={watch_asian_url}").json()
+            year = resp_data.get("year")
+            sources = resp_data.get("sources")
+            title = resp_data.get("title")
+            if len(sources)>1:
+                results = requests.get(f"https://api.themoviedb.org/3/search/tv?api_key=13297541b75a48d82d70644a1a4aade0&query={title}{'&first_air_date_year='+year if year else ''}").json().get("results")
+                if results:
+                    importTV(request,results[0].get("id"))
+                    return JsonResponse({"status":f"{title} added successfully"})
             else:
-                return JsonResponse({"status":"NOT FOUND"},status=404)
+                results = requests.get(f"https://api.themoviedb.org/3/search/movie?api_key=13297541b75a48d82d70644a1a4aade0&query={title}{'&year='+year if year else ''}").json().get("results")
+                if results:
+                    importMovie(request,results[0].get("id"))
+                    return JsonResponse({"status":f"{title} added successfully"})
         return JsonResponse({"status":"Bad Request"},status=400)
 class SearchView(DashboardBaseView,ListView):
     paginate_by = 20
