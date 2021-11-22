@@ -218,11 +218,14 @@ def paginate(request,data, per_page=12):
     last_page = p.num_pages
     try:
         page = p.page(current_page)
+        object_list = page.object_list
+        for obj in object_list:
+            obj["type"] = obj["type"].lower()
         has_previous = page.has_previous()
         has_next = page.has_next()
         resp_data = {
             "current_page": current_page,
-            "data": page.object_list,
+            "data": object_list,
             "first_page_url": f"{path}?page=1",
             "from": 1,
             "last_page": last_page,
