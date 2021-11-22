@@ -225,7 +225,7 @@ class NewEpisodeAPIView(ListAPIView):
             watch_links = WatchEpisode.objects.filter(episode=episode["episode_id"],url__icontains="streaming.php").values("url","source","language")
             if watch_links.exists():
                 watch_link = watch_links.first()
-                episode['link'] = f'https://www.watchcool.in/api/watch/?source={watch_link["url"]}'
+                episode['link'] = f'https://coolapi.watchcool.in/watch/?source={watch_link["url"]}'
                 episode['server'] = "Stream Only"
                 episode['lang'] = watch_link["language"]
             else:
