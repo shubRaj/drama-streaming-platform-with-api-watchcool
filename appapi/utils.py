@@ -220,7 +220,8 @@ def paginate(request,data, per_page=12):
         page = p.page(current_page)
         object_list = page.object_list
         for obj in object_list:
-            obj["type"] = obj["type"].lower()
+            if obj.get("type"):
+                obj["type"] = obj["type"].lower()
         has_previous = page.has_previous()
         has_next = page.has_next()
         resp_data = {
