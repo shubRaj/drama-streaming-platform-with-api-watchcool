@@ -84,7 +84,7 @@ def singleMovie(resp_data):
                 watchmovie["supported_hosts"] = 1
                 watchmovie["hls"] = 0
             elif "sb" in watchmovie["server"]:
-                watchmovie["link"] = f"https://www.watchcool.in/api/watch/?source={watchmovie.pop('url')}"
+                watchmovie["link"] = f"https://coolapi.watchcool.in/watch/?source={watchmovie.pop('url')}"
                 watchmovie["server"] = "Stream Exclusive"
                 watchmovie["supported_hosts"] = 0
                 watchmovie["hls"] = 1
@@ -132,7 +132,7 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
                 watchepisode["hls"] = 0
             elif "sb" in watchepisode["server"]:
                 watchepisode["server"] = "Stream Exclusive"
-                watchepisode["link"] = f"https://www.watchcool.in/api/watch/?source={watchepisode.pop('url')}"
+                watchepisode["link"] = f"https://coolapi.watchcool.in/watch/?source={watchepisode.pop('url')}"
                 watchepisode["lang"] = watchepisode.pop("language")
                 watchepisode["supported_hosts"] = 0
                 watchepisode["hls"] = 1
