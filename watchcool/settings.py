@@ -167,7 +167,7 @@ REST_FRAMEWORK = {
 
 }
 STATIC_URL = '/static/'
-MEDIA_URL = '/media/'
+MEDIA_URL = '/externalmedia/'
 if not DEBUG:
     STATIC_ROOT = "/var/www/html/static.watchcool.in"
     MEDIA_ROOT = "/var/www/html/media.watchcool.in"
