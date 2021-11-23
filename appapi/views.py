@@ -26,7 +26,10 @@ class ConfigAPIView(RetrieveAPIView):
         self.kwargs["pk"] = 1
         resp = super().get(request)
         # resp.data = requests.get(
-        #     f"{_BASE_URL}/params").json()
+        #     f"https://plex.watchcool.in/api/settings/p2lbgWkFrykA4QyUmpHihzmc5BNzIABq",headers={
+        #         "User-Agent":"okhttp/5.0.0-alpha.2,WatchCool (Android 10; SM-G965F; samsung star2lte; en"
+        #     }
+        #     ).json()
         for key in resp.data.keys():
             if isinstance(resp.data[key], bool):
 
