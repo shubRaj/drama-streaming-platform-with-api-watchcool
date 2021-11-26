@@ -13,12 +13,9 @@ from django.http import Http404,HttpResponseBadRequest,HttpResponseRedirect
 from itertools import chain
 from django.http import JsonResponse
 import string
-import asyncio
-from .dramaScraper import Drama
 from urllib.parse import urlparse
 from django.db.models import Q
 import datetime,requests
-from django.core.cache import cache
 from .utils import get_realtime_user,getSeason,getConfig,getEpisode
 from django.db import transaction
 from .fembed import transferToFembed
