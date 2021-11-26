@@ -32,7 +32,6 @@ def getURL(id):
     data={
         "client_id": '379944',
         "client_secret":"f5b3cfea094560e2",
-        "task_id":id,
     },
     headers = {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -45,4 +44,4 @@ def getURL(id):
             freeSlot(data["id"])
             return f'https://fembed.com/v/{data["file_id"]}'
 if __name__ == "__main__":
-    print(transferToFembed(["https://diasfem.com/v/5zgx-hdmnd5lr7n",]))
+    print(transferToFembed("https://diasfem.com/v/36752cmq41xjryk"))
