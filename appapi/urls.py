@@ -6,7 +6,7 @@ from django.conf import settings
 from django.views.decorators.cache import cache_page
 app_name = "app_appapi"
 urlpatterns = [
-    path("settings/",views.ConfigAPIView.as_view(),name="settings"),
+    path("settings/",cache_page(settings.CACHE_TIME)(views.ConfigAPIView.as_view()),name="settings"),
     path("search/<str:query>/",views.SearchAPIView.as_view(),name="search"),
     path("series/show/<int:pk>/",views.SerieAPIView.as_view(),name="serie"),
     path("media/detail/<int:pk>/",views.MovieAPIView.as_view(),name="movie"),

@@ -81,7 +81,7 @@ def singleMovie(resp_data):
             watchmovie["lang"] = watchmovie.pop("language")
             if watchmovie["server"] == "XStreamCDN":
                 watchmovie["link"] = f'https://fembed.com{urlparse(watchmovie.pop("url")).path}'
-                watchmovie["supported_hosts"] = 1
+                watchmovie["supported_hosts"] = 0
                 watchmovie["hls"] = 0
             elif "sb" in watchmovie["server"]:
                 watchmovie["link"] = f"https://coolapi.watchcool.in/watch/?source={watchmovie.pop('url')}"
