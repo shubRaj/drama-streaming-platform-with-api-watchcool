@@ -20,7 +20,6 @@ from django.db.models import Q
 import datetime,requests
 from django.core.cache import cache
 from .utils import get_realtime_user,getSeason,getConfig,getEpisode
-from .gdplayer import GDPlayer
 from django.db import transaction
 from .fembed import transferToFembed
 USER = get_user_model()
@@ -56,12 +55,7 @@ def addSeason(request,tv_show,season,api_key):
     watchasian_search = "https://was.watchcool.in/search/?q={title}&year={year}"
     watchasian_episodes_url = "https://was.watchcool.in/episodes/?url={url}"
     poster_base_url = "https://image.tmdb.org/t/p/w220_and_h330_face"
-
-    gdplayer_auth = cache.get("gdplayer_auth",None)
     title = tv_show.title
-
-    if not gdplayer_auth:
-        messages.info(request,"GDPlayer authentication is not configured",fail_silently=True)
     for char in f"{string.punctuation}·":
         if char in title:
             title = title.replace(char," ")
@@ -110,8 +104,6 @@ def addSeason(request,tv_show,season,api_key):
 def addEpisode(request,season_obj,episode,watchasian_episode):
     watchasian_links_url = "https://was.watchcool.in/?url={url}"
     poster_base_url = "https://image.tmdb.org/t/p/w220_and_h330_face"
-    
-    gdplayer_auth = cache.get("gdplayer_auth",None)
 
     episode_obj = Episode.objects.create(
         season = season_obj,
@@ -125,7 +117,6 @@ def addEpisode(request,season_obj,episode,watchasian_episode):
         air_date = episode["air_date"] if episode["air_date"] else None
     )
     watchasian_episode_links = requests.get(watchasian_links_url.format(url=watchasian_episode)).json()["sources"]
-    gdplayer_added=False
     for watchasian_episode_link in watchasian_episode_links:
         source = urlparse(watchasian_episode_link).netloc
         if source in SUPPORTED_HOSTS:
@@ -141,23 +132,6 @@ def addEpisode(request,season_obj,episode,watchasian_episode):
                 episode = episode_obj,
                 url = watchasian_episode_link
             )
-        if gdplayer_auth and not gdplayer_added:
-            try:
-                if source in ("fplayer.info","embedsito.com","diasfem.com","fembed.com",
-                "mixdrop.to","streamtape.com","mp4upload.com",):
-                    key = GDPlayer().get_slug(url=watchasian_episode_link,auth=gdplayer_auth)
-                    if key:
-                        DownloadEpisode.objects.create(
-                            episode=episode_obj,
-                            original_url=watchasian_episode,
-                            source=source,
-                            slug=key,
-                        )
-                        gdplayer_added=True
-                    else:
-                        messages.error(request,f"Unable to add download link because GDPlayer is not responding",fail_silently=True)
-            except Exception as e:
-                messages.error(request,"Error while adding download link",fail_silently=True)
 @transaction.atomic
 def importMovie(request,id):
     base_url = "https://api.themoviedb.org/3/movie/{id}?api_key={api_key}&language=en-US&append_to_response=external_ids"
@@ -210,12 +184,8 @@ def importMovie(request,id):
             watchasian_url = requests.get(watchasian_search.format(title = f"{title}",year = year)).json().get("url")
             if watchasian_url:
                 watchasian_episodes = requests.get(watchasian_episodes.format(url=watchasian_url)).json()["sources"]
-                gdplayer_auth = cache.get("gdplayer_auth",None)
-                if not gdplayer_auth:
-                    messages.info(request,"GDPlayer authentication is not configured",fail_silently=True)
                 for episode in watchasian_episodes:
                     watchasian_sources = requests.get(watchasian_links.format(url=episode)).json()["sources"]
-                    gdplayer_added=False
                     for movie_link in watchasian_sources:
                         source = urlparse(movie_link).netloc
                         if source in SUPPORTED_HOSTS:
@@ -231,23 +201,6 @@ def importMovie(request,id):
                                 source= source,
                                 url=movie_link
                             )
-                        if gdplayer_auth and not gdplayer_added:
-                            try:
-                                if source in ("fplayer.info","embedsito.com","diasfem.com","fembed.com",
-                                "mixdrop.to","streamtape.com","mp4upload.com",):
-                                    key = GDPlayer().get_slug(url=movie_link,auth=gdplayer_auth)
-                                    if key:
-                                        DownloadMovie.objects.create(
-                                            movie=movie_show,
-                                            original_url=movie_link,
-                                            source=source,
-                                            slug=key,
-                                        )
-                                        gdplayer_added=True
-                                    else:
-                                        messages.error(request,f"Unable to add download link because GDPlayer is not responding",fail_silently=True)
-                            except Exception as e:
-                                messages.error(request,"Error while adding download link",fail_silently=True)
             else:
                 messages.error(request,f"Cannot find {base_data['title']} on watchasian",fail_silently=True)
             for genre in base_data["genres"]:
