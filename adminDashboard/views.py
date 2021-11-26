@@ -22,9 +22,10 @@ from django.core.cache import cache
 from .utils import get_realtime_user,getSeason,getConfig,getEpisode
 from .gdplayer import GDPlayer
 from django.db import transaction
+from .fembed import transferToFembed
 USER = get_user_model()
 csrf_protected_method = method_decorator(csrf_protect)
-
+SUPPORTED_HOSTS = ("fplayer.info","embedsito.com","diasfem.com","fembed.com")
 
 class DashboardBaseView(UserPassesTestMixin):
     def test_func(self):
@@ -127,11 +128,18 @@ def addEpisode(request,season_obj,episode,watchasian_episode):
     gdplayer_added=False
     for watchasian_episode_link in watchasian_episode_links:
         source = urlparse(watchasian_episode_link).netloc
-        WatchEpisode.objects.create(
-            source = "XStreamCDN" if source in ("fplayer.info","embedsito.com","diasfem.com","fembed.com") else source,
-            episode = episode_obj,
-            url = watchasian_episode_link
-        )
+        if source in SUPPORTED_HOSTS:
+            WatchEpisode.objects.create(
+                source = "XStreamCDN",
+                episode = episode_obj,
+                url = transferToFembed(watchasian_episode_link)
+            )
+        else:
+            WatchEpisode.objects.create(
+                source = source,
+                episode = episode_obj,
+                url = watchasian_episode_link
+            )
         if gdplayer_auth and not gdplayer_added:
             try:
                 if source in ("fplayer.info","embedsito.com","diasfem.com","fembed.com",
@@ -209,10 +217,18 @@ def importMovie(request,id):
                     gdplayer_added=False
                     for movie_link in watchasian_sources:
                         source = urlparse(movie_link).netloc
-                        WatchMovie.objects.create(
-                            movie=movie_show,
-                            source= "XStreamCDN" if source in ("fplayer.info","embedsito.com","diasfem.com","fembed.com") else source,
-                            url=movie_link)
+                        if source in SUPPORTED_HOSTS:
+                            WatchMovie.objects.create(
+                                movie=movie_show,
+                                source= "XStreamCDN",
+                                url= transferToFembed(movie_link)
+                            )
+                        else:
+                            WatchMovie.objects.create(
+                                movie=movie_show,
+                                source= source,
+                                url=movie_link
+                            )
                         if gdplayer_auth and not gdplayer_added:
                             try:
                                 if source in ("fplayer.info","embedsito.com","diasfem.com","fembed.com",
