@@ -117,11 +117,11 @@ def addEpisode(request,season_obj,episode,watchasian_episode):
     for watchasian_episode_link in watchasian_episode_links:
         source = urlparse(watchasian_episode_link).netloc
         if source in SUPPORTED_HOSTS:
-            fembed_link = transferToFembed(watchasian_episode_link)
+            # fembed_link = transferToFembed(watchasian_episode_link)
             WatchEpisode.objects.create(
                 source = "XStreamCDN",
                 episode = episode_obj,
-                url = fembed_link if fembed_link else watchasian_episode_link
+                url = watchasian_episode_link
             )
         else:
             WatchEpisode.objects.create(
@@ -186,11 +186,11 @@ def importMovie(request,id):
                     for movie_link in watchasian_sources:
                         source = urlparse(movie_link).netloc
                         if source in SUPPORTED_HOSTS:
-                            fembed_link = transferToFembed(movie_link)
+                            # fembed_link = transferToFembed(movie_link)
                             WatchMovie.objects.create(
                                 movie=movie_show,
                                 source= "XStreamCDN",
-                                url= fembed_link if fembed_link else movie_link
+                                url= movie_link
                             )
                         else:
                             WatchMovie.objects.create(
