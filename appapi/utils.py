@@ -81,7 +81,7 @@ def singleMovie(resp_data):
             watchmovie["lang"] = watchmovie.pop("language")
             if watchmovie["server"] == "XStreamCDN":
                 watchmovie["link"] = f'https://fembed.com{urlparse(watchmovie.pop("url")).path}'
-                watchmovie["supported_hosts"] = 0
+                watchmovie["supported_hosts"] = 1
                 watchmovie["hls"] = 0
             elif "sb" in watchmovie["server"]:
                 watchmovie["link"] = f"https://coolapi.watchcool.in/watch/?source={watchmovie.pop('url')}"
@@ -90,7 +90,7 @@ def singleMovie(resp_data):
                 watchmovie["hls"] = 1
             elif "asian" in watchmovie["server"]:
                 watchmovie["link"] = f"https://coolapi.watchcool.in/watch/?source={watchmovie.pop('url')}"
-                watchmovie["server"] = "AsianCDN"
+                watchmovie["server"] = "AsianLoad"
                 watchmovie["supported_hosts"] = 0
                 watchmovie["header"] = "https://asianembed.io/"
                 watchmovie["hls"] = 1
@@ -143,7 +143,7 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
                 watchepisode["hls"] = 1
             elif "asian" in watchepisode["server"]:
                 watchepisode["link"] = f"https://coolapi.watchcool.in/watch/?source={watchepisode.pop('url')}"
-                watchepisode["server"] = "AsianCDN"
+                watchepisode["server"] = "AsianLoad"
                 watchepisode["supported_hosts"] = 0
                 watchepisode["header"] = "https://asianembed.io/"
                 watchepisode["hls"] = 1
