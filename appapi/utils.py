@@ -69,7 +69,7 @@ def singleMovie(resp_data):
     resp_data["videos"] = []
     resp_data["downloads"] = []
     watchmovie_serializer = serializers.WatchMovieSerializer(
-        WatchMovie.objects.filter(Q(source="XStreamCDN")|Q(source__icontains="sb"), movie=resp_data["id"],), many=True)
+        WatchMovie.objects.filter(Q(source="XStreamCDN")|Q(url__icontains="streaming")|Q(source__icontains="sb"), movie=resp_data["id"],), many=True)
     if watchmovie_serializer.data:
         for watchmovie in watchmovie_serializer.data:
             resp_data["videos"].append(watchmovie)
@@ -87,6 +87,12 @@ def singleMovie(resp_data):
                 watchmovie["link"] = f"https://coolapi.watchcool.in/watch/?source={watchmovie.pop('url')}"
                 watchmovie["server"] = "Stream Exclusive"
                 watchmovie["supported_hosts"] = 0
+                watchmovie["hls"] = 1
+            elif "asian" in watchmovie["server"]:
+                watchmovie["link"] = f"https://coolapi.watchcool.in/watch/?source={watchmovie.pop('url')}"
+                watchmovie["server"] = "AsianCDN"
+                watchmovie["supported_hosts"] = 0
+                watchmovie["header"] = "https://asianembed.io/"
                 watchmovie["hls"] = 1
             watchmovie["embed"] = 0
             watchmovie["youtubelink"] = 0
@@ -114,7 +120,7 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
     episode["downloads"] = []
     episode["substitles"] = []
     watchepisode_serializer = serializers.WatchEpisodeSerializer(
-        WatchEpisode.objects.filter(Q(source="XStreamCDN")|Q(source__icontains="sb"), episode=episode["id"],),
+        WatchEpisode.objects.filter(Q(source="XStreamCDN")|Q(url__icontains="streaming")|Q(source__icontains="sb"), episode=episode["id"],),
         many=True)
     if watchepisode_serializer.data:
         for watchepisode in watchepisode_serializer.data:
@@ -125,16 +131,21 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
             watchepisode["useragent"] = None
             watchepisode["header"] = None
             watchepisode["video_name"] = None
+            watchepisode["lang"] = watchepisode.pop("language")
             if watchepisode["server"]=="XStreamCDN":
                 watchepisode["link"] = f'https://fembed.com{urlparse(watchepisode.pop("url")).path}'
-                watchepisode["lang"] = watchepisode.pop("language")
                 watchepisode["supported_hosts"] = 1
                 watchepisode["hls"] = 0
             elif "sb" in watchepisode["server"]:
                 watchepisode["server"] = "Stream Exclusive"
                 watchepisode["link"] = f"https://coolapi.watchcool.in/watch/?source={watchepisode.pop('url')}"
-                watchepisode["lang"] = watchepisode.pop("language")
                 watchepisode["supported_hosts"] = 0
+                watchepisode["hls"] = 1
+            elif "asian" in watchepisode["server"]:
+                watchepisode["link"] = f"https://coolapi.watchcool.in/watch/?source={watchepisode.pop('url')}"
+                watchepisode["server"] = "AsianCDN"
+                watchepisode["supported_hosts"] = 0
+                watchepisode["header"] = "https://asianembed.io/"
                 watchepisode["hls"] = 1
             watchepisode["embed"] = 0
             watchepisode["youtubelink"] = 0
