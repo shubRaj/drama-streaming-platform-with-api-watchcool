@@ -103,7 +103,8 @@ def singleMovie(resp_data):
                 downloads = copy.copy(watchmovie)
                 downloads.pop("hls")
                 downloads.pop("embed")
-                downloads["external"] = 0
+                downloads["link"] = f'https://gavid.xyz{(urlparse(downloads.pop("link")).path).replace("/v/","/f/")}'
+                downloads["external"] = 1
                 downloads["alldebrid_supported_hosts"] = 0
                 resp_data["downloads"].append(downloads)
     return resp_data
@@ -156,7 +157,8 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
                 downloads = copy.copy(watchepisode)
                 downloads.pop("hls")
                 downloads.pop("embed")
-                downloads["external"] = 0
+                downloads["link"] = f'https://gavid.xyz{(urlparse(downloads.pop("link")).path).replace("/v/","/f/")}'
+                downloads["external"] = 1
                 downloads["alldebrid_supported_hosts"] = 0
                 episode["downloads"].append(downloads)
     return episode
