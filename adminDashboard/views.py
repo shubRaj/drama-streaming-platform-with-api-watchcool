@@ -402,7 +402,7 @@ class MoviesView(DashboardBaseView, ListView):
                             "title":movie.title,
                             "message":movie.overview,
                             "image":movie.backdrop_path,
-                            "tmdb":movie.themoviedb_id,
+                            "tmdb":movie.id,
                             "type":0 if self.model.__name__.lower() == "movie" else 1,
                         })
                         if status_code==200:
