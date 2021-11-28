@@ -9,7 +9,7 @@
 		</div>
 	</div>
 	<!-- end main title -->
-
+	{% include 'adminDashboard/includes/messages.html' with messages=messages only %}
 	<!-- users -->
 	<div class="col-12">
 		<div class="main__table-wrap">
@@ -76,6 +76,9 @@
 						</td>
 						<td>
 							<div class="main__table-btns">
+								<a href="#modal-notify-{{show.id}}" class="main__table-btn main__table-btn--view open-modal">
+									<i class="icon ion-ios-notifications"></i>
+								</a>
 								{% if show.published %}
 									<a href="#modal-status-{{show.id}}" class="main__table-btn main__table-btn--banned open-modal">
 										<i class="icon ion-ios-lock"></i>
@@ -129,7 +132,28 @@
 								</form>
 							</div>
 							<!-- end modal status -->
+							<!-- modal notify -->
+							<div id="modal-notify-{{show.id}}" class="zoom-anim-dialog mfp-hide modal">
+								<h6 class="modal__title">Send Notification</h6>
 
+								<p class="modal__text">Are you sure about sending notification?</p>
+								<form method="post" action="
+								{% if show|getClassName == 'Movie' %}
+									{% url 'app_adminDashboard:movies' %}
+								{% else %}
+									{% url 'app_adminDashboard:tvs' %}
+								{% endif %}
+								" >
+									<div class="modal__btns">
+										{% csrf_token %}
+										<input type="hidden" name="id" value="{{show.id}}">
+										<input type="hidden" name="action" value="notify">
+										<button class="modal__btn modal__btn--apply" type="submit" >Notify</button>
+										<button class="modal__btn modal__btn--dismiss" type="button">Dismiss</button>
+									</div>
+								</form>
+							</div>
+							<!-- end modal notify -->
 							<!-- modal delete -->
 							<div id="modal-delete-{{show.id}}" class="zoom-anim-dialog mfp-hide modal">
 								<h6 class="modal__title">Delete {{show|getClassName}}</h6>

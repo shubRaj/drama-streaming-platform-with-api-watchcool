@@ -19,6 +19,7 @@ import datetime,requests
 from .utils import get_realtime_user,getSeason,getConfig,getEpisode
 from django.db import transaction
 from .fembed import transferToFembed
+from .FCMManager import sendPush
 USER = get_user_model()
 csrf_protected_method = method_decorator(csrf_protect)
 SUPPORTED_HOSTS = ("fplayer.info","embedsito.com","diasfem.com","fembed.com")
@@ -356,7 +357,7 @@ class HomeView(DashboardBaseView, View):
             "latest_shows": sorted(latest_shows, key=lambda show: show.added_on, reverse=True)[:10],
             "new_users": new_users,
             "unique_views_today": ViewLog.objects.filter(viewed_on__date=datetime.date.today()).count(),
-            "active_users": get_realtime_user(),
+            "active_users": 0,
             "shows_published_this_month": (
                 Movie.objects.filter(
                     added_on__date__gt=datetime.date.today()-datetime.timedelta(days=30), published=True).count()
@@ -387,13 +388,27 @@ class MoviesView(DashboardBaseView, ListView):
             id = request.POST.get("id")
             action = request.POST.get("action")
             if id and action:
-                if action == "status":
-                    ins = self.model.objects.filter(id=id)
-                    if ins.exists():
-                        if ins.first().published:
-                            ins.update(published=False)
+                movies = self.model.objects.filter(id=id)
+                if movies.exists():
+                    if action == "status":
+                        if movies.first().published:
+                            movies.update(published=False)
                         else:
-                            ins.update(published=True)
+                            movies.update(published=True)
+                        messages.success(request,f"Status changed successfully",fail_silently=True)
+                    elif action == "notify":
+                        movie = movies.first()
+                        status_code = sendPush({
+                            "title":movie.title,
+                            "message":movie.overview,
+                            "image":movie.backdrop_path,
+                            "tmdb":movie.themoviedb_id,
+                            "type":0 if self.model.__name__.lower() == "movie" else 1,
+                        })
+                        if status_code==200:
+                            messages.success(request,f"Notification for {movie.title} sent successfully",fail_silently=True)
+                        else:
+                            messages.error(request,f"Error while sending notification",fail_silently=True)
         return super().get(request, *args, **kwargs)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
