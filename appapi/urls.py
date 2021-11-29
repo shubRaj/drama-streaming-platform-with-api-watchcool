@@ -58,6 +58,6 @@ urlpatterns = [
     path("suggest/",views.SuggestAPIView.as_view(),name="suggest_api"),
     # path("image/minilogo",RedirectView()),
     # path("categories/list/<str:userID>",views.AllGenreAPIView.as_view(),name="categories"),
-    path("",dramaAPIViews.home,name="home"),
-    path("watch/",dramaAPIViews.watch,name="watch"),
+    # path("",dramaAPIViews.home,name="home"),
+    # path("watch/",dramaAPIViews.watch,name="watch"),
 ]
