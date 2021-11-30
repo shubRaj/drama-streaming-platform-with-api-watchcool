@@ -86,7 +86,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'watchcool.wsgi.application'
-# APPEND_SLASH=False
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
