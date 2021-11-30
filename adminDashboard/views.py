@@ -23,7 +23,18 @@ from .FCMManager import sendPush
 USER = get_user_model()
 csrf_protected_method = method_decorator(csrf_protect)
 SUPPORTED_HOSTS = ("fplayer.info","embedsito.com","diasfem.com","fembed.com")
-
+def deleteEmptySeasons():
+    for season in Season.objects.all():
+        if season.episode.count() < 1:
+            season.delete()
+def deleteEmptyMovie():
+    for movie in Movie.objects.all():
+        if movie.watch.count() < 1:
+            movie.delete()
+def deleteEmptyTV():
+    for tv in TV.objects.all():
+        if tv.season.count() < 1:
+            tv.delete()
 class DashboardBaseView(UserPassesTestMixin):
     def test_func(self):
         return self.request.user.is_superuser or self.request.user.groups.filter(name__icontains='manager').exists() or self.request.META.get("HTTP_LOCALHOST") == "yes"
@@ -522,6 +533,12 @@ class RemoteImport(DashboardBaseView,View):
                 if results:
                     importMovie(request,results[0].get("id"))
                     return JsonResponse({"status":f"{title} added successfully"})
+        return JsonResponse({"status":"Bad Request"},status=400)
+class RemoteDelete(DashboardBaseView,View):
+    def get(self,request):
+        deleteEmptyMovie()
+        deleteEmptySeasons()
+        deleteEmptyTV()
         return JsonResponse({"status":"Bad Request"},status=400)
 class SearchView(DashboardBaseView,ListView):
     paginate_by = 20
