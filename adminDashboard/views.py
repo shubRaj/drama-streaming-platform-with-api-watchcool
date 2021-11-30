@@ -539,7 +539,7 @@ class RemoteDelete(DashboardBaseView,View):
         deleteEmptyMovie()
         deleteEmptySeasons()
         deleteEmptyTV()
-        return JsonResponse({"status":"Bad Request"},status=400)
+        return JsonResponse({"status":"Deleted"},status=200)
 class SearchView(DashboardBaseView,ListView):
     paginate_by = 20
     template_name = "adminDashboard/movies.html"
