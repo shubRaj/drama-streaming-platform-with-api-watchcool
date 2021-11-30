@@ -29,6 +29,6 @@ urlpatterns = [
     path("delete/tv/<int:pk>/",views.DeleteTVView.as_view(),name="delete_tv"),
     path("delete/report/<int:pk>/",views.DeleteReportView.as_view(),name="delete_report"),
     path("delete/user/<int:pk>/",views.DeleteUserView.as_view(),name="delete_user"),
-    path("delete",views.RemoteDelete.as_view(),name="delete_empty"),
+    path("delete/",views.RemoteDelete.as_view(),name="delete_empty"),
     path("",views.HomeView.as_view(),name="home"),
 ]
