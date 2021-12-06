@@ -22,7 +22,7 @@ from .fembed import transferToFembed
 from .FCMManager import sendPush
 USER = get_user_model()
 csrf_protected_method = method_decorator(csrf_protect)
-SUPPORTED_HOSTS = ("fplayer.info","embedsito.com","diasfem.com","fembed.com")
+SUPPORTED_HOSTS = ("fembed-hd.com","fplayer.info","embedsito.com","diasfem.com","fembed.com")
 def deleteEmptySeasons():
     for season in Season.objects.all():
         if season.episode.count() < 1:
