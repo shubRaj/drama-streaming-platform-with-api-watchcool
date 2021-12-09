@@ -85,7 +85,7 @@ def singleMovie(resp_data):
                 watchmovie["hls"] = 0
             elif "sb" in watchmovie["server"]:
                 watchmovie["link"] = f"https://stream.watchcool.in/watch/?source={watchmovie.pop('url')}"
-                watchmovie["server"] = "Stream Exclusive"
+                watchmovie["server"] = "SB"
                 watchmovie["supported_hosts"] = 0
                 watchmovie["hls"] = 1
             elif "asian" in watchmovie["server"]:
@@ -99,7 +99,7 @@ def singleMovie(resp_data):
             watchmovie['status'] = 1
             watchmovie["created_at"] = watchmovie.pop("added_on")
             watchmovie["updated_at"] = watchmovie.pop("created_at")
-            if (watchmovie["server"] == "XStreamCDN") or (watchmovie["server"] == "Stream Exclusive"):
+            if (watchmovie["server"] == "XStreamCDN") or (watchmovie["server"] == "SB"):
                 downloads = copy.copy(watchmovie)
                 downloads.pop("hls")
                 downloads.pop("embed")
@@ -137,7 +137,7 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
                 watchepisode["supported_hosts"] = 1
                 watchepisode["hls"] = 0
             elif "sb" in watchepisode["server"]:
-                watchepisode["server"] = "Stream Exclusive"
+                watchepisode["server"] = "SB"
                 watchepisode["link"] = f"https://stream.watchcool.in/watch/?source={watchepisode.pop('url')}"
                 watchepisode["supported_hosts"] = 0
                 watchepisode["hls"] = 1
@@ -152,7 +152,7 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
             watchepisode['status'] = 1
             watchepisode["created_at"] = watchepisode.pop("added_on")
             watchepisode["updated_at"] = watchepisode["created_at"]
-            if (watchepisode["server"] == "XStreamCDN") or (watchepisode["server"] == "Stream Exclusive"):
+            if (watchepisode["server"] == "XStreamCDN") or (watchepisode["server"] == "SB"):
                 downloads = copy.copy(watchepisode)
                 downloads.pop("hls")
                 downloads.pop("embed")
