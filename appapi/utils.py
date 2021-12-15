@@ -75,9 +75,9 @@ def singleMovie(resp_data):
             resp_data["videos"].append(watchmovie)
             watchmovie["movie_id"] = watchmovie.pop("movie")
             watchmovie["server"] = watchmovie.pop("source")
-            watchmovie["useragent"] = None
-            watchmovie["header"] = None
-            watchmovie["video_name"] = None
+            watchmovie["useragent"] = ""
+            watchmovie["header"] = ""
+            watchmovie["video_name"] = ""
             watchmovie["lang"] = watchmovie.pop("language")
             if watchmovie["server"] == "XStreamCDN":
                 watchmovie["link"] = f'https://fembed.com{urlparse(watchmovie.pop("url")).path}'
@@ -129,8 +129,8 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
             watchepisode["episode_id"] = watchepisode.pop(
                 "episode")
             watchepisode["server"] = watchepisode.pop("source")
-            watchepisode["useragent"] = None
-            watchepisode["header"] = None
+            watchepisode["useragent"] = ""
+            watchepisode["header"] = ""
             watchepisode["video_name"] = None
             watchepisode["lang"] = watchepisode.pop("language")
             if watchepisode["server"]=="XStreamCDN":
@@ -153,12 +153,12 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
             watchepisode['status'] = 1
             watchepisode["created_at"] = watchepisode.pop("added_on")
             watchepisode["updated_at"] = watchepisode["created_at"]
-            if (watchepisode["server"] == "XStreamCDN") or (watchepisode["server"] == "SB"):
+            if (watchepisode["server"] == "SB"):
                 downloads = copy.copy(watchepisode)
                 downloads.pop("hls")
                 downloads.pop("embed")
                 downloads["link"] = downloads["link"].replace("/watch/","/download/")
-                downloads["external"] = 0
+                downloads["external"] = 1
                 downloads["alldebrid_supported_hosts"] = 0
                 episode["downloads"].append(downloads)
     return episode
