@@ -153,12 +153,13 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
             watchepisode['status'] = 1
             watchepisode["created_at"] = watchepisode.pop("added_on")
             watchepisode["updated_at"] = watchepisode["created_at"]
-            if (watchepisode["server"] == "SB"):
+            if (watchepisode["server"] == "XStreamCDN") or (watchepisode["server"] == "SB"):
                 downloads = copy.copy(watchepisode)
                 downloads.pop("hls")
                 downloads.pop("embed")
                 downloads["link"] = downloads["link"].replace("/watch/","/download/")
-                downloads["external"] = 1
+                downloads["server"] =  "(ADM or 1DM) Server" if (watchepisode["server"] == "XStreamCDN") else "External Server"
+                downloads["external"] = 0 if (watchepisode["server"] == "XStreamCDN") else 1
                 downloads["alldebrid_supported_hosts"] = 0
                 episode["downloads"].append(downloads)
     return episode
