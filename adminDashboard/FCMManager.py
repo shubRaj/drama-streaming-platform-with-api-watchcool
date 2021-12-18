@@ -10,6 +10,7 @@ def sendPush(data: dict = {}):
     body = {
         "data": data,
         'to': "/topics/all",
+        "priority": "high",
     }
     response = requests.post(
         "https://fcm.googleapis.com/fcm/send", headers=headers, data=json.dumps(body))
