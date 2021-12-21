@@ -99,11 +99,12 @@ def singleMovie(resp_data):
             watchmovie['status'] = 1
             watchmovie["created_at"] = watchmovie.pop("added_on")
             watchmovie["updated_at"] = watchmovie.pop("created_at")
-            if (watchmovie["server"] == "XStreamCDN") or (watchmovie["server"] == "SB"):
+            if (watchmovie["server"] == "XStreamCDN"):
                 downloads = copy.copy(watchmovie)
                 downloads.pop("hls")
                 downloads.pop("embed")
                 downloads["link"] = downloads["link"].replace("/watch/","/download/")
+                downloads["server"] =  "Use either ADM or 1DM to download" if (watchmovie["server"] == "XStreamCDN") else "External Server"
                 downloads["external"] = 0
                 downloads["alldebrid_supported_hosts"] = 0
                 resp_data["downloads"].append(downloads)
@@ -158,7 +159,7 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
                 downloads.pop("hls")
                 downloads.pop("embed")
                 downloads["link"] = downloads["link"].replace("/watch/","/download/")
-                downloads["server"] =  "(ADM or 1DM) Server" if (watchepisode["server"] == "XStreamCDN") else "External Server"
+                downloads["server"] =  "Use either ADM or 1DM to download" if (watchepisode["server"] == "XStreamCDN") else "External Server"
                 downloads["external"] = 0 if (watchepisode["server"] == "XStreamCDN") else 1
                 downloads["alldebrid_supported_hosts"] = 0
                 episode["downloads"].append(downloads)
