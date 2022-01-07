@@ -5,6 +5,7 @@ from urllib.parse import urlparse
 from django.core.paginator import Paginator,EmptyPage
 from webapp.context_processors import moviesViewin, tvsViewin
 from django.db.models import Q
+import requests
 import copy
 def replaceSingle(single):
     single["tmdb_id"] = str(single.pop("themoviedb_id"))
@@ -158,8 +159,8 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
                 downloads = copy.copy(watchepisode)
                 downloads.pop("hls")
                 downloads.pop("embed")
-                downloads["link"] = downloads["link"].replace("/watch/","/download/")
-                downloads["server"] =  "Use either ADM or 1DM to download" if (watchepisode["server"] == "XStreamCDN") else "External Server"
+                if watchepisode["server"] == "StreamX":
+                    downloads["link"] = requests.get(downloads["link"].replace("/watch/","")).json()[0]["dl"]
                 downloads["external"] = 0
                 downloads["alldebrid_supported_hosts"] = 0
                 episode["downloads"].append(downloads)
