@@ -103,8 +103,8 @@ def singleMovie(resp_data):
                 downloads = copy.copy(watchmovie)
                 downloads.pop("hls")
                 downloads.pop("embed")
-                downloads["link"] = downloads["link"].replace("/watch/","/download/")
-                downloads["server"] =  "Use either ADM or 1DM to download" if (watchmovie["server"] == "XStreamCDN") else "External Server"
+                if downloads["server"] == "StreamX":
+                    downloads["link"] = downloads["link"].replace("/watch/","/download/")
                 downloads["external"] = 0
                 downloads["alldebrid_supported_hosts"] = 0
                 resp_data["downloads"].append(downloads)
@@ -158,7 +158,7 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
                 downloads = copy.copy(watchepisode)
                 downloads.pop("hls")
                 downloads.pop("embed")
-                if watchepisode["server"] == "StreamX":
+                if downloads["server"] == "StreamX":
                     downloads["link"] = downloads["link"].replace("/watch/","/download/")
                 downloads["external"] = 0
                 downloads["alldebrid_supported_hosts"] = 0
