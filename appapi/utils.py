@@ -69,7 +69,7 @@ def singleMovie(resp_data):
     resp_data["videos"] = []
     resp_data["downloads"] = []
     watchmovie_serializer = serializers.WatchMovieSerializer(
-        WatchMovie.objects.filter(Q(source="XStreamCDN")|Q(url__icontains="streaming")|Q(source__icontains="sb"), movie=resp_data["id"],), many=True)
+        WatchMovie.objects.filter(Q(source="XStreamCDN")|Q(source__icontains="sb"), movie=resp_data["id"],), many=True)
     if watchmovie_serializer.data:
         for watchmovie in watchmovie_serializer.data:
             resp_data["videos"].append(watchmovie)
@@ -85,7 +85,7 @@ def singleMovie(resp_data):
                 watchmovie["hls"] = 0
             elif "sb" in watchmovie["server"]:
                 watchmovie["link"] = f"https://stream.watchcool.in/watch/?source={watchmovie.pop('url')}"
-                watchmovie["server"] = "SB"
+                watchmovie["server"] = "StreamX"
                 watchmovie["supported_hosts"] = 0
                 watchmovie["hls"] = 1
             elif "asian" in watchmovie["server"]:
@@ -122,7 +122,7 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
     episode["downloads"] = []
     episode["substitles"] = []
     watchepisode_serializer = serializers.WatchEpisodeSerializer(
-        WatchEpisode.objects.filter(Q(source="XStreamCDN")|Q(url__icontains="streaming")|Q(source__icontains="sb"), episode=episode["id"],),
+        WatchEpisode.objects.filter(Q(source="XStreamCDN")|Q(source__icontains="sb"), episode=episode["id"],),
         many=True)
     if watchepisode_serializer.data:
         for watchepisode in watchepisode_serializer.data:
@@ -139,7 +139,7 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
                 watchepisode["supported_hosts"] = 1
                 watchepisode["hls"] = 0
             elif "sb" in watchepisode["server"]:
-                watchepisode["server"] = "SB"
+                watchepisode["server"] = "StreamX"
                 watchepisode["link"] = f"https://stream.watchcool.in/watch/?source={watchepisode.pop('url')}"
                 watchepisode["supported_hosts"] = 0
                 watchepisode["hls"] = 1
@@ -160,7 +160,7 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
                 downloads.pop("embed")
                 downloads["link"] = downloads["link"].replace("/watch/","/download/")
                 downloads["server"] =  "Use either ADM or 1DM to download" if (watchepisode["server"] == "XStreamCDN") else "External Server"
-                downloads["external"] = 0 if (watchepisode["server"] == "XStreamCDN") else 1
+                downloads["external"] = 0
                 downloads["alldebrid_supported_hosts"] = 0
                 episode["downloads"].append(downloads)
     return episode
