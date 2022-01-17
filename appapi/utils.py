@@ -198,7 +198,7 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
         watchepisode["server"] = "Fast+"
         watchepisode["link"] = f"https://stream.watchcool.in/watch/?source={source_url}"
         watchepisode["supported_hosts"] = 0
-        watchepisode["hls"] = 1
+        watchepisode["hls"] = 0
         watchepisode["embed"] = 0
         watchepisode["youtubelink"] = 0
         watchepisode['status'] = 1
