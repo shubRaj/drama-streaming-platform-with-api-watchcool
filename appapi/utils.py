@@ -113,6 +113,8 @@ def singleMovie(resp_data):
     if source_url:
         watchepisode = {}
         watchepisode["movie_id"] = movie_instance.id
+        watchepisode["quality"] = "Auto"
+        watchepisode["id"] = watchepisode["movie_id"]
         watchepisode["useragent"] = ""
         watchepisode["header"] = "watchasian.sh"
         watchepisode["video_name"] = None
@@ -185,6 +187,8 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
     if source_url:
         watchepisode = {}
         watchepisode["episode_id"] = ep_instance.id
+        watchepisode["quality"] = "Auto"
+        watchepisode["id"] = watchepisode["episode_id"]
         watchepisode["useragent"] = ""
         watchepisode["header"] = "watchasian.sh"
         watchepisode["video_name"] = None
