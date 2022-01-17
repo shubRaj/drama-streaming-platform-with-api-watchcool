@@ -1,4 +1,4 @@
-from webapp.models import ViewLog, Genre, WatchEpisode, Movie, TV,WatchMovie,Cast
+from webapp.models import ViewLog, Genre, WatchEpisode, Movie, TV,WatchMovie,Cast,Episode
 import datetime
 from . import serializers
 from urllib.parse import urlparse
@@ -108,6 +108,23 @@ def singleMovie(resp_data):
                 downloads["external"] = 0
                 downloads["alldebrid_supported_hosts"] = 0
                 resp_data["downloads"].append(downloads)
+    movie_instance = Movie.objects.get(id=resp_data["id"]).values("id","source_url")
+    source_url = movie_instance.source_url
+    if source_url:
+        watchepisode = []
+        watchepisode["movie_id"] = movie_instance.id
+        watchepisode["useragent"] = ""
+        watchepisode["header"] = "watchasian.sh"
+        watchepisode["video_name"] = None
+        watchepisode["lang"] = "English"
+        watchepisode["server"] = "Fast+"
+        watchepisode["link"] = f"https://stream.watchcool.in/watch/?source={source_url}"
+        watchepisode["supported_hosts"] = 0
+        watchepisode["hls"] = 1
+        watchepisode["embed"] = 0
+        watchepisode["youtubelink"] = 0
+        watchepisode['status'] = 1
+        resp_data["videos"].append(watchepisode)
     return resp_data
 def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/None"):
     episode["season_id"] = episode.pop("season")
@@ -163,6 +180,23 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
                 downloads["external"] = 0
                 downloads["alldebrid_supported_hosts"] = 0
                 episode["downloads"].append(downloads)
+    ep_instance = Episode.objects.get(id=episode["id"]).values("id","source_url")
+    source_url = ep_instance.source_url
+    if source_url:
+        watchepisode = []
+        watchepisode["episode_id"] = ep_instance.id
+        watchepisode["useragent"] = ""
+        watchepisode["header"] = "watchasian.sh"
+        watchepisode["video_name"] = None
+        watchepisode["lang"] = "English"
+        watchepisode["server"] = "Fast+"
+        watchepisode["link"] = f"https://stream.watchcool.in/watch/?source={source_url}"
+        watchepisode["supported_hosts"] = 0
+        watchepisode["hls"] = 1
+        watchepisode["embed"] = 0
+        watchepisode["youtubelink"] = 0
+        watchepisode['status'] = 1
+        episode["videos"].append(watchepisode)
     return episode
 def getEpisodes(episode_serializer,backdrop_path="http://image.tmdb.org/t/p/w500/None"):
     episodes = []
