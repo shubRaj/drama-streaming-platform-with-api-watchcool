@@ -126,6 +126,8 @@ def singleMovie(resp_data):
         watchepisode["embed"] = 0
         watchepisode["youtubelink"] = 0
         watchepisode['status'] = 1
+        watchepisode["created_at"] = movie_instance.added_on
+        watchepisode["updated_at"] = movie_instance.updated_on
         resp_data["videos"].append(watchepisode)
     return resp_data
 def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/None"):
@@ -200,6 +202,8 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
         watchepisode["embed"] = 0
         watchepisode["youtubelink"] = 0
         watchepisode['status'] = 1
+        watchepisode["created_at"] = ep_instance.added_on
+        watchepisode["updated_at"] = ep_instance.updated_on
         episode["videos"].append(watchepisode)
     return episode
 def getEpisodes(episode_serializer,backdrop_path="http://image.tmdb.org/t/p/w500/None"):
