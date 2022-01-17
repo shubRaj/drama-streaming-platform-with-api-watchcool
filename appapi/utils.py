@@ -108,7 +108,7 @@ def singleMovie(resp_data):
                 downloads["external"] = 0
                 downloads["alldebrid_supported_hosts"] = 0
                 resp_data["downloads"].append(downloads)
-    movie_instance = Movie.objects.get(id=resp_data["id"]).values("id","source_url")
+    movie_instance = Movie.objects.get(id=resp_data["id"])
     source_url = movie_instance.source_url
     if source_url:
         watchepisode = []
@@ -180,7 +180,7 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
                 downloads["external"] = 0
                 downloads["alldebrid_supported_hosts"] = 0
                 episode["downloads"].append(downloads)
-    ep_instance = Episode.objects.get(id=episode["id"]).values("id","source_url")
+    ep_instance = Episode.objects.get(id=episode["id"])
     source_url = ep_instance.source_url
     if source_url:
         watchepisode = []
