@@ -123,6 +123,7 @@ def addEpisode(request,season_obj,episode,watchasian_episode):
         tmdb_episode_id = episode["id"],
         still_path = f'{poster_base_url}{episode["still_path"]}',
         vote_average = episode["vote_average"],
+        source_url= watchasian_episode,
         air_date = episode["air_date"] if episode["air_date"] else None
     )
     watchasian_episode_links = requests.get(watchasian_links_url.format(url=watchasian_episode)).json()["sources"]
@@ -167,20 +168,6 @@ def importMovie(request,id):
                     if (video["site"].lower() == "youtube") and (video["type"].lower() == "trailer"):
                         trailer = f"https://www.youtube.com/embed/{video['key']}"
                         break
-            movie_show = Movie.objects.create(
-                themoviedb_id = base_data["id"],
-                imdb_id = base_data["external_ids"].get("imdb_id"),
-                original_title = base_data["original_title"],
-                title = base_data["title"],
-                overview = base_data["overview"],
-                backdrop_path = f"{backdrop_base_url}{base_data['backdrop_path']}",
-                poster_path = f"{poster_base_url}{base_data['poster_path']}",
-                release_date = base_data["release_date"],
-                tagline = base_data["tagline"],
-                runtime = base_data["runtime"],
-                vote_average=base_data["vote_average"],
-                trailer=trailer,
-            )
             title = base_data["title"]
             release_date = base_data["release_date"]
             if release_date:
@@ -193,7 +180,23 @@ def importMovie(request,id):
             watchasian_url = requests.get(watchasian_search.format(title = f"{title}",year = year)).json().get("url")
             if watchasian_url:
                 watchasian_episodes = requests.get(watchasian_episodes.format(url=watchasian_url)).json()["sources"]
-                for episode in watchasian_episodes:
+                if watchasian_episodes:
+                    episode = watchasian_episodes[0]
+                    movie_show = Movie.objects.create(
+                        themoviedb_id = base_data["id"],
+                        imdb_id = base_data["external_ids"].get("imdb_id"),
+                        original_title = base_data["original_title"],
+                        title = base_data["title"],
+                        overview = base_data["overview"],
+                        backdrop_path = f"{backdrop_base_url}{base_data['backdrop_path']}",
+                        poster_path = f"{poster_base_url}{base_data['poster_path']}",
+                        release_date = base_data["release_date"],
+                        tagline = base_data["tagline"],
+                        runtime = base_data["runtime"],
+                        source_url = episode,
+                        vote_average=base_data["vote_average"],
+                        trailer=trailer,
+                    )
                     watchasian_sources = requests.get(watchasian_links.format(url=episode)).json()["sources"]
                     for movie_link in watchasian_sources:
                         source = urlparse(movie_link).netloc

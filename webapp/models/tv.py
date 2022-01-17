@@ -46,6 +46,7 @@ class Episode(models.Model):
     episode_number = models.IntegerField()
     season_number = models.IntegerField()
     tmdb_episode_id = models.IntegerField()
+    source_url = models.CharField(null=True,blank=True,max_length=2083)
     slug = models.SlugField(null=True,blank=True,max_length=2083)
     still_path = models.URLField(null=True,blank=True)
     vote_average = models.IntegerField(null=True,blank=True)

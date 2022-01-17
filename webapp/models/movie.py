@@ -3,6 +3,7 @@ from django.urls import reverse
 from .absmodels import AbsWatch,AbsSubtitle,AbsShow,AbsDownload
 class Movie(AbsShow):
     media_type=models.CharField(default="MOVIE",max_length=5)
+    source_url = models.CharField(null=True,blank=True,max_length=2083)
     class Meta:
         ordering = ("-added_on","-release_date",)
         db_table = "movie"
