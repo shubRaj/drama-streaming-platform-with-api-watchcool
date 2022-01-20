@@ -143,7 +143,7 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
     episode["downloads"] = []
     episode["substitles"] = []
     watchepisode_serializer = serializers.WatchEpisodeSerializer(
-        WatchEpisode.objects.filter(Q(source="XStreamCDN")|Q(source__icontains="sb"), episode=episode["id"],),
+        WatchEpisode.objects.filter(Q(source="XStreamCDN")|Q(source__icontains="sb")|Q(url__icontains="streaming.php"), episode=episode["id"],),
         many=True)
     if watchepisode_serializer.data:
         for watchepisode in watchepisode_serializer.data:
@@ -158,6 +158,11 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
             if watchepisode["server"]=="XStreamCDN":
                 watchepisode["link"] = f'https://fembed.com{urlparse(watchepisode.pop("url")).path}'
                 watchepisode["supported_hosts"] = 1
+                watchepisode["hls"] = 0
+            elif "streaming.php" in watchepisode["url"]:
+                watchepisode["server"] = "Xtreme"
+                watchepisode["link"] = f'https://stream.watchcool.in/watch/?source={watchepisode.pop("url")}'
+                watchepisode["supported_hosts"] = 0
                 watchepisode["hls"] = 0
             elif "sb" in watchepisode["server"]:
                 watchepisode["server"] = "StreamX"
