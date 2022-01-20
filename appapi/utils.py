@@ -188,7 +188,11 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
                     downloads["link"] = downloads["link"].replace("/watch/","/download/")
                 elif downloads["server"] == "Xtreme":
                     downloads["link"] = f'https://asianembed.io/download?id={parse_qs(urlparse(parse_qs(urlparse(downloads["link"]).query)["source"][0]).query)["id"][0]}'
-                downloads["external"] = 1 if downloads["server"] == "Xtreme" else 0
+                if downloads["server"] == "Xtreme":
+                    downloads["server"] = "External Download"
+                    downloads["external"] = 1
+                else:
+                    downloads["external"] = 0
                 downloads["alldebrid_supported_hosts"] = 0
                 episode["downloads"].append(downloads)
     ep_instance = Episode.objects.get(id=episode["id"])
