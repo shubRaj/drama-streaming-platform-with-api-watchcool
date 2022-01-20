@@ -199,7 +199,7 @@ class PopularMovieAPIView(PopularSerieAPIView):
 
 
 class NewEpisodeAPIView(ListAPIView):
-    queryset = Episode.objects.filter(has_watch_episode__source="XStreamCDN").order_by("-added_on").values(
+    queryset = Episode.objects.filter(has_watch_episode__source__icontains="sb").order_by("-added_on").values(
         "id",
         "episode_number",
         "still_path",
@@ -237,7 +237,7 @@ class NewEpisodeAPIView(ListAPIView):
                 episode['lang'] = ''
             episode['embed'] = '0'
             episode['youtubelink'] = '0'
-            episode['hls'] = '1'
+            episode['hls'] = '0'
             episode['seasons_name'] = episode.pop("season_name")
             episode['premuim'] = 0 
             episode['poster_path']= episode["still_path"]
