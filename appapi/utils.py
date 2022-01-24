@@ -34,7 +34,7 @@ def replaceSingle(single):
         data["name"] for data in serializers.GenreSerializer(genreslist, many=True,).data
     ]
     if single["media_type"] == "MOVIE":
-        single["views"] = ViewLog.objects.filter(movie=single["id"]).count() 
+        single["views"] = 0 #ViewLog.objects.filter(movie=single["id"]).count() 
         single["type"] = "Movie"
         casters_serializer_data = serializers.CastSerializer(Cast.objects.filter(movie__id=single["id"]),many=True).data
         single["casterslist"] = casters_serializer_data
@@ -45,7 +45,7 @@ def replaceSingle(single):
         single["hasrecap"] = 0
         single["substitles"] = []
     else:
-        single["views"] = ViewLog.objects.filter(tv=single["id"]).count() 
+        single["views"] = 0 #ViewLog.objects.filter(tv=single["id"]).count() 
         single["name"] = single.pop("title")
         casters_serializer_data = serializers.CastSerializer(Cast.objects.filter(tv__id=single["id"]),many=True).data
         single["casterslist"] = casters_serializer_data
