@@ -163,7 +163,7 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
                 watchepisode["server"] = "Xtreme"
                 watchepisode["link"] = f'https://stream.watchcool.in/watch/?source={watchepisode.pop("url")}'
                 watchepisode["supported_hosts"] = 0
-                watchepisode["hls"] = 1
+                watchepisode["hls"] = 0
             elif "sb" in watchepisode["server"]:
                 watchepisode["server"] = "StreamX"
                 watchepisode["link"] = f"https://stream.watchcool.in/watch/?source={watchepisode.pop('url')}"
