@@ -237,7 +237,7 @@ class NewEpisodeAPIView(ListAPIView):
                 episode['lang'] = ''
             episode['embed'] = '0'
             episode['youtubelink'] = '0'
-            episode['hls'] = '0'
+            episode['hls'] = '1'
             episode['seasons_name'] = episode.pop("season_name")
             episode['premuim'] = 0 
             episode['poster_path']= episode["still_path"]
