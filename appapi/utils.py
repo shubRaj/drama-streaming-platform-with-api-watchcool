@@ -162,10 +162,10 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
                 watchepisode["hls"] = 0
             elif "streaming.php" in watchepisode["url"]:
                 watchepisode["server"] = "Xtreme"
-                watchepisode["link"] = f'{watchepisode.pop("url")}'
+                watchepisode["watchasian_id"] = parse_qs(urlparse(f'{watchepisode.pop("url")}').query)["id"][-1]
+                watchepisode["link"] = f"https://wa.watchcool.in/{watchepisode['watchasian_id']}"
                 watchepisode["supported_hosts"] = 0
                 watchepisode["hls"] = 0
-                watchepisode["embed"] = 1
             elif "sb" in watchepisode["server"]:
                 watchepisode["server"] = "StreamX"
                 watchepisode["link"] = f"https://stream.watchcool.in/watch/?source={watchepisode.pop('url')}"
@@ -188,7 +188,7 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
                 if downloads["server"] == "StreamX":
                     downloads["link"] = downloads["link"].replace("/watch/","/download/")
                 elif downloads["server"] == "Xtreme":
-                    downloads["link"] = f'https://asianembed.io/download?id={parse_qs(urlparse(downloads["link"]).query)["id"][0]}'
+                    downloads["link"] = f'https://asianembed.io/download?id={downloads["watchasian_id"]}'
                     downloads["server"] = "External Download"
                     downloads["external"] = 1
                 else:
@@ -216,7 +216,6 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
         watchepisode["created_at"] = ep_instance.added_on
         watchepisode["updated_at"] = ep_instance.updated_on
         episode["videos"].append(watchepisode)
-    episode["videos"].sort(key=lambda a:a["server"])
     return episode
 def getEpisodes(episode_serializer,backdrop_path="http://image.tmdb.org/t/p/w500/None"):
     episodes = []
