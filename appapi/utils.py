@@ -216,6 +216,13 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
         watchepisode["created_at"] = ep_instance.added_on
         watchepisode["updated_at"] = ep_instance.updated_on
         episode["videos"].append(watchepisode)
+    for watchepisode in episode["videos"]:
+        if watchepisode["server"] == "Xtreme":
+            external_watchepisode = copy.copy(watchepisode)
+            external_watchepisode["server"] = "External"
+            external_watchepisode["embed"] = 1
+            external_watchepisode["link"] = f"https://asianembed.io/streaming.php?id={watchepisode['watchasian_id']}"
+            episode["videos"].append(external_watchepisode)
     return episode
 def getEpisodes(episode_serializer,backdrop_path="http://image.tmdb.org/t/p/w500/None"):
     episodes = []
