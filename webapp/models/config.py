@@ -74,7 +74,7 @@ class Report(models.Model):
     added_on = models.DateTimeField(default=timezone.now, editable=False)
 
     def __str__(self):
-        return self.title
+        return self.title or ""
 
     class Meta:
         ordering = ("-added_on",)
