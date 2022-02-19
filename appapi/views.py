@@ -402,7 +402,7 @@ class SuggestAPIView(APIView):
     def post(self,request):
         title = request.POST.get("title")
         message = request.POST.get("message")
-        serializer = serializers.ReportSerializer(data={"description":message})
+        serializer = serializers.ReportSerializer(data={"title":title,"description":message})
         if serializer.is_valid():
             inst = serializer.save()
             resp_data = {
