@@ -65,10 +65,7 @@ class Configuration(models.Model):
 
 
 class Report(models.Model):
-    episode = models.ForeignKey(Episode, on_delete=models.CASCADE, related_name="report",
-                                related_query_name="has_report", null=True, blank=True,)
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="report",
-                              related_query_name="has_report", null=True, blank=True,)
+    title = models.CharField(max_length=300,null=True,blank=True)
     status = models.CharField(
         max_length=10, choices=STATUS_CHOICES, default="p")
     option = models.CharField(
@@ -77,11 +74,7 @@ class Report(models.Model):
     added_on = models.DateTimeField(default=timezone.now, editable=False)
 
     def __str__(self):
-        if self.episode:
-            return self.episode.name
-        elif self.movie:
-            return self.movie.title
-        return ""
+        return self.title
 
     class Meta:
         ordering = ("-added_on",)
