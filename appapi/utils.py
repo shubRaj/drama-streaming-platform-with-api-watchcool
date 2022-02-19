@@ -164,6 +164,7 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
                 watchepisode["server"] = "Xtreme"
                 watchepisode["watchasian_id"] = parse_qs(urlparse(f'{watchepisode.pop("url")}').query)["id"][-1]
                 watchepisode["link"] = f"https://wa.watchcool.in/{watchepisode['watchasian_id']}"
+                watchepisode["header"] = "watchasian.sh"
                 watchepisode["supported_hosts"] = 0
                 watchepisode["hls"] = 0
             elif "sb" in watchepisode["server"]:
