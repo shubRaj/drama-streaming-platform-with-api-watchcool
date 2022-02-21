@@ -182,6 +182,11 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
             watchepisode['status'] = 1
             watchepisode["created_at"] = watchepisode.pop("added_on")
             watchepisode["updated_at"] = watchepisode["created_at"]
+            if watchepisode["server"] == "Xtreme":
+                xtreamebackup = copy.copy(watchepisode)
+                xtreamebackup["server"] = "Xstreme Backup"
+                xtreamebackup["hls"] = 1
+                episode["videos"].insert(1,xtreamebackup)
             if (watchepisode["server"] == "XStreamCDN") or (watchepisode["server"] == "Xtreme"):
                 downloads = copy.copy(watchepisode)
                 downloads.pop("hls")
