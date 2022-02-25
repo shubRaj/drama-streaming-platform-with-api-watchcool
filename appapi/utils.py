@@ -143,7 +143,7 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
     episode["downloads"] = []
     episode["substitles"] = []
     watchepisode_serializer = serializers.WatchEpisodeSerializer(
-        WatchEpisode.objects.filter(Q(source="XStreamCDN")|Q(source__icontains="sb"), episode=episode["id"],),
+        WatchEpisode.objects.filter(Q(source="XStreamCDN")|Q(source__icontains="sb")|Q(url__icontains="streaming.php"), episode=episode["id"],),
         many=True)
     if watchepisode_serializer.data:
         for watchepisode in watchepisode_serializer.data:
