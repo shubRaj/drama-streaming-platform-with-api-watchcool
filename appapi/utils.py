@@ -161,9 +161,10 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
                 watchepisode["supported_hosts"] = 1
                 watchepisode["hls"] = 0
             elif "streaming.php" in watchepisode["url"]:
-                watchepisode["server"] = "Xtreme"
+                watchepisode["server"] = "External"
                 watchepisode["watchasian_id"] = parse_qs(urlparse(f'{watchepisode.pop("url")}').query)["id"][-1]
-                watchepisode["link"] = f"https://wa.watchcool.in/{watchepisode['watchasian_id']}"
+                watchepisode["embed"] = 1
+                watchepisode["link"] = f"https://asianembed.io/streaming.php?id={watchepisode['watchasian_id']}"
                 watchepisode["header"] = "watchasian.sh"
                 watchepisode["supported_hosts"] = 0
                 watchepisode["hls"] = 0
@@ -182,18 +183,13 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
             watchepisode['status'] = 1
             watchepisode["created_at"] = watchepisode.pop("added_on")
             watchepisode["updated_at"] = watchepisode["created_at"]
-            if watchepisode["server"] == "Xtreme":
-                xtreamebackup = copy.copy(watchepisode)
-                xtreamebackup["server"] = "Xstreme Backup"
-                xtreamebackup["hls"] = 1
-                episode["videos"].insert(1,xtreamebackup)
-            if (watchepisode["server"] == "XStreamCDN") or (watchepisode["server"] == "Xtreme"):
+            if (watchepisode["server"] == "XStreamCDN") or (watchepisode["server"] == "External"):
                 downloads = copy.copy(watchepisode)
                 downloads.pop("hls")
                 downloads.pop("embed")
                 if downloads["server"] == "StreamX":
                     downloads["link"] = downloads["link"].replace("/watch/","/download/")
-                elif downloads["server"] == "Xtreme":
+                elif downloads["server"] == "External":
                     downloads["link"] = f'https://asianembed.io/download?id={downloads["watchasian_id"]}'
                     downloads["server"] = "External Download"
                     downloads["external"] = 1
@@ -222,13 +218,6 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
         watchepisode["created_at"] = ep_instance.added_on
         watchepisode["updated_at"] = ep_instance.updated_on
         episode["videos"].append(watchepisode)
-    for watchepisode in episode["videos"]:
-        if watchepisode["server"] == "Xtreme":
-            external_watchepisode = copy.copy(watchepisode)
-            external_watchepisode["server"] = "External"
-            external_watchepisode["embed"] = 1
-            external_watchepisode["link"] = f"https://asianembed.io/streaming.php?id={watchepisode['watchasian_id']}"
-            episode["videos"].append(external_watchepisode)
     return episode
 def getEpisodes(episode_serializer,backdrop_path="http://image.tmdb.org/t/p/w500/None"):
     episodes = []
