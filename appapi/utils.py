@@ -151,7 +151,7 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
             watchepisode["episode_id"] = watchepisode.pop(
                 "episode")
             watchepisode["server"] = watchepisode.pop("source")
-            watchepisode["useragent"] = "Mozilla/7.0 (iPhone; CPU iPhone OS 12_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) FxiOS/7.0.4 Mobile/16B91 Safari/605.1.15"
+            # watchepisode["user-agent"] = "Mozilla/7.0 (iPhone; CPU iPhone OS 12_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) FxiOS/7.0.4 Mobile/16B91 Safari/605.1.15"
             watchepisode["header"] = ""
             watchepisode["video_name"] = None
             watchepisode["embed"] = 0
