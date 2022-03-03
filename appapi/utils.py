@@ -129,6 +129,7 @@ def singleMovie(resp_data):
         watchepisode["created_at"] = movie_instance.added_on
         watchepisode["updated_at"] = movie_instance.updated_on
         resp_data["videos"].append(watchepisode)
+    resp_data["videos"].sort(key=lambda a : a["server"])
     return resp_data
 def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/None"):
     episode["season_id"] = episode.pop("season")
@@ -220,6 +221,7 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
         watchepisode["created_at"] = ep_instance.added_on
         watchepisode["updated_at"] = ep_instance.updated_on
         episode["videos"].append(watchepisode)
+    episode["videos"].sort(key=lambda a : a["server"])
     return episode
 def getEpisodes(episode_serializer,backdrop_path="http://image.tmdb.org/t/p/w500/None"):
     episodes = []
