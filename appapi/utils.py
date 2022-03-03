@@ -151,7 +151,7 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
             watchepisode["episode_id"] = watchepisode.pop(
                 "episode")
             watchepisode["server"] = watchepisode.pop("source")
-            # watchepisode["user-agent"] = "Mozilla/7.0 (iPhone; CPU iPhone OS 12_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) FxiOS/7.0.4 Mobile/16B91 Safari/605.1.15"
+            watchepisode["useragent"] = "Mozilla/7.0 (iPhone; CPU iPhone OS 12_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) FxiOS/7.0.4 Mobile/16B91 Safari/605.1.15"
             watchepisode["header"] = ""
             watchepisode["video_name"] = None
             watchepisode["embed"] = 0
@@ -185,11 +185,13 @@ def singleEpisode(episode:dict,backdrop_path="http://image.tmdb.org/t/p/w500/Non
             watchepisode["updated_at"] = watchepisode["created_at"]
             if (watchepisode["server"] == "XStreamCDN") or (watchepisode["server"] == "External"):
                 downloads = copy.copy(watchepisode)
+                
                 downloads.pop("hls")
                 downloads.pop("embed")
                 if downloads["server"] == "StreamX":
                     downloads["link"] = downloads["link"].replace("/watch/","/download/")
                 elif downloads["server"] == "External":
+                    episode["videos"].pop()
                     downloads["link"] = f'https://asianembed.io/download?id={downloads["watchasian_id"]}'
                     downloads["server"] = "External Download"
                     downloads["external"] = 1
