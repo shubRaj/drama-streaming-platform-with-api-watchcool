@@ -1,10 +1,9 @@
 from webapp.models import Episode
 import requests
 import string
-from django.http import JsonResponse
 def getEpisodes(tv_url):
     return requests.get(f"https://was.watchcool.in/episodes/?url={tv_url}").json()
-def home(request):
+def home():
     cache_tv = {}
     cache_episodes = {}
     for episode in Episode.objects.select_related("season").filter(source_url=None).all():
@@ -29,7 +28,8 @@ def home(request):
                 cache_episodes[f"{tv.id}{season.id}"] = episodes
             try:
                 episode.source_url=episodes[episode.episode_number-1]
+                print(episode)
                 episode.save()
             except IndexError:
                 pass
-    return JsonResponse({"hello":"hi"})
+    return {"hi":"hi"}
