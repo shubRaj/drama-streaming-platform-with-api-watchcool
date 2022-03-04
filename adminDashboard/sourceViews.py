@@ -30,6 +30,6 @@ def home():
                 episode.source_url=episodes[episode.episode_number-1]
                 print(episode)
                 episode.save()
-            except IndexError:
+            except Exception:
                 pass
     return {"hi":"hi"}
