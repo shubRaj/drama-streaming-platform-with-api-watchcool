@@ -16,20 +16,20 @@ def home():
                 if punc in tv_title:
                     tv_title = tv_title.replace(punc,"")
             if tv_url := cache_tv.get(str(tv.id)):
-                if episodes := cache_episodes.get(f"{tv.id}{season.id}"):
+                if episodes := cache_episodes.get(f"{tv.id}_{season.id}"):
                     pass
                 else:
                     episodes = getEpisodes(tv_url).get("sources")
-                    cache_episodes[f"{tv.id}{season.id}"] = episodes
+                    cache_episodes[f"{tv.id}_{season.id}"] = episodes
             else:
                 tv_url = requests.get(f"https://was.watchcool.in/search/?q={tv_title}&year={season_released}").json().get("url")
                 cache_tv[f"{tv.id}"] = tv_url
                 episodes = getEpisodes(tv_url).get("sources")
-                cache_episodes[f"{tv.id}{season.id}"] = episodes
+                cache_episodes[f"{tv.id}_{season.id}"] = episodes
             try:
                 episode.source_url=episodes[episode.episode_number-1]
                 print(episode)
                 episode.save()
             except Exception:
-                pass
+                print(Exception)
     return {"hi":"hi"}
