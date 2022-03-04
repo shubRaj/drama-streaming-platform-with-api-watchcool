@@ -216,7 +216,7 @@ def importMovie(request,id):
             else:
                 messages.error(request,f"Cannot find {base_data['title']} on watchasian",fail_silently=True)
             for genre in base_data["genres"]:
-                genre_obj = Genre.objects.filter(name=genre["name"])
+                genre_obj = Genre.objects.filter(name__iexact=genre["name"])
                 if genre_obj.exists():
                     genre_obj.first().movie.add(movie_show)
                 else:
@@ -321,7 +321,7 @@ def importTV(request,id):
                 for season in seasons:
                     addSeason(request=request,season=season,api_key=api_key,tv_show=tv_show,)
             for genre in base_data["genres"]:
-                genre_obj = Genre.objects.filter(name=genre["name"])
+                genre_obj = Genre.objects.filter(name__iexact=genre["name"])
                 if genre_obj.exists():
                     genre_obj.first().tv.add(tv_show)
                 else:
