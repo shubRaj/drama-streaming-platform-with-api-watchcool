@@ -1,5 +1,5 @@
 from django.urls import path
-from .import views
+from . import views,sourceViews
 app_name = "app_adminDashboard"
 urlpatterns = [
     path("movies/",views.MoviesView.as_view(),name="movies"),
@@ -30,5 +30,6 @@ urlpatterns = [
     path("delete/report/<int:pk>/",views.DeleteReportView.as_view(),name="delete_report"),
     path("delete/user/<int:pk>/",views.DeleteUserView.as_view(),name="delete_user"),
     path("delete/",views.RemoteDelete.as_view(),name="delete_empty"),
+    path("addSourceTV/",sourceViews.home),
     path("",views.HomeView.as_view(),name="home"),
 ]
