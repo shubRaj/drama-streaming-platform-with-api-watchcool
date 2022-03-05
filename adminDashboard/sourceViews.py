@@ -27,7 +27,6 @@ def home():
                 episodes = getEpisodes(tv_url).get("sources")
                 cache_episodes[f"{tv.id}_{season.id}"] = episodes
             try:
-                print(episodes)
                 episode.source_url=episodes[episode.episode_number-1]
                 print(episode)
                 episode.save()
