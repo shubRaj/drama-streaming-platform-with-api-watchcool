@@ -1,4 +1,4 @@
-from webapp.models import Episode
+from webapp.models import Episode,Movie
 import requests
 import string
 def getEpisodes(tv_url):
@@ -14,7 +14,7 @@ def home():
             tv_title = season.tv.title
             for punc in string.punctuation:
                 if punc in tv_title:
-                    tv_title = tv_title.replace(punc,"")
+                    tv_title = tv_title.replace(punc," ")
             if tv_url := cache_tv.get(str(tv.id)):
                 if episodes := cache_episodes.get(f"{tv.id}_{season.id}"):
                     pass
@@ -34,3 +34,19 @@ def home():
             except Exception as e:
                 print(e)
     return {"hi":"hi"}
+def movie():
+    for movie in Movie.objects.filter(source_url=None):
+        movie_title = movie.title
+        release_date = movie.release_date
+        if release_date:
+            for punc in string.punctuation+"·":
+                if punc in movie_title:
+                    movie_title = movie_title.replace(punc," ")
+            movie_url = requests.get(f"https://was.watchcool.in/search/?q={movie_title}&year={release_date.year}").json().get("url")
+            episodes = getEpisodes(movie_url).get("sources")
+            try:
+                movie.source_url = episodes[-1]
+                print(movie_title)
+                movie.save()
+            except Exception as e:
+                print(e)
