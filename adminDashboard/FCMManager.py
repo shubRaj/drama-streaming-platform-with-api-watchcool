@@ -5,7 +5,7 @@ import json
 def sendPush(data: dict = {}):
     headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'key=AAAArIL4nuM:APA91bEJw8psWb0Ym8WSQhV8n5FFaxHT4T3a1U21vMtrVZ2kw23vjzz-wEE7SsgUoIOHJPdrdh0Q-MxS2pRWjh_TiDr6r_vwHhkY5EZMUMh6PpjaziuVG9DOxlM3Ltkb3qENtgViRoqu',
+        'Authorization': 'key=AAAAagvPTK8:APA91bGspTtDPMV2LuGvJs8mC9aVALBkPEd9WaJn1jhbdhYNaLdtx4sH7MGXzmg8nAWvCLMBLQbD509hGPixa4y_qCnRrhne5E7eAJaAc1l-DguklC5Jh1dYSlb3zla8zmwp7sNRzLEC',
     }
     body = {
         "data": data,
