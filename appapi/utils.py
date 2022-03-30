@@ -267,7 +267,7 @@ def latestTV(number,this_week=False):
     latest_releases, many=True)
     resp_data = replaceMeta(movie_serializer.data)
     return resp_data
-def popularTV(number,days=60):
+def popularTV(number,days=10):
     popular_series = sorted(tvsViewin(days=days, get=number), key=lambda a: a["views"], reverse=True)
     for popular_serie in popular_series:
         popular_serie["id"] = popular_serie.pop("tv")
@@ -275,7 +275,7 @@ def popularTV(number,days=60):
         popular_series, many=True)
     resp_data = replaceMeta(popular_series_serializer.data)
     return resp_data
-def popularMovie(number,days=60):
+def popularMovie(number,days=10):
     popular_series = sorted(moviesViewin(days=days, get=number), key=lambda a: a["views"], reverse=True)
     for popular_serie in popular_series:
         popular_serie["id"] = popular_serie.pop("movie")
