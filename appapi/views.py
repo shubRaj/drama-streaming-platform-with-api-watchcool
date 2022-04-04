@@ -16,27 +16,33 @@ from .utils import (replaceMeta, getEpisodes, singleEpisode,
 topMovie, topTV,paginate,latestTV,latestMovie,popularTV,popularMovie,singleMovie)
 from webapp.context_processors import config
 import datetime
+from django.core.cache import cache
+from django.conf import settings
 
 _BASE_URL = "https://myapp.watchcool.in/public/api"
+TURN = 0
 class ConfigAPIView(RetrieveAPIView):
     queryset = Configuration.objects.all()
     serializer_class = serializers.ConfigSerializer
-
     def get(self, request, **kwargs):
+        global TURN
         self.kwargs["pk"] = 1
         resp = super().get(request)
-        resp.data = requests.get(
+        config = cache.get("config")
+        if not config:
+            config = requests.get(
             f"https://plex.watchcool.in/api/settings/p2lbgWkFrykA4QyUmpHihzmc5BNzIABq",headers={
                 "User-Agent":"okhttp/5.0.0-alpha.2,WatchCool (Android 10; SM-G965F; samsung star2lte; en"
             }
             ).json()
-        # for key in resp.data.keys():
-        #     if isinstance(resp.data[key], bool):
-
-        #         if resp.data[key]:
-        #             resp.data[key] = 1
-        #         else:
-        #             resp.data[key] = 0
+            cache.set("config",config,settings.CACHE_TIME)
+        if TURN <2:
+            config["unity_game_id"] = "4466592"
+            TURN += 1
+        else:
+            config["unity_game_id"] =  "4691431"
+            TURN = 0
+        resp.data = config
         return resp
 
 
