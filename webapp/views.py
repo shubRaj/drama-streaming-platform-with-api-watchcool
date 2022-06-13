@@ -194,30 +194,30 @@ class DiscoveryView(ListView):
 class TrendView(ListView):
     template_name = "webapp/trends.html"
     context_object_name = "shows"
-    paginate_by = 40
-    def get_queryset(self):
+    # paginate_by = 40
+    # def get_queryset(self):
         
-        most_popular_tv_shows = ViewLog.objects.filter(movie=None,viewed_on__gte=(datetime.date.today()-datetime.timedelta(days=1))).values(
-            "tv",
-            slug=F("tv__slug"),
-            title=F("tv__title"),
-            poster_path=F("tv__poster_path"),
-            tagline=F("tv__tagline"),
-            release_date=F("tv__release_date"),
-            overview=F("tv__overview"),
-            vote_average=F("tv__vote_average"),
-            ).annotate(views=Count("tv")).order_by()
-        most_popular_movies = ViewLog.objects.filter(tv=None,viewed_on__gte=(datetime.date.today()-datetime.timedelta(days=1))).values(
-            "movie",
-            slug=F("movie__slug"),
-            title=F("movie__title"),
-            poster_path=F("movie__poster_path"),
-            tagline=F("movie__tagline"),
-            release_date=F("movie__release_date"),
-            overview=F("movie__overview"),
-            vote_average=F("movie__vote_average"),
-            ).annotate(views=Count("movie")).order_by()
-        return sorted(list(chain(most_popular_tv_shows,most_popular_movies)),key=lambda a:a["views"],reverse=True)
+    #     most_popular_tv_shows = ViewLog.objects.filter(movie=None,viewed_on__gte=(datetime.date.today()-datetime.timedelta(days=1))).values(
+    #         "tv",
+    #         slug=F("tv__slug"),
+    #         title=F("tv__title"),
+    #         poster_path=F("tv__poster_path"),
+    #         tagline=F("tv__tagline"),
+    #         release_date=F("tv__release_date"),
+    #         overview=F("tv__overview"),
+    #         vote_average=F("tv__vote_average"),
+    #         ).annotate(views=Count("tv")).order_by()
+    #     most_popular_movies = ViewLog.objects.filter(tv=None,viewed_on__gte=(datetime.date.today()-datetime.timedelta(days=1))).values(
+    #         "movie",
+    #         slug=F("movie__slug"),
+    #         title=F("movie__title"),
+    #         poster_path=F("movie__poster_path"),
+    #         tagline=F("movie__tagline"),
+    #         release_date=F("movie__release_date"),
+    #         overview=F("movie__overview"),
+    #         vote_average=F("movie__vote_average"),
+    #         ).annotate(views=Count("movie")).order_by()
+    #     return sorted(list(chain(most_popular_tv_shows,most_popular_movies)),key=lambda a:a["views"],reverse=True)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         title = f"List all trending TV Shows and Movies | {self.request.get_host()}"
