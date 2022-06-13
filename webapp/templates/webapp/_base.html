@@ -20,7 +20,6 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com" />
     <link rel="dns-prefetch" href="//code.jquery.com" />
     <link rel="dns-prefetch" href="//cdnjs.cloudflare.com" />
-    <link rel="dns-prefetch" href="//www.google-analytics.com">
     <link as="style" media="all" rel="stylesheet preload prefetch" href="{% static 'webapp/css/app.css' %}"
         type="text/css" crossorigin="anonymous" />
     <link rel="preload" href="{% static 'webapp/public/assets/webfonts/inter/Inter-Regular.woff2' %}" as="font"
@@ -422,6 +421,16 @@
     {{custom_footer|safe}}
     {% block custom_script %}
     {% endblock custom_script %}
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-209868647-1"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-209868647-1');
+    </script>
+
 </body>
 
 </html>
