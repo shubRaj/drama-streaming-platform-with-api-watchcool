@@ -1,6 +1,7 @@
 from oauth2client.service_account import ServiceAccountCredentials
 from pathlib import Path
 import requests
+import re
 from webapp.models import Configuration
 BASE_DIR = Path(__file__).resolve().parent
 def get_realtime_user():
@@ -49,3 +50,7 @@ def getEpisode(tmdbid,season_number,episode_number,themoviedb_api_key):
         return resp.json()
 def getConfig():
     return Configuration.objects.first()
+def extractEpisodeNum(url):
+    episodeNum = re.search(r"\b[\d]{1,3}(-[\d])?\b",url).group()
+    if episodeNum:
+        return episodeNum.replace("-",".")

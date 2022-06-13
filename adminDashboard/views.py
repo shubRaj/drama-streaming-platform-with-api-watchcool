@@ -16,7 +16,7 @@ import string
 from urllib.parse import urlparse
 from django.db.models import Q
 import datetime,requests
-from .utils import get_realtime_user,getSeason,getConfig,getEpisode
+from .utils import get_realtime_user,getSeason,getConfig,getEpisode,extractEpisodeNum
 from django.db import transaction
 from .fembed import transferToFembed
 from .FCMManager import sendPush
@@ -99,49 +99,59 @@ def addSeason(request,tv_show,season,api_key):
                 watchasian_episodes = requests.get(watchasian_episodes_url.format(
                     url=watchasian_url
                 )).json()["sources"]
-                for episode,watchasian_episode in list(zip(episodes,watchasian_episodes)):
-                    try:
-                        addEpisode(request,season_obj,episode,watchasian_episode) #adding episode
-                    except Exception: #any exception
-                        pass
+                for watchasian_episode in watchasian_episodes:
+                    episode_num = extractEpisodeNum(watchasian_episode)
+                    episode = next(filter(lambda a:str(a["episode_number"])==episode_num,episodes),None)
+                    addEpisode(request,season_obj,episode,watchasian_episode,episode_num)
+                    
+                # for episode,watchasian_episode in list(zip(episodes,watchasian_episodes)):
+                #     try:
+                #         addEpisode(request,season_obj,episode,watchasian_episode) #adding episode
+                #     except Exception: #any exception
+                #         pass
             else:
                 messages.error(request,f"Cannot find {tv_show.title} {'season '+str(season['season_number']) if season['season_number'] != 1 else ''} on watchasian",fail_silently=True)
 
     else:
         messages.info(request,f"Special(0) Season Skipped",fail_silently=True)
 @transaction.atomic
-def addEpisode(request,season_obj,episode,watchasian_episode):
+def addEpisode(request,season_obj,episode,watchasian_episode,episode_num=None):
     watchasian_links_url = "https://was.watchcool.in/?url={url}"
     poster_base_url = "https://image.tmdb.org/t/p/w220_and_h330_face"
-
+    if not episode:
+        episode = {}
+        episode["name"] = f"Episode {episode_num}"
+        episode["season_number"] = season_obj.season_number
+        episode["episode_number"] = episode_num
     episode_obj = Episode.objects.create(
         season = season_obj,
         name = episode["name"],
-        overview = episode["overview"],
+        overview = episode.get("overview"),
         episode_number = episode["episode_number"],
         season_number = episode["season_number"],
-        tmdb_episode_id = episode["id"],
-        still_path = f'{poster_base_url}{episode["still_path"]}',
-        vote_average = episode["vote_average"],
+        tmdb_episode_id = episode.get("id"),
+        still_path = f'{poster_base_url}{episode.get("still_path")}' if episode.get("still_path") else None,
+        vote_average = episode.get("vote_average"),
         source_url= watchasian_episode,
-        air_date = episode["air_date"] if episode["air_date"] else None
+        air_date = episode.get("air_date") if episode.get("air_date") else None
     )
     watchasian_episode_links = requests.get(watchasian_links_url.format(url=watchasian_episode)).json()["sources"]
+    watch_episodes = []
     for watchasian_episode_link in watchasian_episode_links:
         source = urlparse(watchasian_episode_link).netloc
         if source in SUPPORTED_HOSTS:
-            # fembed_link = transferToFembed(watchasian_episode_link)
-            WatchEpisode.objects.create(
+            watch_episodes.append(WatchEpisode(
                 source = "XStreamCDN",
                 episode = episode_obj,
                 url = watchasian_episode_link
-            )
+            ))
         else:
-            WatchEpisode.objects.create(
+            watch_episodes.append(WatchEpisode(
                 source = source,
                 episode = episode_obj,
                 url = watchasian_episode_link
-            )
+            ))
+    WatchEpisode.objects.bulk_create(watch_episodes)
 @transaction.atomic
 def importMovie(request,id):
     base_url = "https://api.themoviedb.org/3/movie/{id}?api_key={api_key}&language=en-US&append_to_response=external_ids"
@@ -198,21 +208,23 @@ def importMovie(request,id):
                         trailer=trailer,
                     )
                     watchasian_sources = requests.get(watchasian_links.format(url=episode)).json()["sources"]
+                    watch_movies = []
                     for movie_link in watchasian_sources:
                         source = urlparse(movie_link).netloc
                         if source in SUPPORTED_HOSTS:
                             # fembed_link = transferToFembed(movie_link)
-                            WatchMovie.objects.create(
+                            watch_movies.append(WatchMovie(
                                 movie=movie_show,
                                 source= "XStreamCDN",
                                 url= movie_link
-                            )
+                            ))
                         else:
-                            WatchMovie.objects.create(
+                            watch_movies.append(WatchMovie(
                                 movie=movie_show,
                                 source= source,
                                 url=movie_link
-                            )
+                            ))
+                    WatchMovie.objects.bulk_create(watch_movies)
             else:
                 messages.error(request,f"Cannot find {base_data['title']} on watchasian",fail_silently=True)
             for genre in base_data["genres"]:
