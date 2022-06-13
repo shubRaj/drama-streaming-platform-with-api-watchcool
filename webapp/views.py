@@ -232,22 +232,16 @@ class AjaxEmbed(View):
         if type:
             if id:
                 if id.isnumeric():
-                    if type=="tv":
-                        source = WatchEpisode.objects.filter(id=int(id))
-                    else:
-                        source = WatchMovie.objects.filter(id=int(id))
-                    if source.exists():
-                        source = source.first()
-                        if "sb" in source.source:
-                            source_url = f"https://www.watchcool.in/static/embed.html?source={source.url}"
+                    try:
+                        if type=="tv":
+                            source = WatchEpisode.objects.get(id=int(id))
                         else:
-                            source_url = source.url
-                        sandbox = False
-                else:
-                    source_url = f"https://gdplayer.top/embed/?{id}"
-                    sandbox=True
-                return render(request,self.template_name,{"source_url":source_url,"sandbox":sandbox})
-        return render(request,self.template_name,)
+                            source = WatchMovie.objects.get(id=int(id))
+                    except (WatchEpisode.DoesNotExist,WatchMovie.DoesNotExist):
+                        pass
+                    source_url = source.url
+                return render(request,self.template_name,{"source_url":source_url})
+        return render(request,self.template_name)
 
 class AjaxSearch(generics.ListAPIView):
     def list(self,request):

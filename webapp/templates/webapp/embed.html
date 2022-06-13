@@ -1,11 +1,7 @@
 <html>
 
 <body>
-    {% if sandbox %}
-        <iframe class="embed-responsive-item" sandbox="allow-scripts allow-same-origin" src="{{source_url}}" allowfullscreen></iframe>
-    {% else %}
-        <iframe class="embed-responsive-item" src="{{source_url}}" allowfullscreen></iframe>
-    {% endif %}
+    <iframe class="embed-responsive-item" id="embed-frame" src="{{source_url}}" allowfullscreen base_url="{% url 'app_webapp:embed' %}"></iframe>
 </body>
 
 </html>
