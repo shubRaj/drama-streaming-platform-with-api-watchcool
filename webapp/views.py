@@ -191,13 +191,13 @@ class DiscoveryView(ListView):
         context["description"] = title
         context["currentPage"] = "discovery"
         return context
-class TrendView(ListView):
+class TrendView(TemplateView):
     template_name = "webapp/trends.html"
-    context_object_name = "shows"
+    # context_object_name = "shows"
     # paginate_by = 40
     # def get_queryset(self):
         
-    #     most_popular_tv_shows = ViewLog.objects.filter(movie=None,viewed_on__gte=(datetime.date.today()-datetime.timedelta(days=1))).values(
+    #     most_popular_tv_shows = ViewLog.objects.filter(movie=None,viewed_on__gte=(datetime.date.today()-datetime.timedelta(days=7))).values(
     #         "tv",
     #         slug=F("tv__slug"),
     #         title=F("tv__title"),
@@ -207,7 +207,7 @@ class TrendView(ListView):
     #         overview=F("tv__overview"),
     #         vote_average=F("tv__vote_average"),
     #         ).annotate(views=Count("tv")).order_by()
-    #     most_popular_movies = ViewLog.objects.filter(tv=None,viewed_on__gte=(datetime.date.today()-datetime.timedelta(days=1))).values(
+    #     most_popular_movies = ViewLog.objects.filter(tv=None,viewed_on__gte=(datetime.date.today()-datetime.timedelta(days=7))).values(
     #         "movie",
     #         slug=F("movie__slug"),
     #         title=F("movie__title"),
@@ -218,13 +218,20 @@ class TrendView(ListView):
     #         vote_average=F("movie__vote_average"),
     #         ).annotate(views=Count("movie")).order_by()
     #     return sorted(list(chain(most_popular_tv_shows,most_popular_movies)),key=lambda a:a["views"],reverse=True)
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     title = f"List all trending TV Shows and Movies | {self.request.get_host()}"
+    #     context["title"] = title
+    #     context["description"] = title
+    #     context["currentPage"] = "trends"
+    #     return context
+    def get(self,request):
+        context = {}
         title = f"List all trending TV Shows and Movies | {self.request.get_host()}"
         context["title"] = title
         context["description"] = title
         context["currentPage"] = "trends"
-        return context
+        return render(request,self.template_name,context)
 class AjaxEmbed(View):
     template_name = "webapp/embed.html"
     def post(self,request):
