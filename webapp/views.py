@@ -63,11 +63,7 @@ class MovieDetailView(DetailView):
         if self.object.genre.exists():
             context["similars"] = Movie.objects.filter(~Q(id=self.object.id),published=True,has_genre__name=self.object.genre.first()).order_by("-release_date")[:6]
         context["download_links"] = self.object.download.all()
-        sources = list(self.object.watch.filter(~Q(source__contains="asian")).order_by("-source").values("id","url","source"))
-        for index,source in enumerate(sources):
-            if "sb" in source.get("source",""):
-                sources.append(source)
-                sources.pop(index)
+        sources = list(self.object.watch.all().order_by("-added_on").values("id","url","source"))
         context["sources"] = sources
         return context
 class EpisodeDetailView(DetailView):
@@ -98,11 +94,7 @@ class EpisodeDetailView(DetailView):
         if self.tv.genre.exists():
             context["similars"] = TV.objects.filter(~Q(id=self.tv.id),published=True,has_genre__name=self.tv.genre.first()).order_by("-release_date")[:6]
         context["next_episode"] = next_episode
-        sources = list(self.object.watch_episode.filter(~Q(source__contains="asian")).order_by("-source").values("id","url","source"))
-        for index,source in enumerate(sources):
-            if "sb" in source.get("source",""):
-                sources.append(source)
-                sources.pop(index)
+        sources = list(self.object.watch_episode.all().order_by("-added_on").values("id","url","source"))
         context["sources"] = sources
         return context
 class TVList(ListView):
