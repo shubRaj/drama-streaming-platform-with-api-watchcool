@@ -18,7 +18,7 @@
                 <div class="subtext text-12">
                     Discover the best Movies and TV Shows with english subtitle in HD Quality. </div>
             </div>
-            {% for show in  most_popular_shows_sorted %}
+            {% for show in most_popular_shows %}
             <a href="
             {% if show.tv %}
                 {% url 'app_webapp:tv_detail' show.slug %}
