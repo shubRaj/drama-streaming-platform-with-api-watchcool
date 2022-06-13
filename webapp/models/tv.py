@@ -55,7 +55,7 @@ class Episode(models.Model):
     added_on = models.DateTimeField(default=timezone.now,editable=False)
     updated_on = models.DateTimeField(default=timezone.now,editable=False)
     class Meta:
-        ordering = ("-episode_number","-added_on",)
+        ordering = ("-added_on",)
     def get_absolute_url(self):
         return reverse("app_webapp:watch_episode",args=(self.slug,))
     def __str__(self):
