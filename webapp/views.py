@@ -197,7 +197,7 @@ class TrendView(ListView):
     paginate_by = 40
     def get_queryset(self):
         
-        most_popular_tv_shows = ViewLog.objects.filter(movie=None,viewed_on__gte=(datetime.date.today()-datetime.timedelta(days=7))).values(
+        most_popular_tv_shows = ViewLog.objects.filter(movie=None,viewed_on__gte=(datetime.date.today()-datetime.timedelta(days=1))).values(
             "tv",
             slug=F("tv__slug"),
             title=F("tv__title"),
@@ -207,7 +207,7 @@ class TrendView(ListView):
             overview=F("tv__overview"),
             vote_average=F("tv__vote_average"),
             ).annotate(views=Count("tv")).order_by()
-        most_popular_movies = ViewLog.objects.filter(tv=None,viewed_on__gte=(datetime.date.today()-datetime.timedelta(days=7))).values(
+        most_popular_movies = ViewLog.objects.filter(tv=None,viewed_on__gte=(datetime.date.today()-datetime.timedelta(days=1))).values(
             "movie",
             slug=F("movie__slug"),
             title=F("movie__title"),
