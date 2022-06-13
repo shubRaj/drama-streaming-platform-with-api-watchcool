@@ -30,6 +30,7 @@ def moviesViewin(days,get):
             ).annotate(views=Count("movie")).order_by()[:get]
         lock = 0
         return resp
+    return []
 def tvsViewin(days,get):
     global lock
     if not lock:
@@ -56,6 +57,7 @@ def tvsViewin(days,get):
         ).annotate(views=Count("tv")).order_by()[:get]
         lock = 0
         return resp
+    return []
 def cache_context():
     data = {}
     config = Configuration.objects.filter(id=1)
