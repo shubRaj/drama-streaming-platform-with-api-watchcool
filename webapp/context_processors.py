@@ -4,28 +4,37 @@ from itertools import chain
 from django.db.models import Count,F
 from django.core.cache import cache
 from django.conf import settings
+lock = 0
 def moviesViewin(days,get):
-    return ViewLog.objects.filter(tv=None,viewed_on__date__gte=(datetime.date.today()-datetime.timedelta(days=days))).values(
-        "movie",
-        slug=F("movie__slug"),
-        title=F("movie__title"),
-        themoviedb_id = F("movie__themoviedb_id"),
-        original_title = F("movie__original_title"),
-        imdb_id = F("movie__imdb_id"),
-        trailer = F("movie__trailer"),
-        published = F("movie__published"),
-        runtime = F("movie__runtime"),
-        added_on = F("movie__added_on"),
-        updated_on = F("movie__updated_on"),
-        media_type = F("movie__media_type"),
-        poster_path=F("movie__poster_path"),
-        overview=F("movie__overview"),
-        vote_average=F("movie__vote_average"),
-        backdrop_path=F("movie__backdrop_path"),
-        release_date=F("movie__release_date"),
-        ).annotate(views=Count("movie")).order_by()[:get]
+    global lock
+    if not lock:
+        lock=1
+        resp = ViewLog.objects.filter(tv=None,viewed_on__date__gte=(datetime.date.today()-datetime.timedelta(days=days))).values(
+            "movie",
+            slug=F("movie__slug"),
+            title=F("movie__title"),
+            themoviedb_id = F("movie__themoviedb_id"),
+            original_title = F("movie__original_title"),
+            imdb_id = F("movie__imdb_id"),
+            trailer = F("movie__trailer"),
+            published = F("movie__published"),
+            runtime = F("movie__runtime"),
+            added_on = F("movie__added_on"),
+            updated_on = F("movie__updated_on"),
+            media_type = F("movie__media_type"),
+            poster_path=F("movie__poster_path"),
+            overview=F("movie__overview"),
+            vote_average=F("movie__vote_average"),
+            backdrop_path=F("movie__backdrop_path"),
+            release_date=F("movie__release_date"),
+            ).annotate(views=Count("movie")).order_by()[:get]
+        lock = 0
+        return resp
 def tvsViewin(days,get):
-    return ViewLog.objects.filter(movie=None,
+    global lock
+    if not lock:
+        lock = 1
+        resp = ViewLog.objects.filter(movie=None,
         viewed_on__date__gte=(datetime.date.today()-datetime.timedelta(days=days))).values(
         "tv",
         slug = F("tv__slug"),
@@ -45,6 +54,8 @@ def tvsViewin(days,get):
         backdrop_path=F("tv__backdrop_path"),
         release_date=F("tv__release_date"),
         ).annotate(views=Count("tv")).order_by()[:get]
+        lock = 0
+        return resp
 def cache_context():
     data = {}
     config = Configuration.objects.filter(id=1)
