@@ -14,6 +14,7 @@ from .serializers import TVSerializer
 from django.http import Http404,JsonResponse
 from rest_framework.response import Response
 import datetime
+import math
 
 class HomeView(TemplateView):
     template_name = "webapp/index.html"
@@ -85,9 +86,9 @@ class EpisodeDetailView(DetailView):
         context["title"] = title
         context["description"] =  f"{self.request.get_host()}, you can watch {self.tv.title} {'({})'.format(self.tv.release_date.year) if self.tv.release_date else '' } {f' Season {self.object.season_number}' if self.object.season_number>1 else ''} Episode {self.object.episode_number} online with English Subtitle. Watch korean dramas,japanese dramas,chinese dramas and asian dramas online for free and more free dramas online in high quality, without downloading."
         context["download_links"] = self.object.download_episode.all()
-        next_episode = self.season.episode.filter(episode_number=(self.object.episode_number+1))
+        next_episode = self.season.episode.filter(episode_number=(math.floor(float(self.object.episode_number)+1)))
         if not next_episode.exists():
-            next_season = self.tv.season.filter(season_number=(self.season.season_number+1))
+            next_season = self.tv.season.filter(season_number=(math.floor(float(self.season.season_number)+1)))
             if next_season.exists():
                 next_episode = next_season.first().episode.order_by("episode_number").first()
             else:
