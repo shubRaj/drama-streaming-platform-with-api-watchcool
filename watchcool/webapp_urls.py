@@ -13,6 +13,7 @@ urlpatterns.extend(
     [
         path("watchdog.xml",sitemap_views.index,{"sitemaps":sitemaps},name="django.contrib.sitemaps.views.sitemap"),
         path('watchdog-<section>.xml', sitemap_views.sitemap, {'sitemaps': sitemaps},name='django.contrib.sitemaps.views.sitemap'),
+        path("api/",include("appapi.urls",namespace="appapi")),
         path("",include("webapp.urls",namespace="webapp")),
     ]
 )

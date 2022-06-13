@@ -5,7 +5,7 @@ class VirtualHostMiddleware:
 
     def __call__(self, request):
         host = request.get_host()
-        if host in "www.watchcool.in":
+        if  "localhost" in  host in "www.watchcool.in":
             request.urlconf = "watchcool.webapp_urls"
         else:
             request.urlconf = "watchcool.api_urls"
