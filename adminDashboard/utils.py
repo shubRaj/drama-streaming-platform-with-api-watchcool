@@ -51,6 +51,8 @@ def getEpisode(tmdbid,season_number,episode_number,themoviedb_api_key):
 def getConfig():
     return Configuration.objects.first()
 def extractEpisodeNum(url):
-    episodeNum = re.search(r"\b[\d]{1,3}(-[\d])?\b",url).group()
+    episodeNum = re.search(r"\b[\d]{1,3}(-[\d])?\b",url)
     if episodeNum:
-        return episodeNum.replace("-",".")
+        return episodeNum.group().replace("-",".")
+    return "0"
+    
