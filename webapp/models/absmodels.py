@@ -18,7 +18,7 @@ class AbsShow(models.Model):
     runtime = models.IntegerField(null=True,blank=True)
     published = models.BooleanField(default=True)
     trailer = models.URLField(null=True,blank=True)
-    slug = models.SlugField(blank=True,null=True,editable=False,max_length=300)
+    slug = models.SlugField(blank=True,null=True,editable=False,unique=True,max_length=300)
     updated_on = models.DateTimeField(default=timezone.now,editable=False)
     added_on = models.DateTimeField(default=timezone.now,editable=False)
     class Meta:
