@@ -151,7 +151,7 @@ class GenreView(ListView):
     paginate_by = 40
     def get_queryset(self):
         self.category = self.kwargs["category"]
-        shows = sorted(list(chain(TV.objects.filter(has_genre__name__icontains=self.category),Movie.objects.filter(has_genre__name__icontains=self.category))),key=lambda a:a.release_date,reverse=True)
+        shows = sorted(list(chain(TV.objects.filter(has_genre__name__icontains=self.category,release_date__isnull=False),Movie.objects.filter(has_genre__name__icontains=self.category,release_date__isnull=False))),key=lambda a:a.release_date,reverse=True)
         return shows
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
