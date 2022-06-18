@@ -32,17 +32,19 @@
     <link rel="preload" href="{% static 'webapp/public/assets/webfonts/inter/Inter-Black.woff2' %}" as="font"
         crossorigin="anonymous" />
     <meta property="og:site_name" content="{{request.get_host}}">
-    <meta property="og:locale" content="en_US"/>
+    <meta property="og:locale" content="en_US" />
     <meta property="og:url" content="{{request.build_absolute_uri}}">
     <meta property="og:title" content="{{title}}">
     <meta property="og:description" content="{{description}}">
-    <meta property="og:image" content="{% if tv %} {{tv.backdrop_path}} {% elif movie %} {{movie.backdrop_path}} {% else %} {{episode.still_path}} {% endif %} ">
+    <meta property="og:image"
+        content="{% if tv %} {{tv.backdrop_path}} {% elif movie %} {{movie.backdrop_path}} {% else %} {{episode.still_path}} {% endif %} ">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@">
     <meta name="twitter:title" content="{{title}}">
     <meta name="twitter:url" content="{{request.build_absolute_uri}}">
     <meta name="twitter:description" content="{{description}}">
-    <meta name="twitter:image" content="{% if tv %} {{tv.backdrop_path}} {% elif movie %} {{movie.backdrop_path}} {% else %} {{episode.still_path}} {% endif %} " />
+    <meta name="twitter:image"
+        content="{% if tv %} {{tv.backdrop_path}} {% elif movie %} {{movie.backdrop_path}} {% else %} {{episode.still_path}} {% endif %} " />
     <link rel="canonical" href="{{request.build_absolute_uri}}" />
     <link rel="alternate" hreflang="en-us" href="{{request.build_absolute_uri}}" />
     <script type="text/javascript">
@@ -127,6 +129,19 @@
         }
     </style>
     <link rel="shortcut icon" href="{{favicon.url}}">
+    <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+    <script>
+        window.OneSignal = window.OneSignal || [];
+        OneSignal.push(function () {
+            OneSignal.init({
+                appId: "338a03b1-f4e4-470a-bf5d-9d2fbdc1574f",
+                safari_web_id: "web.onesignal.auto.44e6ca0d-bbca-461f-908e-69d9a6be2a2a",
+                notifyButton: {
+                    enable: true,
+                },
+            });
+        });
+    </script>
     {{custom_header|safe}}
     {% block custom_head %}
     {% endblock custom_head %}
@@ -375,7 +390,7 @@
                                 <div class="footer-nav">
                                     {% for page in pages %}
                                     <a href="{% url 'app_webapp:page' page.slug %}" class="mr-3">
-                                    {{page.title}}</a>
+                                        {{page.title}}</a>
                                     {% endfor %}
                                 </div>
                                 <div class="my-2">©{% now 'Y' %} {{request.get_host|upper}} </div>
@@ -423,11 +438,11 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-209868647-1"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-    gtag('config', 'UA-209868647-1');
+        gtag('config', 'UA-209868647-1');
     </script>
 
 </body>
