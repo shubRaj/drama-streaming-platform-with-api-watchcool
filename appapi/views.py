@@ -159,8 +159,8 @@ class FeaturedAPIView(SearchAPIView):
         featured_shows = sorted(
             list(
                 chain(
-                    Movie.objects.filter(published=True,featured=True).order_by("added_on")[:10],
-                    TV.objects.filter(published=True,featured=True).order_by("added_on")[:10]
+                    Movie.objects.filter(published=True,featured=True).order_by("-added_on")[:10],
+                    TV.objects.filter(published=True,featured=True).order_by("-added_on")[:10]
                 ),
             ), key=lambda a: a.added_on, reverse=True)
         featured_serializer = serializers.MovieSerializer(featured_shows,many=True)
