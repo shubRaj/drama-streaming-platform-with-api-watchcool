@@ -76,7 +76,7 @@ class ViewLog(models.Model):
     movie = models.ForeignKey(Movie,on_delete=models.CASCADE,related_name="view",related_query_name="has_view",null=True,blank=True,db_column="movie")
     tv = models.ForeignKey(TV,on_delete=models.CASCADE,related_name="view",related_query_name="has_view",null=True,blank=True,db_column="tv")
     user = models.ForeignKey(USER,on_delete=models.SET_NULL,related_name="view",related_query_name="has_view",null=True,blank=True,db_column="user")
-    viewed_on = models.DateTimeField(default=timezone.now,editable=False,db_column="viewed_on")
+    viewed_on = models.DateTimeField(default=timezone.now,editable=False,db_column="viewed_on",db_index=True)
     def __str__(self):
         return str(self.movie or self.tv)
     class Meta:
