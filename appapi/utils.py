@@ -83,7 +83,7 @@ def singleMovie(resp_data):
                 watchmovie["link"] = f'https://fembed.com{urlparse(watchmovie.pop("url")).path}'
                 watchmovie["supported_hosts"] = 1
                 watchmovie["hls"] = 0
-            elif "sb" in watchmovie["server"]:
+            elif "sb" in watchmovie["server"] or "stream" in watchmovie["server"]:
                 watchmovie["link"] = f"https://stream.watchcool.in/watch/?source={watchmovie.pop('url')}"
                 watchmovie["server"] = "StreamX"
                 watchmovie["supported_hosts"] = 0
